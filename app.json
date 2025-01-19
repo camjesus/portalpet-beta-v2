@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "portalpet-beta-v2",
-    "slug": "portalpet-beta-v2",
+    "name": "portalpet-beta",
+    "slug": "portalpet-beta",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -36,7 +36,22 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "@react-native-google-signin/google-signin"
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
+          "savePhotosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
+          "cameraPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

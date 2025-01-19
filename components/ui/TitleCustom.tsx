@@ -8,39 +8,35 @@ type Props = {
 
 export default function TitleCustom({ title, children }: Props) {
   return (
-          <View style={[styles.column, styles.checkBoxContainer]}>
-            <View style={styles.titleBackground}>
-              <Text style={styles.title}>{title}</Text>
-            </View>
-            <View style={[{ paddingHorizontal: 10 }]}>
-
-{children}
-</View>
-
-          </View>
+    <View style={[styles.column, styles.checkBoxContainer]}>
+      <View style={styles.titleBackground}>
+        <Text style={styles.title}>{title}</Text>
+      </View>
+      <View style={[{ paddingHorizontal: 10 }]}>{children}</View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-    column: {
-        flexDirection: "column",
-      },
-      checkBoxContainer: {
-        backgroundColor: "white",
-        paddingBottom: 10,
-        borderRadius: 10,
-      },
-      titleBackground: {
-        backgroundColor: "#ffb13d",
-        borderTopRightRadius: 10,
-        borderTopLeftRadius: 10,
-        paddingVertical: 5,
-        marginBottom: 5,
-      },
-      title: {
-        textAlign: "center",
-        color: "white",
-        fontWeight: "bold",
-        fontSize: 15,
-      },
+  column: {
+    flexDirection: "column",
+  },
+  checkBoxContainer: {
+    backgroundColor: "white",
+    paddingBottom: 5,
+    borderRadius: 10,
+  },
+  titleBackground: {
+    backgroundColor: "#ffb13d",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingVertical: 5,
+    marginBottom: 5,
+  },
+  title: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
 });

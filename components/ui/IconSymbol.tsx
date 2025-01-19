@@ -18,7 +18,9 @@ const MAPPING = {
   'male': 'gender-male',
   'female': 'gender-female',
   'cat': 'cat',
-  'dog': 'dog'
+  'dog': 'dog',
+  'add-image':'camera-plus',
+  'add-location': 'map-marker-plus'
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

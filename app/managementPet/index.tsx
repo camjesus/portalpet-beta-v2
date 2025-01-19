@@ -1,58 +1,102 @@
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import { Link } from "expo-router";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import PanelButtons from "@/components/PanelButtons";
-import { FC, useState } from "react";
+import PanelButtons from "@/app/managementPet/components/PanelButtons";
+import { useState, useReducer } from "react";
 import TextInputCustom from "@/components/ui/TextInputCustom";
-import CheckBox from "@/components/ui/CheckBox";
-import { LABELS_ACCTION, ACCTIONS } from "../Models/Constants";
-import TitleCustom from "@/components/ui/TitleCustom";
+import {
+  LABELS_ACCTION,
+  ACCTIONS,
+  PLACEHOLDER_DESCRIPTION,
+  SIZE,
+} from "@/constants/StaticData";
+import InputName from "./components/InputName";
+import InputOption from "./components/InputOption";
+import InputSize from "./components/InputSize";
+import InputAge from "./components/InputAge";
 import Button from "@/components/ui/Button";
+import { petReducer, initalPet, ACTION } from "@/hooks/usePetReducer";
+import { ScrollView } from "react-native-gesture-handler";
+import InputImage from "./components/InputImage";
+import { savePetAsync } from "@/service/useDataBase";
 
 export default function ManagementPet() {
-  const [acction, setAction] = useState("ADOPTION");
-  const [name, setName] = useState("");
-  const [age, setAge] = useState("");
   const [noName, setNoName] = useState(false);
-  const [female, setFemale] = useState(true);
-  const [male, setMale] = useState(false);
-  const [dog, setDog] = useState(true);
-  const [cat, setCat] = useState(false);
-  const [opt, setOption] = useState(0);
+  const [optAcion, setAcion] = useState(0);
+  const [optSize, setSize] = useState(0);
+  const [description, setDescription] = useState("");
+  const [state, dispatch] = useReducer(petReducer, initalPet);
 
-  function changeSex() {
-    console.log("macho" + male + " / hembra" + female);
-    setFemale(!female);
-    setMale(!male);
+  console.log("state", state.pet);
+
+  function changeValue(value: string, field: string) {
+    console.log("value", value);
+    console.log("field", field);
+
+    switch (field) {
+      case "sex":
+        console.log("prueba", value === "optOne" ? "FEMALE" : "MALE");
+        dispatch({
+          type: ACTION.CHANGE_INPUT,
+          payload: {
+            field: field,
+            value: value === "optOne" ? "FEMALE" : "MALE",
+          },
+        });
+        break;
+      case "type":
+        dispatch({
+          type: ACTION.CHANGE_INPUT,
+          payload: {
+            field: field,
+            value: value === "optOne" ? "DOG" : "CAT",
+          },
+        });
+        break;
+      case "action":
+        setAcion(parseInt(value));
+        dispatch({
+          type: ACTION.CHANGE_INPUT,
+          payload: {
+            field: field,
+            value: ACCTIONS[parseInt(value)],
+          },
+        });
+        break;
+      case "size":
+        setSize(parseInt(value));
+        dispatch({
+          type: ACTION.CHANGE_INPUT,
+          payload: {
+            field: field,
+            value: SIZE[parseInt(value)],
+          },
+        });
+        break;
+      default:
+        if (field === "description") setDescription(value);
+        dispatch({
+          type: ACTION.CHANGE_INPUT,
+          payload: {
+            field: field,
+            value: value,
+          },
+        });
+        break;
+    }
   }
 
-  function changeName(text: string) {
-    setName(text);
-  }
-
-  function changeAge(text: string) {
-    setAge(text);
-  }
-
-  function changeType() {
-    console.log("perro " + dog + " / cat " + cat);
-
-    setDog(!dog);
-    setCat(!cat);
+  async function savePet() {
+    try {
+      await savePetAsync(state.pet);
+    } catch {}
   }
 
   function changeNoName() {
     setNoName(!noName);
-    if (!noName) setName("");
-  }
-
-  function chageAccion(opt: number) {
-    setOption(opt);
-    setAction(ACCTIONS[opt]);
-    console.log(opt + " chagevalue");
-    console.log(acction + " accion");
+    if (!noName) changeValue("", "name");
   }
 
   return (
@@ -64,94 +108,101 @@ export default function ManagementPet() {
             <IconSymbol size={30} name="arrow-back" color="white" />
           </Link>
         }
-      ></HeaderCustom>
-      <View style={styles.containerAcction}>
-        <PanelButtons
-          changeOption={(t) => chageAccion(t)}
-          option={opt}
-          labels={LABELS_ACCTION}
-        />
-      </View>
-      <View style={styles.row}>
-        <View style={{ width: "65%" }}>
-          <TextInputCustom
-            options={{
-              value: name,
-              onChangeText: (t) => changeName(t),
-              placeholder: noName ? "No tiene" : "Nombre",
-            }}
-            editable={!noName}
-          />
-        </View>
-
-        <CheckBox label="No tiene" active={noName} onPress={changeNoName} />
-      </View>
-
-      <View style={[styles.row, { gap: 40 }]}>
-        <TitleCustom title="Mascota">
-          <View style={[styles.row, { gap: 10 }]}>
-            <CheckBox active={dog} onPress={changeType}>
-              <IconSymbol size={25} name="dog" color="black" />
-            </CheckBox>
-            <View>
-              <CheckBox active={cat} onPress={changeType}>
-                <IconSymbol size={25} name="cat" color="black" />
-              </CheckBox>
-            </View>
+      />
+      <View style={styles.container}>
+        <InputImage image={state.pet.image} changeImage={changeValue} />
+        <ScrollView>
+          {/** PASAR A INPUTNAME */}
+          <View style={styles.row}>
+            <InputName
+              name={state.pet.name}
+              noName={noName}
+              changeName={changeValue}
+              changeNoName={changeNoName}
+            />
           </View>
-        </TitleCustom>
-
-        <TitleCustom title="Sexo">
-          <View style={[styles.row, {gap: 10 }]}>
-            <CheckBox active={female} onPress={changeSex}>
-              <IconSymbol size={25} name="female" color="black" />
-            </CheckBox>
-            <View>
-              <CheckBox active={male} onPress={changeSex}>
-                <IconSymbol size={25} name="male" color="black" />
-              </CheckBox>
-            </View>
-          </View>
-        </TitleCustom>
-      </View>
-
-      <View style={[styles.row, { gap: 10 }]}>
-        <View>
-      <TitleCustom title="Edad">
-      <View style={[{ paddingHorizontal: 10 }]}>
-      
-          <View style= {[styles.row, {gap: 3}]} >
-            
-          <Button label="Meses"></Button>
-          <Button label="Años"></Button>
-          </View>
-          <TextInputCustom
-            options={{
-              value: age,
-              onChangeText: (t) => changeAge(t),
-              placeholder: "Edad",
-              keyboardType: "numeric",
-            }}
-          />
-        </View>
-        </TitleCustom>
-        </View>
-        
-        <View >
-        <TitleCustom title="Tamaño">
-          <View>
+          <View style={styles.containerAcction}>
             <PanelButtons
-              changeOption={(t) => chageAccion(t)}
-              option={opt}
-              children={[
-                <IconSymbol key={"opt0"} size={20} name="paw" color="black" />,
-                <IconSymbol key={"opt1"} size={25} name="paw" color="black" />,
-                <IconSymbol key={"opt2"} size={29} name="paw" color="black" />,
+              changeOption={(t) => changeValue(t.toString(), "action")}
+              option={optAcion}
+              labels={LABELS_ACCTION}
+            />
+          </View>
+
+          {/** PASAR A INPUTTYPE */}
+          <View style={[styles.row, { gap: 50 }]}>
+            <InputOption
+              title="Mascota"
+              optOne={state.pet.type === "DOG"}
+              optTwo={state.pet.type === "CAT"}
+              changeOption={(opt) => {
+                changeValue(opt, "type");
+              }}
+              icon={[
+                <IconSymbol
+                  size={25}
+                  name={"dog"}
+                  color={state.pet.type === "DOG" ? "#4B4B4B" : "#A5A5A5"}
+                />,
+                <IconSymbol
+                  size={25}
+                  name={"cat"}
+                  color={state.pet.type === "CAT" ? "#4B4B4B" : "#A5A5A5"}
+                />,
+              ]}
+            />
+
+            {/** PASAR A INPUTSEX */}
+            <InputOption
+              title="Sexo"
+              optOne={state.pet.sex === "FEMALE"}
+              optTwo={state.pet.sex === "MALE"}
+              changeOption={(opt) => {
+                changeValue(opt, "sex");
+              }}
+              icon={[
+                <IconSymbol
+                  size={25}
+                  name={"female"}
+                  color={state.pet.sex === "FEMALE" ? "#4B4B4B" : "#A5A5A5"}
+                />,
+                <IconSymbol
+                  size={25}
+                  name={"male"}
+                  color={state.pet.sex === "MALE" ? "#4B4B4B" : "#A5A5A5"}
+                />,
               ]}
             />
           </View>
-        </TitleCustom>
-        </View>
+
+          {/** PASAR A INPUTAGE */}
+          <View style={[styles.row, { gap: 5 }]}>
+            <InputAge
+              age={state.pet.age}
+              type={state.pet.ageType}
+              changeAge={changeValue}
+              changeAgeType={changeValue}
+            />
+            {/** PASAR A INPUTSIZE */}
+            <InputSize option={optSize} chageOption={changeValue} />
+          </View>
+          <View style={{ marginTop: 16 }}>
+            <TextInputCustom
+              label={"Descripción (" + (200 - description.length) + ")"}
+              options={{
+                numberOfLines: 4,
+                maxLength: 200,
+                value: state.pet.description,
+                onChangeText: (t) => changeValue(t, "description"),
+                placeholder: PLACEHOLDER_DESCRIPTION[optAcion],
+              }}
+              multiline={true}
+            />
+          </View>
+          <View style={{ marginBottom: 16 }}>
+            <Button label="Crear" onPress={savePet} />
+          </View>
+        </ScrollView>
       </View>
     </ParallaxScrollView>
   );
@@ -160,9 +211,14 @@ export default function ManagementPet() {
 const styles = StyleSheet.create({
   containerAcction: {
     alignItems: "center",
+    marginTop: 16,
   },
   row: {
     flexDirection: "row",
     marginHorizontal: "auto",
+    marginTop: 16,
+  },
+  container: {
+    flex: 1,
   },
 });

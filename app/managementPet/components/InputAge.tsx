@@ -1,0 +1,112 @@
+import { Pressable, View, Text, StyleSheet } from "react-native";
+import TextInputCustom from "@/components/ui/TextInputCustom";
+import TitleCustom from "@/components/ui/TitleCustom";
+import React from "react";
+
+type Props = {
+  age: string;
+  type: string;
+  changeAge: (text: string, field: string) => void;
+  changeAgeType: (text: string, field: string) => void;
+};
+
+export default function InputAge({
+  age,
+  type,
+  changeAge,
+  changeAgeType,
+}: Props) {
+  return (
+    <>
+      <TitleCustom title="Edad">
+        <View style={{ width: "60%", marginHorizontal: "auto" }}>
+          <TextInputCustom
+            options={{
+              value: age,
+              onChangeText: (t) => changeAge(t, "age"),
+              placeholder: "Edad",
+              keyboardType: "numeric",
+            }}
+          />
+        </View>
+        <View style={[styles.row, { gap: 15 }]}>
+          <View style={styles.box}>
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? "#DCAD5F" : "#ffb13d",
+                },
+                styles.button,
+                styles.year,
+                type === "YEAR" ? styles.active : styles.default,
+              ]}
+              onPress={() => changeAgeType("YEAR", "ageType")}
+            >
+              <Text style={type === "YEAR" ? styles.labelActive : styles.label}>
+                Años
+              </Text>
+            </Pressable>
+          </View>
+          <View style={styles.box}>
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? "#DCAD5F" : "#ffb13d",
+                },
+                styles.button,
+                type === "MONTH" ? styles.active : styles.default,
+              ]}
+              onPress={() => changeAgeType("MONTH", "ageType")}
+            >
+              <Text
+                style={type === "MONTH" ? styles.labelActive : styles.label}
+              >
+                Meses
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </TitleCustom>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "center",
+  },
+  label: {
+    textAlign: "center",
+    color: "#A5A5A5",
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  year: {
+    paddingHorizontal: 10,
+  },
+  labelActive: {
+    color: "#4B4B4B",
+    fontSize: 17,
+    fontWeight: "bold",
+  },
+  button: {
+    borderRadius: 5,
+    borderColor: "white",
+    borderWidth: 2,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+  },
+  active: {
+    backgroundColor: "#ffb13d",
+  },
+  default: {
+    backgroundColor: "white",
+  },
+  box: {
+    borderColor: "#ffb13d",
+    borderWidth: 3,
+    borderRadius: 5,
+  },
+});
