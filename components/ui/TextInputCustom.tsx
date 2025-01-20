@@ -7,6 +7,7 @@ import {
   TextInputProps,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   options: TextInputProps;
@@ -40,26 +41,26 @@ export default TextInputCustom;
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 12,
+    marginHorizontal: scale(12),
   },
   default: {
     borderWidth: 1,
     backgroundColor: "white",
     borderRadius: 10,
     borderColor: "#A5A5A5",
-    paddingStart: 10,
+    paddingStart: scale(10),
     textAlignVertical: "top",
   },
   input: {
-    height:40
+    height: scale(35),
   },
   box: {
-    height: 85
+    height: scale(80),
   },
   label: {
     textAlign: "left",
     color: "white",
     fontWeight: "bold",
-    marginBottom: 5
+    marginBottom: scale(5),
   },
 });

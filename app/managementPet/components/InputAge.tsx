@@ -2,6 +2,7 @@ import { Pressable, View, Text, StyleSheet } from "react-native";
 import TextInputCustom from "@/components/ui/TextInputCustom";
 import TitleCustom from "@/components/ui/TitleCustom";
 import React from "react";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   age: string;
@@ -19,7 +20,7 @@ export default function InputAge({
   return (
     <>
       <TitleCustom title="Edad">
-        <View style={{ width: "60%", marginHorizontal: "auto" }}>
+        <View style={{ width: scale(70), marginHorizontal: "auto" }}>
           <TextInputCustom
             options={{
               value: age,
@@ -29,7 +30,7 @@ export default function InputAge({
             }}
           />
         </View>
-        <View style={[styles.row, { gap: 15 }]}>
+        <View style={[styles.row, { gap: scale(10) }]}>
           <View style={styles.box}>
             <Pressable
               style={({ pressed }) => [
@@ -74,29 +75,29 @@ export default function InputAge({
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    marginTop: 10,
+    marginTop: scale(10),
     justifyContent: "center",
   },
   label: {
     textAlign: "center",
     color: "#A5A5A5",
-    fontSize: 17,
+    fontSize: scale(17),
     fontWeight: "bold",
   },
   year: {
-    paddingHorizontal: 10,
+    paddingHorizontal: scale(10),
   },
   labelActive: {
     color: "#4B4B4B",
-    fontSize: 17,
+    fontSize: scale(17),
     fontWeight: "bold",
   },
   button: {
     borderRadius: 5,
     borderColor: "white",
     borderWidth: 2,
-    paddingHorizontal: 5,
-    paddingVertical: 3,
+    paddingHorizontal: scale(4),
+    paddingVertical: scale(2),
   },
   active: {
     backgroundColor: "#ffb13d",

@@ -3,6 +3,7 @@ import TitleCustom from "@/components/ui/TitleCustom";
 import CheckBox from "@/components/ui/CheckBox";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import React from "react";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   title: string;
@@ -22,7 +23,7 @@ export default function InputOption({
   return (
     <>
       <TitleCustom title={title}>
-        <View style={[styles.row, { gap: 10 }]}>
+        <View style={[styles.row, { gap: scale(10) }]}>
           <CheckBox active={optOne} onPress={() => changeOption("optOne")}>
             {icon[0]}
           </CheckBox>

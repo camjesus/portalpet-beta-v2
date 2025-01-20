@@ -4,6 +4,7 @@ import React from "react";
 import { Alert, Image, View } from "react-native";
 import { StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   image: string;
@@ -12,8 +13,9 @@ type Props = {
 
 export default function InputImage({ image, changeImage }: Props) {
   const [permissions, requestPermission] = ImagePicker.useCameraPermissions();
-  const default_image = "https://reactnative.dev/img/tiny_logo.png";
+  const default_image = "./default.png";
 
+  console.log("image" + image);
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -30,12 +32,14 @@ export default function InputImage({ image, changeImage }: Props) {
 
   return (
     <>
-      <Image
-        style={styles.image}
-        source={{
-          uri: image ? image : default_image,
-        }}
-      />
+      <View style={styles.imageRow}>
+        <Image
+          style={styles.image}
+          source={
+            image === default_image ? require(default_image) : { uri: image }
+          }
+        />
+      </View>
       <View style={styles.viewRowIcon}>
         <Button
           circle={true}
@@ -64,9 +68,13 @@ export default function InputImage({ image, changeImage }: Props) {
 }
 
 const styles = StyleSheet.create({
+  imageRow: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
   image: {
-    width: "100%",
-    height: "30%",
+    width: scale(340),
+    height: scale(280),
     marginHorizontal: 10,
     borderRadius: 10,
     marginTop: 10,
@@ -75,9 +83,8 @@ const styles = StyleSheet.create({
   viewRowIcon: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: -40,
-    paddingTop: 0,
-    marginHorizontal: "25%",
-    marginBottom: 5,
+    marginTop: scale(-40),
+    marginHorizontal: scale(70),
+    marginBottom: scale(5),
   },
 });

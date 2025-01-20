@@ -1,5 +1,6 @@
 import { Pressable, View, Text } from "react-native";
 import { StyleSheet } from "react-native";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   title: string;
@@ -31,8 +32,8 @@ export default function HeaderCustom({
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 15,
-    paddingTop: 30,
+    paddingBottom: scale(15),
+    paddingTop: scale(25),
     alignItems: "center",
     backgroundColor: "#ffb13d",
     borderBottomLeftRadius: 25,
@@ -44,26 +45,26 @@ const styles = StyleSheet.create({
     borderColor: "#ffd33d",
     borderRadius: 15,
     flexDirection: "row",
-    padding: 10,
+    padding: scale(10),
   },
   title: {
+    fontSize: scale(30),
     textAlign: "center",
     color: "#FFFFFF",
-    fontSize: 26,
-    marginTop: 20,
+    marginTop: scale(15),
     padding: 0,
     flex: 5,
     marginBottom: 0,
     textTransform: "capitalize",
   },
   buttonLeft: {
-    width: 30,
-    marginStart: 30,
-    marginTop: 20,
+    width: scale(30),
+    marginStart: scale(30),
+    marginTop: scale(20),
   },
   buttonRight: {
-    width: 30,
-    marginEnd: 30,
-    marginTop: 20,
+    width: scale(30),
+    marginEnd: scale(30),
+    marginTop: scale(20),
   },
 });

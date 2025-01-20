@@ -4,6 +4,7 @@ import TitleCustom from "@/components/ui/TitleCustom";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { LABEL_SIZE } from "@/constants/StaticData";
 import React from "react";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   option: number;
@@ -49,12 +50,13 @@ export default function InputSize({ option, chageOption }: Props) {
 const styles = StyleSheet.create({
   text: {
     textAlign: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 2,
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(2),
     backgroundColor: "#ffb13d",
     marginHorizontal: "auto",
-    marginTop: 5,
+    marginTop: scale(7),
     borderRadius: 2,
     color: "white",
+    fontWeight: "bold",
   },
 });

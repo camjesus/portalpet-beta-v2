@@ -23,7 +23,7 @@ export const initalPet: State = {
 		age: '',
 		ageType: 'YEAR',
 		description: '',
-		image: "https://reactnative.dev/img/tiny_logo.png",
+		image: "./default.png",
 		action: 'ADOPTION',
 		dateStart: new Date(0,0,0),
 		dateStart_string: "",

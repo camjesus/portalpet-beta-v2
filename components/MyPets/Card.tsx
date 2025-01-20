@@ -2,6 +2,7 @@ import { View, StyleSheet, Image, Text, Dimensions } from "react-native";
 import React, { act, useEffect, useState } from "react";
 import { loadPet } from "@/hooks/useLoadPet";
 import { Pet } from "@/models/Pet";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   pet: Pet;
@@ -16,14 +17,11 @@ export default function Card({ pet }: Props) {
     setData({ name: name, action: action, color: color });
   }, []);
 
-  const { width } = Dimensions.get("window");
-
   return (
-    <View style={[styles.card, { borderColor: data.color }]}>
-      <Image
-        source={{ uri: pet.image }}
-        style={[styles.image, { width: width * 0.4 }]}
-      />
+    <View
+      style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}
+    >
+      <Image source={{ uri: pet.image }} style={[styles.image]} />
       <Text style={styles.textName}>{data.name}</Text>
       <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>
         {data.action}
@@ -34,33 +32,38 @@ export default function Card({ pet }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    margin: 10,
-    padding: 10,
     borderRadius: 10,
-    borderWidth: 3,
-    justifyContent: "center",
+    borderWidth: scale(3),
+    width: scale(150),
+    height: scale(280),
+    alignItems: "center",
+    alignContent: "center",
+    marginRight: scale(10),
+    marginBottom: scale(15),
   },
   image: {
-    height: 150,
-    borderRadius: 10,
-    marginBottom: 8,
-    aspectRatio: 1,
+    width: scale(145),
+    height: scale(200),
+    borderTopEndRadius: 8,
+    borderStartStartRadius: 8,
+    marginBottom: scale(8),
   },
   textName: {
     color: "white",
-    fontWeight: "bold",
     textAlign: "center",
-    fontSize: 20,
-    marginBottom: 10,
+    fontSize: scale(15),
+    marginHorizontal: scale(10),
   },
   labelAcction: {
-    marginTop: 5,
-    padding: 5,
-    paddingHorizontal: 10,
+    marginTop: scale(3),
+    padding: scale(5),
+    paddingHorizontal: scale(10),
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 15,
-    borderRadius: 15,
+    fontSize: scale(12),
+    borderRadius: 5,
+    bottom: scale(8),
+    position: "absolute",
   },
 });

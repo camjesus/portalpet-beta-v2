@@ -1,5 +1,6 @@
 import { Pressable, View, Text } from "react-native";
 import { StyleSheet } from "react-native";
+import { scale } from "react-native-size-matters";
 
 type Props = {
   label?: string;
@@ -9,31 +10,31 @@ type Props = {
 };
 
 export default function CheckBox({ label, active, onPress, children }: Props) {
-    return (
-      <View style={styles.containerRow}>
-        <View
-          style={{
-            borderColor: "#ffb13d",
-            borderWidth: 3,
-            borderRadius: 50,
-          }}
+  return (
+    <View style={styles.containerRow}>
+      <View
+        style={{
+          borderColor: "#ffb13d",
+          borderWidth: 3,
+          borderRadius: 50,
+        }}
+      >
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#DCAD5F" : "white",
+            },
+            styles.box,
+            active && styles.active,
+          ]}
+          onPress={() => onPress(!active)}
         >
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#DCAD5F" : "white",
-              },
-              styles.box,
-              active && styles.active,
-            ]}
-            onPress={() => onPress(!active)}
-          >
-            {children}
-          </Pressable>
-        </View>
-        {label && <Text style={styles.label}>{label}</Text>}
+          {children}
+        </Pressable>
       </View>
-    );
+      {label && <Text style={styles.label}>{label}</Text>}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -42,16 +43,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   box: {
-    borderWidth: 3,
+    borderWidth: scale(3),
     borderColor: "white",
-    padding: 8,
+    padding: scale(8),
     borderRadius: 30,
   },
   active: {
     backgroundColor: "#ffb13d",
   },
   label: {
-    marginStart: 10,
+    marginStart: scale(10),
     textAlign: "center",
     color: "white",
     fontWeight: "bold",

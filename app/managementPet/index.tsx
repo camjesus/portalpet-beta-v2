@@ -21,6 +21,7 @@ import { petReducer, initalPet, ACTION } from "@/hooks/usePetReducer";
 import { ScrollView } from "react-native-gesture-handler";
 import InputImage from "./components/InputImage";
 import { savePetAsync } from "@/service/useDataBase";
+import { scale } from "react-native-size-matters";
 
 export default function ManagementPet() {
   const [noName, setNoName] = useState(false);
@@ -130,7 +131,7 @@ export default function ManagementPet() {
           </View>
 
           {/** PASAR A INPUTTYPE */}
-          <View style={[styles.row, { gap: 50 }]}>
+          <View style={[styles.row, { gap: scale(50) }]}>
             <InputOption
               title="Mascota"
               optOne={state.pet.type === "DOG"}
@@ -176,7 +177,7 @@ export default function ManagementPet() {
           </View>
 
           {/** PASAR A INPUTAGE */}
-          <View style={[styles.row, { gap: 5 }]}>
+          <View style={[styles.row, { gap: scale(5) }]}>
             <InputAge
               age={state.pet.age}
               type={state.pet.ageType}
@@ -186,7 +187,8 @@ export default function ManagementPet() {
             {/** PASAR A INPUTSIZE */}
             <InputSize option={optSize} chageOption={changeValue} />
           </View>
-          <View style={{ marginTop: 16 }}>
+
+          <View style={{ marginTop: scale(16) }}>
             <TextInputCustom
               label={"Descripción (" + (200 - description.length) + ")"}
               options={{
@@ -199,7 +201,7 @@ export default function ManagementPet() {
               multiline={true}
             />
           </View>
-          <View style={{ marginBottom: 16 }}>
+          <View style={{ marginBottom: scale(16) }}>
             <Button label="Crear" onPress={savePet} />
           </View>
         </ScrollView>
@@ -211,12 +213,12 @@ export default function ManagementPet() {
 const styles = StyleSheet.create({
   containerAcction: {
     alignItems: "center",
-    marginTop: 16,
+    marginTop: scale(16),
   },
   row: {
     flexDirection: "row",
     marginHorizontal: "auto",
-    marginTop: 16,
+    marginTop: scale(16),
   },
   container: {
     flex: 1,

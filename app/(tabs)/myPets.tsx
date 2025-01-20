@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { Link } from "expo-router";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import HeaderCustom from "@/components/ui/HeaderCustom";
@@ -9,11 +9,16 @@ import { useEffect, useState } from "react";
 import { Pet } from "@/models/Pet";
 import Card from "@/components/MyPets/Card";
 import { FlatList } from "react-native-gesture-handler";
+import { scale } from "react-native-size-matters";
 
 interface PetId {
   docId: string;
   pet: Pet;
 }
+
+const { width } = Dimensions.get("window");
+const cardWidth = (width - 20) / 2;
+
 export default function MyPets() {
   const [myPets, setMyPets] = useState<PetId[]>([]);
 
@@ -30,17 +35,16 @@ export default function MyPets() {
   return (
     <View style={{ height: "100%" }}>
       <ParallaxScrollView>
-        <HeaderCustom title="Mis Mascotas"></HeaderCustom>
+        <HeaderCustom title="Mis mascotas"></HeaderCustom>
         {myPets && (
-          <View style={styles.row}>
-            <FlatList
-              data={myPets}
-              renderItem={({ item }) => <Card pet={item.pet} />}
-              keyExtractor={(item) => item.docId}
-              showsHorizontalScrollIndicator={true}
-              numColumns={2}
-            />
-          </View>
+          <FlatList
+            data={myPets}
+            renderItem={({ item }) => <Card pet={item.pet} />}
+            keyExtractor={(item) => item.docId}
+            showsHorizontalScrollIndicator={true}
+            numColumns={2}
+            contentContainerStyle={styles.flatList}
+          />
         )}
       </ParallaxScrollView>
 
@@ -56,16 +60,17 @@ export default function MyPets() {
 }
 
 const styles = StyleSheet.create({
+  flatList: {
+    marginHorizontal: scale(20),
+    justifyContent: "center",
+    alignContent: "center",
+
+    marginTop: scale(15),
+  },
   float: {
     margin: 16,
     right: 0,
     bottom: 0,
     position: "absolute",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 10,
-    marginTop: 16,
   },
 });
