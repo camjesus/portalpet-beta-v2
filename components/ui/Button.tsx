@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     padding: scale(10),
     bottom: 0,
     position: "relative",
+    alignItems: "center",
   },
   default: {
     borderRadius: 10,

@@ -20,7 +20,8 @@ const MAPPING = {
   'cat': 'cat',
   'dog': 'dog',
   'add-image':'camera-plus',
-  'add-location': 'map-marker-plus'
+  'add-location': 'map-marker-plus',
+  'clipboard': 'clipboard-text'
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

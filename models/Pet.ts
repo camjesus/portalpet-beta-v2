@@ -9,19 +9,23 @@ export type Pet = {
 	description: string;
 	image: string;
 	action: string; //ADOPTION - WANTED - FOUND
-	dateStart: Date;
-	dateStart_string: string;
+	dateStart: Date | null;
+	dateStart_string: string| null;
 	active: boolean;
-	latitud: string;
-	longitud: string;
-	idAdopter: string;
-	rescuerId: string;
+	latitud: string| null;
+	longitud: string| null;
+	idAdopter: string| null;
+	rescuerId: string| null;
 	rescuer: {
 		lastName: string;
 		name: string;
 		uid: string;
-	}
+	} | null;
+	createDate: Date;
 	//ubication: undefined; // N/A
 };
 
-
+export interface PetId {
+	docId: string;
+	pet: Pet;
+  }

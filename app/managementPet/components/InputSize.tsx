@@ -1,23 +1,32 @@
 import { View, Text, StyleSheet } from "react-native";
-import PanelButtons from "./PanelButtons";
+import PanelButtons from "../../../components/ui/PanelButtons";
 import TitleCustom from "@/components/ui/TitleCustom";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import { LABEL_SIZE } from "@/constants/StaticData";
+import { LABEL_SIZE, SIZE } from "@/constants/StaticData";
 import React from "react";
 import { scale } from "react-native-size-matters";
 
 type Props = {
   option: number;
-  chageOption: (opt: string, field: string) => void;
+  changeValue: React.Dispatch<React.SetStateAction<number>>;
+  changeOption: (opt: string, field: string) => void;
 };
 
-export default function InputSize({ option, chageOption }: Props) {
+export default function InputSize({
+  option,
+  changeOption,
+  changeValue,
+}: Props) {
+  function changeSize(opt: number) {
+    changeValue(opt);
+    return SIZE[opt];
+  }
   return (
     <>
       <TitleCustom title="Tamaño">
         <View>
           <PanelButtons
-            changeOption={(t) => chageOption(t.toString(), "size")}
+            changeOption={(t) => changeOption(changeSize(t), "size")}
             option={option}
             children={[
               <IconSymbol
@@ -28,13 +37,13 @@ export default function InputSize({ option, chageOption }: Props) {
               />,
               <IconSymbol
                 key={"opt1"}
-                size={24}
+                size={23}
                 name="paw"
                 color={option === 1 ? "#4B4B4B" : "#A5A5A5"}
               />,
               <IconSymbol
                 key={"opt2"}
-                size={28}
+                size={26}
                 name="paw"
                 color={option === 2 ? "#4B4B4B" : "#A5A5A5"}
               />,

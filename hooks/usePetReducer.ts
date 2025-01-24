@@ -5,7 +5,7 @@ interface Action {
 
 	payload: {
 		field: string;
-		value: string;
+		value: any;
 	} 
 } 
 
@@ -13,7 +13,7 @@ interface State {
 	pet: Pet;
 }
 
-export const initalPet: State = {
+export const initalPet: State = {	
 	pet: {
 		id: "",
 		name: '',
@@ -25,18 +25,15 @@ export const initalPet: State = {
 		description: '',
 		image: "./default.png",
 		action: 'ADOPTION',
-		dateStart: new Date(0,0,0),
-		dateStart_string: "",
+		dateStart: null,
+		dateStart_string: null,
 		active: true,
-		latitud: "",
-		longitud:"",
+		latitud: null,
+		longitud:null,
 		idAdopter: "",
-		rescuerId: "4dede6e5-504c-4f46-8339-9d6280a693b0",
-		rescuer: {
-			lastName: "Palermo",
-			name: "Martin",
-			uid: "4dede6e5-504c-4f46-8339-9d6280a693b0",
-		}
+		rescuerId: null,
+		rescuer: null,
+		createDate: new Date()
 		//ubication: undefined
 	}
 };
@@ -44,16 +41,18 @@ export const initalPet: State = {
 export const ACTION = {
 	CHANGE_INPUT: 'changeInput',
 };
+
 export const petReducer = (state: State, action: Action) => {
 	switch (action.type) {
 		case ACTION.CHANGE_INPUT:
-			const updatePet = {
+				const updatePet = {
 				...state.pet,
 				[action.payload.field]: action.payload.value
 			} ;
 				return { pet: updatePet };
 
 		default:
-			throw Error('error');
+			throw Error('error en petReducer');
 	}
 };
+

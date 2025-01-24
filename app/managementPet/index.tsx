@@ -1,98 +1,65 @@
 import { StyleSheet, View } from "react-native";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import HeaderCustom from "@/components/ui/HeaderCustom";
-import { Link } from "expo-router";
+import { Link, useRouter, useLocalSearchParams } from "expo-router";
+import { useState, useReducer, useEffect } from "react";
+import { ScrollView } from "react-native-gesture-handler";
+import { scale } from "react-native-size-matters";
+import { User } from "@/models/User";
+import { petReducer, initalPet, ACTION } from "@/hooks/usePetReducer";
+import { savePetAsync } from "@/service/useDataBase";
+//components
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import PanelButtons from "@/app/managementPet/components/PanelButtons";
-import { useState, useReducer } from "react";
-import TextInputCustom from "@/components/ui/TextInputCustom";
-import {
-  LABELS_ACCTION,
-  ACCTIONS,
-  PLACEHOLDER_DESCRIPTION,
-  SIZE,
-} from "@/constants/StaticData";
+import HeaderCustom from "@/components/ui/HeaderCustom";
 import InputName from "./components/InputName";
-import InputOption from "./components/InputOption";
 import InputSize from "./components/InputSize";
 import InputAge from "./components/InputAge";
 import Button from "@/components/ui/Button";
-import { petReducer, initalPet, ACTION } from "@/hooks/usePetReducer";
-import { ScrollView } from "react-native-gesture-handler";
 import InputImage from "./components/InputImage";
-import { savePetAsync } from "@/service/useDataBase";
-import { scale } from "react-native-size-matters";
+import Toast from "@/components/ui/Toast";
+import InputType from "./components/InputType";
+import InputSex from "./components/InputSex";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import InputAction from "./components/InputAction";
+import InputDescription from "./components/InputDescription";
 
 export default function ManagementPet() {
   const [noName, setNoName] = useState(false);
   const [optAcion, setAcion] = useState(0);
   const [optSize, setSize] = useState(0);
-  const [description, setDescription] = useState("");
   const [state, dispatch] = useReducer(petReducer, initalPet);
+  const [toast, setToast] = useState(false);
+  const router = useRouter();
+  const [user, setUser] = useState<User>();
+  const { uid, name, lastname } = useLocalSearchParams<{
+    uid: string;
+    name: string;
+    lastname: string;
+  }>();
 
-  console.log("state", state.pet);
+  useEffect(() => {
+    console.log("user my pets", uid, name, lastname);
+    if (uid !== undefined) {
+      setUser({ uid: uid, name: name, lastname: lastname });
+    }
+  }, []);
 
   function changeValue(value: string, field: string) {
-    console.log("value", value);
-    console.log("field", field);
-
-    switch (field) {
-      case "sex":
-        console.log("prueba", value === "optOne" ? "FEMALE" : "MALE");
-        dispatch({
-          type: ACTION.CHANGE_INPUT,
-          payload: {
-            field: field,
-            value: value === "optOne" ? "FEMALE" : "MALE",
-          },
-        });
-        break;
-      case "type":
-        dispatch({
-          type: ACTION.CHANGE_INPUT,
-          payload: {
-            field: field,
-            value: value === "optOne" ? "DOG" : "CAT",
-          },
-        });
-        break;
-      case "action":
-        setAcion(parseInt(value));
-        dispatch({
-          type: ACTION.CHANGE_INPUT,
-          payload: {
-            field: field,
-            value: ACCTIONS[parseInt(value)],
-          },
-        });
-        break;
-      case "size":
-        setSize(parseInt(value));
-        dispatch({
-          type: ACTION.CHANGE_INPUT,
-          payload: {
-            field: field,
-            value: SIZE[parseInt(value)],
-          },
-        });
-        break;
-      default:
-        if (field === "description") setDescription(value);
-        dispatch({
-          type: ACTION.CHANGE_INPUT,
-          payload: {
-            field: field,
-            value: value,
-          },
-        });
-        break;
-    }
+    dispatch({
+      type: ACTION.CHANGE_INPUT,
+      payload: {
+        field: field,
+        value: value,
+      },
+    });
   }
 
   async function savePet() {
+    setToast(true);
     try {
-      await savePetAsync(state.pet);
-    } catch {}
+      await savePetAsync(state.pet, user);
+    } catch {
+      throw Error("error en savePetAsync");
+    }
+    router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
   }
 
   function changeNoName() {
@@ -113,7 +80,6 @@ export default function ManagementPet() {
       <View style={styles.container}>
         <InputImage image={state.pet.image} changeImage={changeValue} />
         <ScrollView>
-          {/** PASAR A INPUTNAME */}
           <View style={styles.row}>
             <InputName
               name={state.pet.name}
@@ -122,61 +88,17 @@ export default function ManagementPet() {
               changeNoName={changeNoName}
             />
           </View>
-          <View style={styles.containerAcction}>
-            <PanelButtons
-              changeOption={(t) => changeValue(t.toString(), "action")}
+          <View style={styles.containerCenter}>
+            <InputAction
               option={optAcion}
-              labels={LABELS_ACCTION}
+              changeValue={setAcion}
+              changeOption={changeValue}
             />
           </View>
-
-          {/** PASAR A INPUTTYPE */}
           <View style={[styles.row, { gap: scale(50) }]}>
-            <InputOption
-              title="Mascota"
-              optOne={state.pet.type === "DOG"}
-              optTwo={state.pet.type === "CAT"}
-              changeOption={(opt) => {
-                changeValue(opt, "type");
-              }}
-              icon={[
-                <IconSymbol
-                  size={25}
-                  name={"dog"}
-                  color={state.pet.type === "DOG" ? "#4B4B4B" : "#A5A5A5"}
-                />,
-                <IconSymbol
-                  size={25}
-                  name={"cat"}
-                  color={state.pet.type === "CAT" ? "#4B4B4B" : "#A5A5A5"}
-                />,
-              ]}
-            />
-
-            {/** PASAR A INPUTSEX */}
-            <InputOption
-              title="Sexo"
-              optOne={state.pet.sex === "FEMALE"}
-              optTwo={state.pet.sex === "MALE"}
-              changeOption={(opt) => {
-                changeValue(opt, "sex");
-              }}
-              icon={[
-                <IconSymbol
-                  size={25}
-                  name={"female"}
-                  color={state.pet.sex === "FEMALE" ? "#4B4B4B" : "#A5A5A5"}
-                />,
-                <IconSymbol
-                  size={25}
-                  name={"male"}
-                  color={state.pet.sex === "MALE" ? "#4B4B4B" : "#A5A5A5"}
-                />,
-              ]}
-            />
+            <InputType type={state.pet.type} changeValue={changeValue} />
+            <InputSex sex={state.pet.sex} changeValue={changeValue} />
           </View>
-
-          {/** PASAR A INPUTAGE */}
           <View style={[styles.row, { gap: scale(5) }]}>
             <InputAge
               age={state.pet.age}
@@ -184,34 +106,40 @@ export default function ManagementPet() {
               changeAge={changeValue}
               changeAgeType={changeValue}
             />
-            {/** PASAR A INPUTSIZE */}
-            <InputSize option={optSize} chageOption={changeValue} />
+            <InputSize
+              option={optSize}
+              changeValue={setSize}
+              changeOption={changeValue}
+            />
           </View>
 
           <View style={{ marginTop: scale(16) }}>
-            <TextInputCustom
-              label={"Descripción (" + (200 - description.length) + ")"}
-              options={{
-                numberOfLines: 4,
-                maxLength: 200,
-                value: state.pet.description,
-                onChangeText: (t) => changeValue(t, "description"),
-                placeholder: PLACEHOLDER_DESCRIPTION[optAcion],
-              }}
-              multiline={true}
+            <InputDescription
+              optAcion={optAcion}
+              description={state.pet.description}
+              changeValue={changeValue}
             />
           </View>
-          <View style={{ marginBottom: scale(16) }}>
+          <View style={styles.submit}>
             <Button label="Crear" onPress={savePet} />
           </View>
         </ScrollView>
+      </View>
+      <View style={styles.containerCenter}>
+        {toast && (
+          <Toast
+            title="Eureka!"
+            message="La mascota se ha creado con éxito!"
+            setToast={setToast}
+          />
+        )}
       </View>
     </ParallaxScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  containerAcction: {
+  containerCenter: {
     alignItems: "center",
     marginTop: scale(16),
   },
@@ -222,5 +150,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  submit: {
+    marginBottom: scale(16),
   },
 });

@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
   image: {
     width: scale(340),
     height: scale(280),
-    marginHorizontal: 10,
+    marginHorizontal: scale(10),
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: scale(10),
     resizeMode: "center",
   },
   viewRowIcon: {

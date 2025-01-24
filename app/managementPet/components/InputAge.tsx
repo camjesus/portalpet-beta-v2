@@ -3,6 +3,7 @@ import TextInputCustom from "@/components/ui/TextInputCustom";
 import TitleCustom from "@/components/ui/TitleCustom";
 import React from "react";
 import { scale } from "react-native-size-matters";
+import { Age } from "@/models/Enums";
 
 type Props = {
   age: string;
@@ -39,11 +40,13 @@ export default function InputAge({
                 },
                 styles.button,
                 styles.year,
-                type === "YEAR" ? styles.active : styles.default,
+                type === Age.YEAR ? styles.active : styles.default,
               ]}
-              onPress={() => changeAgeType("YEAR", "ageType")}
+              onPress={() => changeAgeType(Age.YEAR, "ageType")}
             >
-              <Text style={type === "YEAR" ? styles.labelActive : styles.label}>
+              <Text
+                style={type === Age.YEAR ? styles.labelActive : styles.label}
+              >
                 Años
               </Text>
             </Pressable>
@@ -55,12 +58,12 @@ export default function InputAge({
                   backgroundColor: pressed ? "#DCAD5F" : "#ffb13d",
                 },
                 styles.button,
-                type === "MONTH" ? styles.active : styles.default,
+                type === Age.MONTH ? styles.active : styles.default,
               ]}
-              onPress={() => changeAgeType("MONTH", "ageType")}
+              onPress={() => changeAgeType(Age.MONTH, "ageType")}
             >
               <Text
-                style={type === "MONTH" ? styles.labelActive : styles.label}
+                style={type === Age.MONTH ? styles.labelActive : styles.label}
               >
                 Meses
               </Text>
