@@ -1,3 +1,5 @@
+import { LABEL_SIZE } from "@/constants/StaticData";
+import { Size } from "@/models/Enums";
 import { Pet } from "@/models/Pet";
 const default_image = "./components/default.png";
 
@@ -68,7 +70,20 @@ function loadName(pet:Pet) {
     return errorMessage;
   }
 
-  export function getNumberOption(labelOpt:string)
-  {
-    
-  }
+  export function loadLabels(size: string[]) {
+      const opt0 = size.indexOf(Size.SMALL) > -1;
+      const opt1 = size.indexOf(Size.MEDIUM) > -1;
+      const opt2 = size.indexOf(Size.BIG) > -1;
+      let labelInit: string[] = [];
+      if (opt0) {
+        labelInit.unshift(LABEL_SIZE[0]);
+      }
+      if (opt1) {
+        labelInit.push(LABEL_SIZE[1]);
+      }
+      if (opt2) {
+        labelInit.push(LABEL_SIZE[2]);
+      }
+  
+      return labelInit;
+    }

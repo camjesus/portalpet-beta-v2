@@ -6,6 +6,7 @@ import { LABEL_SIZE, SIZE } from "@/constants/StaticData";
 import { Size } from "@/models/Enums";
 import React, { useState } from "react";
 import { scale } from "react-native-size-matters";
+import { loadLabels } from "@/hooks/useLoadPet";
 
 type Props = {
   size: string[];
@@ -16,42 +17,17 @@ export default function FilterSize({ size, changeValue }: Props) {
   const opt0 = size.indexOf(Size.SMALL) > -1;
   const opt1 = size.indexOf(Size.MEDIUM) > -1;
   const opt2 = size.indexOf(Size.BIG) > -1;
-  const [labels, setLabel] = useState(LABEL_SIZE);
-
-  
+  const [labels, setLabel] = useState(loadLabels(size));
 
   function changeSize(opt: number) {
     var exist = size.indexOf(SIZE[opt]) > -1;
-
-    switch (opt) {
-      case 0:
-        if (exist && size.length > 1) {
-          size = size.filter((s) => s !== Size.SMALL);
-          setLabel(labels.filter((s) => s !== LABEL_SIZE[opt]));
-        } else if (!exist) {
-          size.push(Size.SMALL);
-          labels.unshift(LABEL_SIZE[opt]);
-        }
-        break;
-      case 1:
-        if (exist && size.length > 1) {
-          size = size.filter((s) => s !== Size.MEDIUM);
-          setLabel(labels.filter((s) => s !== LABEL_SIZE[opt]));
-        } else if (!exist) {
-          size.push(Size.MEDIUM);
-          labels.push(LABEL_SIZE[opt]);
-        }
-        break;
-      case 2:
-        if (exist && size.length > 1) {
-          size = size.filter((s) => s !== Size.BIG);
-          setLabel(labels.filter((s) => s !== LABEL_SIZE[opt]));
-        } else if (!exist) {
-          size.push(Size.BIG);
-          labels.push(LABEL_SIZE[opt]);
-        }
-        break;
+    if (exist && size.length > 1) {
+      size = size.filter((s) => s !== SIZE[opt]);
+      setLabel(labels.filter((s) => s !== LABEL_SIZE[opt]));
+    } else if (!exist) {
+      size.push(SIZE[opt]);
     }
+    setLabel(loadLabels(size));
     changeValue(size, "size");
   }
 
