@@ -10,17 +10,17 @@ type Props = {
 
 const Toast = ({ message, title, setToast }: Props) => {
   const bottom = React.useRef(new Animated.Value(-80)).current;
-  const opacity = React.useRef(new Animated.Value(1)).current;
+  const opacity = React.useRef(new Animated.Value(3)).current;
 
   function animate() {
     Animated.timing(bottom, {
-      toValue: 20,
+      toValue: 40,
       duration: 100,
       useNativeDriver: false,
     }).start(() => {
       Animated.timing(opacity, {
         toValue: 0,
-        duration: 10000,
+        duration: 8000,
         useNativeDriver: false,
       }).start(() => {
         setToast(false);
@@ -34,8 +34,8 @@ const Toast = ({ message, title, setToast }: Props) => {
 
   return (
     <Animated.View style={[styles.container, { bottom, opacity }]}>
-      <Text style={{ fontSize: 25, color: "white" }}>✅</Text>
-      <View style={{ marginLeft: 12 }}>
+      <Text style={{ fontSize: 25 }}>💬</Text>
+      <View style={{ marginLeft: scale(12) }}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.message}>{message}</Text>
       </View>

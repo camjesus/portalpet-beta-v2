@@ -23,7 +23,7 @@ export const initalPet: State = {
 		age: '',
 		ageType: 'YEAR',
 		description: '',
-		image: "./default.png",
+		image: "./components/default.png",
 		action: 'ADOPTION',
 		dateStart: null,
 		dateStart_string: null,

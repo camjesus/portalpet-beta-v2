@@ -14,7 +14,7 @@ export default function PanelButtons({
   labels,
   children,
 }: Props) {
-  console.log("panel" + option);
+  //console.log("panel" + option);
   return (
     <View style={[styles.containerButton]}>
       <View style={styles.box}>

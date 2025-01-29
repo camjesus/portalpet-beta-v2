@@ -1,7 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Link, useRouter, useLocalSearchParams } from "expo-router";
 import { useState, useReducer, useEffect } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { scale } from "react-native-size-matters";
 import { User } from "@/models/User";
 import { petReducer, initalPet, ACTION } from "@/hooks/usePetReducer";
@@ -20,6 +19,13 @@ import InputSex from "./components/InputSex";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import InputAction from "./components/InputAction";
 import InputDescription from "./components/InputDescription";
+import Animated, {
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import { validatePet } from "@/hooks/useLoadPet";
 
 export default function ManagementPet() {
   const [noName, setNoName] = useState(false);
@@ -27,16 +33,30 @@ export default function ManagementPet() {
   const [optSize, setSize] = useState(0);
   const [state, dispatch] = useReducer(petReducer, initalPet);
   const [toast, setToast] = useState(false);
-  const router = useRouter();
   const [user, setUser] = useState<User>();
+  const default_image = "./components/default.png";
+  const [toastConfig, setToastConfig] = useState({
+    title: "Eureka!",
+    message: "La mascota se ha creado con éxito!",
+  });
+  const router = useRouter();
+
   const { uid, name, lastname } = useLocalSearchParams<{
     uid: string;
     name: string;
     lastname: string;
   }>();
+  var scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollY.set(event.contentOffset.y);
+      //console.log("scrollY.value" + scrollY.get());
+    },
+  });
 
   useEffect(() => {
-    console.log("user my pets", uid, name, lastname);
+    //console.log("user my pets", uid, name, lastname);
     if (uid !== undefined) {
       setUser({ uid: uid, name: name, lastname: lastname });
     }
@@ -53,6 +73,21 @@ export default function ManagementPet() {
   }
 
   async function savePet() {
+    var error = validatePet(state.pet, noName);
+
+    if (error !== "") {
+      setToastConfig({
+        title: "Validación",
+        message: error,
+      });
+      setToast(true);
+      return;
+    } else {
+      setToastConfig({
+        title: "Eureka!",
+        message: "La mascota se ha creado con éxito!",
+      });
+    }
     setToast(true);
     try {
       await savePetAsync(state.pet, user);
@@ -67,6 +102,19 @@ export default function ManagementPet() {
     if (!noName) changeValue("", "name");
   }
 
+  const IMAGE_HEIGHT = scale(300);
+  const imageStyle = useAnimatedStyle(() => {
+    const height = interpolate(
+      scrollY.get(),
+      [0, IMAGE_HEIGHT],
+      [IMAGE_HEIGHT, 200]
+    );
+
+    return {
+      height,
+    };
+  });
+
   return (
     <ParallaxScrollView>
       <HeaderCustom
@@ -78,8 +126,20 @@ export default function ManagementPet() {
         }
       />
       <View style={styles.container}>
-        <InputImage image={state.pet.image} changeImage={changeValue} />
-        <ScrollView>
+        <Animated.Image
+          source={
+            state.pet.image === default_image
+              ? require(default_image)
+              : { uri: state.pet.image }
+          }
+          style={[styles.image, imageStyle]}
+        />
+
+        <InputImage changeImage={changeValue} />
+        <Animated.ScrollView
+          onScroll={scrollHandler}
+          scrollEventThrottle={10} // Optimiza la frecuencia del scroll
+        >
           <View style={styles.row}>
             <InputName
               name={state.pet.name}
@@ -123,13 +183,13 @@ export default function ManagementPet() {
           <View style={styles.submit}>
             <Button label="Crear" onPress={savePet} />
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
       </View>
       <View style={styles.containerCenter}>
         {toast && (
           <Toast
-            title="Eureka!"
-            message="La mascota se ha creado con éxito!"
+            title={toastConfig.title}
+            message={toastConfig.message}
             setToast={setToast}
           />
         )}
@@ -153,5 +213,13 @@ const styles = StyleSheet.create({
   },
   submit: {
     marginBottom: scale(16),
+  },
+  image: {
+    width: scale(340),
+    height: scale(300),
+    marginHorizontal: scale(10),
+    borderRadius: 10,
+    marginTop: scale(10),
+    resizeMode: "center",
   },
 });

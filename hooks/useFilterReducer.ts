@@ -9,18 +9,19 @@ interface Action {
     } 
 } 
 
-interface State {
+export interface State {
     filter: Filter;
 }
 
 export const initalFilter: State = {	
     filter: {
-        size: 'SMALL',
-        type: 'DOG',
-        sex: 'FEMALE',
-        age: '0',
-        ageType: 'YEAR',
-        action: 'ADOPTION',
+        size: ["SMALL", "MEDIUM" , "BIG"],
+        type: ['DOG', 'CAT'],
+        sex: ['FEMALE','MALE'],
+        ageFrom: 1,
+        ageTo: 11,
+        ageType: 'MONTH',
+        action: 0,
         latitud: null,
         longitud:null,
     }
@@ -28,6 +29,7 @@ export const initalFilter: State = {
 
 export const ACTION = {
     CHANGE_FILTER: 'changeFilter',
+    CHANGE_OBJECT: "changeObject"
 };
 
 export const filterReducer = (state: State, action: Action) => {
@@ -37,7 +39,8 @@ export const filterReducer = (state: State, action: Action) => {
                 ...state.filter,
                 [action.payload.field]: action.payload.value
             }  };
-
+        case ACTION.CHANGE_OBJECT:    
+        return { filter: action.payload.value };
         default:
             throw Error('error en filterReducer');
     }

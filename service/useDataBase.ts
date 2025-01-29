@@ -22,7 +22,7 @@ export const savePetAsync = async (pet:Pet, user:User|any) => {
 export const myPetAsync =  async () => {
     console.log("entro myPetAsync");
     const user = await getUserAsync();
-    console.log("user ", user);
+    //console.log("user ", user);
     const myPets: any[] = [];
     const q = query(collection(db, "pets"), where("rescuerId", "==", user.uid),where("active", "==", true), orderBy("createDate", "desc"));
 
@@ -44,6 +44,8 @@ export const myPetAsync =  async () => {
 function loadInitPet(pet:Pet, user:User)
 {
     if(pet.id === "") pet.id = Crypto.randomUUID();
+
+    if(pet.name === "") pet.name = "No tiene";
 
     pet.rescuer = {
         uid: user.uid,

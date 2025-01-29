@@ -2,22 +2,45 @@ import "react-native-gesture-handler";
 import { Text, StyleSheet, View } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import HeaderCustom from "@/components/ui/HeaderCustom";
-import { saveUser } from "@/hooks/useStoreData";
+import {
+  cleanAllAsync,
+  getFilterAsync,
+  saveFilterAsync,
+  saveUser,
+} from "@/hooks/useStoreData";
 import { useEffect, useReducer, useState } from "react";
 import PanelButtons from "@/components/ui/PanelButtons";
 import { LABELS_ACCTION, ACCTIONS } from "@/constants/StaticData";
 import { scale } from "react-native-size-matters";
-import { filterReducer, initalFilter, ACTION } from "@/hooks/useFilter";
+import { filterReducer, initalFilter, ACTION } from "@/hooks/useFilterReducer";
 import { User } from "@/models/User";
 import Swiper from "@/components/Search/Swiper";
 import { PetId } from "@/models/Pet";
 import { myPetAsync } from "@/service/useDataBase";
+import { Link, router, useLocalSearchParams } from "expo-router";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import { Pressable } from "react-native-gesture-handler";
 
 export default function Search() {
-  const [optAcion, setAcion] = useState(0);
-  const [state, dispatch] = useReducer(filterReducer, initalFilter);
   const [user, setUser] = useState<User>();
   const [myPets, setMyPets] = useState<PetId[]>([]);
+  const { search, stateFilter } = useLocalSearchParams<{
+    search: string;
+    stateFilter: string;
+  }>();
+  console.log("stateFilter", stateFilter);
+  const [state, dispatch] = useReducer(
+    filterReducer,
+    stateFilter === undefined ? initalFilter : JSON.parse(stateFilter)
+  );
+  const [optAcion, setAcion] = useState(0);
+  const [goTosearch, setSearch] = useState<boolean>(
+    search === "yes" || search === undefined ? true : false
+  );
+  console.log("search", search);
+  console.log("goTosearch", goTosearch);
+
+  console.log("state", state);
 
   const getUser = async () => {
     let user = {
@@ -32,38 +55,97 @@ export default function Search() {
   const getData = async () => {
     await myPetAsync().then((res) => {
       setMyPets(res.myPets);
+      setSearch(false);
     });
+  };
+
+  const getFilter = async () => {
+    await getFilterAsync().then((state) => {
+      console.log("PEPE state", state);
+      if (state) {
+        dispatch({
+          type: ACTION.CHANGE_OBJECT,
+          payload: {
+            field: "object",
+            value: state.filter,
+          },
+        });
+      } else {
+        getData();
+      }
+    });
+  };
+
+  const saveFilter = async () => {
+    let filter = JSON.parse(stateFilter);
+    await saveFilterAsync(filter);
   };
 
   useEffect(() => {
     if (user === undefined) {
       getUser();
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    if (user !== undefined) {
+    if (stateFilter === undefined) {
+      getFilter();
+    } else {
+      saveFilter();
+    }
+    setAcion(state.filter.action);
+    if (goTosearch) {
       getData();
     }
-  }, [user, optAcion]);
+  }, [optAcion, goTosearch]);
 
-  function changeValue(value: string, field: string) {
-    setAcion(parseInt(value));
+  function changeValue(value: number, field: string) {
+    console.log("value", ACCTIONS[value]);
+    setAcion(value);
     dispatch({
       type: ACTION.CHANGE_FILTER,
       payload: {
         field: field,
-        value: ACCTIONS[parseInt(value)],
+        value: value,
       },
     });
+    getData();
+  }
+  const clear = async () => {
+    await cleanAllAsync();
+  };
+
+  function goToFilter() {
+    router.push({
+      pathname: "/filter",
+      params: { stateFilter: JSON.stringify(state) },
+    });
+  }
+
+  function clearAll() {
+    clear();
   }
 
   return (
     <ParallaxScrollView>
-      <HeaderCustom title="Portal Pet" />
+      <HeaderCustom
+        childrenRight={
+          <Pressable onPress={goToFilter}>
+            <IconSymbol size={30} name="filter" color="white" />
+          </Pressable>
+        }
+        childrenLeft={
+          <Pressable onPress={clearAll}>
+            <IconSymbol size={30} name="filter" color="black" />
+          </Pressable>
+        }
+        title="Portal Pet"
+      />
       <View style={styles.containerCenter}>
         <PanelButtons
-          changeOption={(t) => changeValue(t.toString(), "action")}
+          changeOption={(t) => {
+            changeValue(t, "action");
+          }}
           option={optAcion}
           labels={LABELS_ACCTION}
         />
@@ -84,7 +166,7 @@ const styles = StyleSheet.create({
   },
   containerSwiper: {
     marginHorizontal: scale(20),
-    marginTop: scale(30),
+    marginTop: scale(25),
     alignContent: "center",
   },
 });

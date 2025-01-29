@@ -23,6 +23,7 @@ export default function Swiper({ pets, onPress }: Props) {
             index={index}
             activeIndex={activeIndex}
             pet={item.pet}
+            petId={item.docId}
           ></SwiperCard>
         );
       })}

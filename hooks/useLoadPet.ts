@@ -1,4 +1,5 @@
 import { Pet } from "@/models/Pet";
+const default_image = "./components/default.png";
 
 export const loadPet = (pet:Pet) => {
     let name = loadName(pet);
@@ -46,4 +47,28 @@ function loadName(pet:Pet) {
         return action;
     }
     return [action, color];
+  }
+
+  export function validatePet(pet:Pet, noName:boolean)
+  {
+    var errorMessage: string = "";
+
+    if (pet.name === "" && !noName) 
+      return errorMessage = "Es necesario ingresar un nombre."
+
+    if (pet.age === "") 
+      return errorMessage = "Es necesario ingresar una edad."
+
+    if (pet.description === "") 
+      return errorMessage = "Es necesario ingresar alguna descripción."
+
+    if (pet.image === default_image) 
+      return errorMessage = "Es necesario ingresar alguna imagen."
+
+    return errorMessage;
+  }
+
+  export function getNumberOption(labelOpt:string)
+  {
+    
   }

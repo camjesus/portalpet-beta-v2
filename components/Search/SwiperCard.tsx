@@ -1,10 +1,9 @@
 import { View, StyleSheet, Image, Text, Dimensions } from "react-native";
 import React, { act, useEffect, useState } from "react";
 import { loadPet } from "@/hooks/useLoadPet";
-import { Pet } from "@/models/Pet";
+import { Pet, PetId } from "@/models/Pet";
 import { scale } from "react-native-size-matters";
 import { IconSymbol } from "../ui/IconSymbol";
-import { Link } from "expo-router";
 import Button from "../ui/Button";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
@@ -14,8 +13,10 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { Link, router } from "expo-router";
 
 type Props = {
+  petId: string;
   pet: Pet;
   numOfCards: number;
   index: number;
@@ -26,13 +27,13 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 export default function SwiperCard({
+  petId,
   pet,
   numOfCards,
   index,
   activeIndex,
 }: Props) {
   const [data, setData] = useState({ name: "", action: "", color: "" });
-
   const translationX = useSharedValue(0);
 
   const animatedCard = useAnimatedStyle(() => ({
@@ -94,9 +95,21 @@ export default function SwiperCard({
 
   useEffect(() => {
     let { name, action, color } = loadPet(pet);
-    console.log("efect" + name, action, color);
+    //console.log("efect" + name, action, color);
     setData({ name: name, action: action, color: color });
   }, []);
+
+  function goToPetProfile(petId: string, pet: Pet) {
+    //console.log("pet", pet);
+    router.push({
+      pathname: "/petProfile",
+      params: {
+        petId: petId,
+        stringPet: JSON.stringify(pet),
+        image: pet.image,
+      },
+    });
+  }
 
   return (
     <GestureDetector gesture={gesture}>
@@ -116,28 +129,19 @@ export default function SwiperCard({
         <View style={styles.pawSize}>
           <IconSymbol
             name="paw"
-            size={45}
-            color={pet?.size === "BIG" ? "#9575cd" : "#FFFFFF"}
+            size={25}
+            color={pet?.size === "SMALL" ? "#ffb13d" : "#A5A5A5"}
           />
           <IconSymbol
             name="paw"
             size={35}
-            color={pet?.size === "MEDIUM" ? "#9575cd" : "#FFFFFF"}
+            color={pet?.size === "MEDIUM" ? "#ffb13d" : "#A5A5A5"}
           />
           <IconSymbol
             name="paw"
-            size={25}
-            color={pet?.size === "SMALL" ? "#9575cd" : "#FFFFFF"}
+            size={45}
+            color={pet?.size === "BIG" ? "#ffb13d" : "#A5A5A5"}
           />
-        </View>
-        <View style={styles.moreInfo}>
-          <Button label="Ver ficha">
-            <IconSymbol size={25} name="clipboard" color="#4B4B4B" />
-          </Button>
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.name}>{pet?.name}</Text>
-          <Text style={styles.old}>, {pet?.age} años</Text>
           <View style={styles.sexIcon}>
             <IconSymbol
               name={pet?.sex === "MALE" ? "male" : "female"}
@@ -145,6 +149,14 @@ export default function SwiperCard({
               color="#4B4B4B"
             />
           </View>
+        </View>
+        <View style={styles.moreInfo}>
+          <Button label="Ver ficha" onPress={() => goToPetProfile(petId, pet)}>
+            <IconSymbol size={25} name="clipboard" color="#4B4B4B" />
+          </Button>
+        </View>
+        <View style={styles.footer}>
+          <Text style={styles.name}>{data.name}</Text>
         </View>
       </Animated.View>
     </GestureDetector>
@@ -154,7 +166,7 @@ export default function SwiperCard({
 const styles = StyleSheet.create({
   card: {
     width: screenWidth - scale(40),
-    height: screenHeight - scale(250),
+    height: screenHeight - scale(240),
     borderRadius: 25,
     justifyContent: "flex-end",
 
@@ -171,12 +183,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     alignContent: "center",
+    justifyContent: "space-between",
     position: "absolute",
-    marginStart: scale(10),
-    margin: scale(10),
-    bottom: scale(50),
+    marginStart: scale(15),
+    margin: scale(5),
+    bottom: scale(5),
     left: 0,
-    gap: scale(10),
+    gap: scale(6),
   },
   moreInfo: {
     position: "absolute",
@@ -188,24 +201,22 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: scale(20),
     margin: scale(10),
+    marginBottom: scale(50),
     flexDirection: "row",
   },
   image: {
     borderWidth: 3,
     borderColor: "white",
     width: screenWidth - scale(40),
-    height: screenHeight - scale(300),
+    height: screenHeight - scale(290),
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     borderRadius: 10,
   },
   name: {
     fontSize: scale(28),
-    marginBottom: scale(5),
-    fontWeight: "bold",
-  },
-  old: {
-    fontSize: scale(28),
+    marginBottom: scale(15),
+    color: "#ffb13d",
     fontWeight: "bold",
   },
   sexIcon: {
