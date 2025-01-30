@@ -4,7 +4,7 @@ export type Pet = {
 	size: string; //SMALL - MEDIUM - BIG
 	type: string; //DOG - CAT
 	sex: string; //FAMALE - MALE
-	age: string;
+	age: number | null;
 	ageType: string;
 	description: string;
 	image: string;

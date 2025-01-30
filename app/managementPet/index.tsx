@@ -62,7 +62,7 @@ export default function ManagementPet() {
     }
   }, []);
 
-  function changeValue(value: string, field: string) {
+  function changeValue(value: any, field: string) {
     dispatch({
       type: ACTION.CHANGE_INPUT,
       payload: {
@@ -161,7 +161,7 @@ export default function ManagementPet() {
           </View>
           <View style={[styles.row, { gap: scale(5) }]}>
             <InputAge
-              age={state.pet.age}
+              age={state.pet.age !== null ? state.pet.age?.toString() : ""}
               type={state.pet.ageType}
               changeAge={changeValue}
               changeAgeType={changeValue}

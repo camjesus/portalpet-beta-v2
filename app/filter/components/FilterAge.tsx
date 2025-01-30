@@ -32,11 +32,16 @@ export default function FilterAge({
       setMaxValue(11);
       if (ageTo > 11) {
         changeValue(11, "ageTo");
+        setSliderTo(11);
+      }
+      if (ageFrom > 11) {
+        setSliderFrom(0);
+        changeValue(0, "ageFrom");
       }
     } else {
-      changeValue(MAXIMUN_AGE, "ageTo");
       setMaxValue(MAXIMUN_AGE);
     }
+
     changeValue(ageType, "ageType");
   }
 
@@ -172,8 +177,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: "white",
     borderWidth: 2,
-    paddingHorizontal: scale(4),
-    paddingVertical: scale(2),
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(5),
   },
   active: {
     backgroundColor: "#ffb13d",

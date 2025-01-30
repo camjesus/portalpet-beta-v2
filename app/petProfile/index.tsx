@@ -1,10 +1,19 @@
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Pressable,
+  Dimensions,
+} from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
 import HeaderAnimated from "@/components/ui/HeaderAnimated";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import React, { useEffect } from "react";
 import InfoAnimated from "./components/InfoAnimated";
+
+const SCREEN_HEIGHT = (Dimensions.get("window").height / 2) * 0.2;
 
 export default function PetProfile() {
   const { petId, stringPet, image } = useLocalSearchParams<{
@@ -21,11 +30,6 @@ export default function PetProfile() {
           children={
             <>
               <View style={styles.titleRow}>
-                <View style={styles.buttonLeft}>
-                  <Link href={"../"}>
-                    <IconSymbol size={35} name="arrow-back" color="white" />
-                  </Link>
-                </View>
                 <Text style={styles.title}>Ficha</Text>
                 <IconSymbol
                   style={{ marginStart: scale(10) }}
@@ -36,13 +40,15 @@ export default function PetProfile() {
               </View>
               {pet.image && (
                 <View style={styles.imageRow}>
-                  <Image
-                    style={styles.image}
-                    defaultSource={{ uri: pet.image }}
-                  />
+                  <Image style={styles.image} source={{ uri: pet.image }} />
                 </View>
               )}
             </>
+          }
+          childrenLeft={
+            <Link href={"/(tabs)"}>
+              <IconSymbol size={35} name="arrow-back" color="white" />
+            </Link>
           }
         />
       </View>
@@ -61,7 +67,7 @@ export default function PetProfile() {
                 <Text style={styles.value}>{pet.sex}</Text>
               </View>
               <View style={styles.underline}>
-                <Text style={styles.field}>Nombre: </Text>
+                <Text style={styles.field}>Descripción: </Text>
                 <Text style={styles.value}>{pet.name}</Text>
               </View>
             </View>
@@ -73,12 +79,6 @@ export default function PetProfile() {
 }
 
 const styles = StyleSheet.create({
-  buttonLeft: {
-    width: scale(30),
-    left: scale(30),
-    paddingTop: scale(45),
-    position: "absolute",
-  },
   containerHeader: {
     top: scale(-10),
     backgroundColor: "#A5A5A5",
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: scale(20),
   },
   container: {
-    top: scale(-30),
+    top: scale(20) - SCREEN_HEIGHT,
     backgroundColor: "white",
     marginHorizontal: scale(20),
     paddingHorizontal: scale(30),
@@ -124,11 +124,11 @@ const styles = StyleSheet.create({
   },
   titleRow: {
     paddingBottom: scale(15),
-    paddingTop: scale(60),
     alignItems: "center",
     flexDirection: "row",
     alignContent: "center",
     justifyContent: "center",
+    paddingTop: scale(60),
   },
   imageRow: {
     alignItems: "center",

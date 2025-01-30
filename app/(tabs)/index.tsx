@@ -16,7 +16,7 @@ import { filterReducer, initalFilter, ACTION } from "@/hooks/useFilterReducer";
 import { User } from "@/models/User";
 import Swiper from "@/components/Search/Swiper";
 import { PetId } from "@/models/Pet";
-import { myPetAsync } from "@/service/useDataBase";
+import { findPetsAsync, myPetAsync } from "@/service/useDataBase";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Pressable } from "react-native-gesture-handler";
@@ -33,7 +33,6 @@ export default function Search() {
     filterReducer,
     stateFilter === undefined ? initalFilter : JSON.parse(stateFilter)
   );
-  const [optAcion, setAcion] = useState(0);
   const [goTosearch, setSearch] = useState<boolean>(
     search === "yes" || search === undefined ? true : false
   );
@@ -41,6 +40,8 @@ export default function Search() {
   console.log("goTosearch", goTosearch);
 
   console.log("state", state);
+  const [optAcion, setAcion] = useState(0);
+  const [isFirst, setIsFirst] = useState(true);
 
   const getUser = async () => {
     let user = {
@@ -53,7 +54,7 @@ export default function Search() {
   };
 
   const getData = async () => {
-    await myPetAsync().then((res) => {
+    await findPetsAsync(state.filter).then((res) => {
       setMyPets(res.myPets);
       setSearch(false);
     });
@@ -82,6 +83,14 @@ export default function Search() {
   };
 
   useEffect(() => {
+    if (state.filter.action && isFirst) {
+      console.log("state.filter.action", state.filter.action);
+      setAcion(state.filter.action);
+      setIsFirst(false);
+    }
+  }, [state.filter.action]);
+
+  useEffect(() => {
     if (user === undefined) {
       getUser();
     }
@@ -90,10 +99,13 @@ export default function Search() {
   useEffect(() => {
     if (stateFilter === undefined) {
       getFilter();
-    } else {
+    }
+  }, []);
+
+  useEffect(() => {
+    if (stateFilter) {
       saveFilter();
     }
-    setAcion(state.filter.action);
     if (goTosearch) {
       getData();
     }
@@ -109,6 +121,7 @@ export default function Search() {
         value: value,
       },
     });
+    saveFilter();
     getData();
   }
   const clear = async () => {

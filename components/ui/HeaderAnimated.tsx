@@ -7,14 +7,12 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useEffect } from "react";
-import { Link } from "expo-router";
-import { IconSymbol } from "./IconSymbol";
-
 type Props = {
   children?: React.ReactNode;
+  childrenLeft?: React.ReactNode;
 };
 
-export default function HeaderAnimated({ children }: Props) {
+export default function HeaderAnimated({ children, childrenLeft }: Props) {
   const height = useSharedValue(0);
   const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -26,7 +24,7 @@ export default function HeaderAnimated({ children }: Props) {
 
   const handleExpand = () => {
     height.set(
-      withTiming((SCREEN_HEIGHT + scale(250)) / 2, { duration: 1000 })
+      withTiming((SCREEN_HEIGHT + scale(300)) / 2, { duration: 1000 })
     );
   };
 
@@ -37,6 +35,7 @@ export default function HeaderAnimated({ children }: Props) {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.animatedBox, animatedStyle]}>
+        <Pressable style={styles.buttonLeft}>{childrenLeft}</Pressable>
         {children}
       </Animated.View>
     </View>
@@ -47,7 +46,8 @@ const styles = StyleSheet.create({
   buttonLeft: {
     width: scale(30),
     marginStart: scale(30),
-    marginTop: scale(20),
+    position: "absolute",
+    paddingTop: scale(60),
   },
   container: {
     justifyContent: "flex-start", // Comienza desde la parte superior

@@ -8,8 +8,8 @@ import { Age } from "@/models/Enums";
 type Props = {
   age: string;
   type: string;
-  changeAge: (text: string, field: string) => void;
-  changeAgeType: (text: string, field: string) => void;
+  changeAge: (text: any, field: string) => void;
+  changeAgeType: (text: any, field: string) => void;
 };
 
 export default function InputAge({
@@ -24,8 +24,8 @@ export default function InputAge({
         <View style={{ width: scale(70), marginHorizontal: "auto" }}>
           <TextInputCustom
             options={{
-              value: age,
-              onChangeText: (t) => changeAge(t, "age"),
+              value: age.toString(),
+              onChangeText: (t) => changeAge(parseInt(t), "age"),
               placeholder: "Edad",
               keyboardType: "numeric",
             }}

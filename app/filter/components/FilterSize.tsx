@@ -92,7 +92,7 @@ export default function FilterSize({ size, changeValue }: Props) {
           </Pressable>
         </View>
       </View>
-      <View style={{ height: scale(40), width: scale(180) }}>
+      <View style={{ height: scale(40), width: scale(200) }}>
         {labels && <Text style={styles.text}>{labels.join(" -")}</Text>}
       </View>
     </TitleCustom>

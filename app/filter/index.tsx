@@ -89,6 +89,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    marginTop: scale(16),
+    gap: scale(20),
   },
-  age: { marginHorizontal: scale(20), marginTop: scale(16) },
+  age: {
+    marginHorizontal: scale(20),
+    marginTop: scale(16),
+  },
 });

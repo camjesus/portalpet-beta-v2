@@ -12,7 +12,7 @@ export const loadPet = (pet:Pet) => {
 
 function loadName(pet:Pet) {
     let ageType = "";
-    if (pet.age === "1") {
+    if (pet.age === 1) {
       if (pet.ageType === "YEAR") {
         ageType = "Año";
       } else {
@@ -58,7 +58,7 @@ function loadName(pet:Pet) {
     if (pet.name === "" && !noName) 
       return errorMessage = "Es necesario ingresar un nombre."
 
-    if (pet.age === "") 
+    if (pet.age === null) 
       return errorMessage = "Es necesario ingresar una edad."
 
     if (pet.description === "") 

@@ -20,7 +20,7 @@ export const initalPet: State = {
 		size: 'SMALL',
 		type: 'DOG',
 		sex: 'FEMALE',
-		age: '',
+		age: null,
 		ageType: 'YEAR',
 		description: '',
 		image: "./components/default.png",
