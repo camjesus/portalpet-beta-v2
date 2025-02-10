@@ -1,15 +1,13 @@
 import { StyleSheet, View } from "react-native";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import ViewCustom from "@/components/ViewCustom";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import TextInputCustom from "@/components/ui/TextInputCustom";
-import PanelButtons from "@/components/ui/PanelButtons";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import { useState } from "react";
 import { Link } from "expo-router";
 
 export default function TabThreeScreen() {
   return (
-    <ParallaxScrollView>
+    <ViewCustom>
       <HeaderCustom
         title="Portal Pet"
         childrenRight={
@@ -19,7 +17,7 @@ export default function TabThreeScreen() {
         }
         childrenLeft={<IconSymbol size={30} name="paw" color="white" />}
       />
-    </ParallaxScrollView>
+    </ViewCustom>
   );
 }
 

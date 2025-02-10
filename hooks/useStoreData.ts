@@ -45,35 +45,20 @@ export const getPets  = async () => {
     return myPets != null ? JSON.parse(myPets) : null;
 };
 
-export const getFilterAsync = async()=> 
-{
-    var filter = await AsyncStorage.getItem('@filter');
-    console.log("filter get ", filter);
-
-    if(filter !== null)
-    {
-        let localFilter = JSON.parse(filter);
-        console.log("localFilter ", filter);
-
-        console.log("localFilter ", localFilter);
-        console.log("localFilter sex", localFilter.sex);
-          return localFilter;
-    }
-    return null;
-};
-
-export const saveFilterAsync = async(filter:Filter)=> 
-{
-    console.log("filter a savee", filter);
-    try{
-        await AsyncStorage.removeItem('@filter');
-        await AsyncStorage.setItem('@filter', JSON.stringify(filter));
-    }catch(error){
-        throw Error('error en saveFilter');
-
-    }
-};
 
 export const cleanAllAsync = async() => {
-    await AsyncStorage.clear();
+    console.log("limpiete")
+
+    //await AsyncStorage.clear();
+    try{
+        var users = await AsyncStorage.getItem('@filter');
+        console.log("limpiete",  users != null ? JSON.parse(users) : null)
+
+
+    }catch(err){
+        console.log("error")
+    }
+    
+
+
 }

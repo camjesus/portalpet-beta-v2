@@ -40,6 +40,7 @@ export default function RootLayout() {
           <Stack.Screen name="managementPet" options={{ headerShown: false }} />
           <Stack.Screen name="petProfile" options={{ headerShown: false }} />
           <Stack.Screen name="filter" options={{ headerShown: false }} />
+          <Stack.Screen name="report" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

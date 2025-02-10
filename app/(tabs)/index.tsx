@@ -1,13 +1,11 @@
 import "react-native-gesture-handler";
 import { Text, StyleSheet, View } from "react-native";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import ViewCustom from "@/components/ViewCustom";
 import HeaderCustom from "@/components/ui/HeaderCustom";
-import {
-  cleanAllAsync,
-  getFilterAsync,
-  saveFilterAsync,
-  saveUser,
-} from "@/hooks/useStoreData";
+import { saveUser } from "@/hooks/useStoreData";
+import { cleanAllAsync } from "@/hooks/useFilterStoreData";
+import { StatusBar } from "expo-status-bar";
+import { getFilterAsync, saveFilterAsync } from "@/hooks/useFilterStoreData";
 import { useEffect, useReducer, useState } from "react";
 import PanelButtons from "@/components/ui/PanelButtons";
 import { LABELS_ACCTION, ACCTIONS } from "@/constants/StaticData";
@@ -16,14 +14,16 @@ import { filterReducer, initalFilter, ACTION } from "@/hooks/useFilterReducer";
 import { User } from "@/models/User";
 import Swiper from "@/components/Search/Swiper";
 import { PetId } from "@/models/Pet";
-import { findPetsAsync, myPetAsync } from "@/service/useDataBase";
+import { findPetsAsync, myPetAsync } from "@/service/usePetDataBase";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Pressable } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Search() {
   const [user, setUser] = useState<User>();
   const [myPets, setMyPets] = useState<PetId[]>([]);
+  const [load, setLoad] = useState(true);
   const { search, stateFilter } = useLocalSearchParams<{
     search: string;
     stateFilter: string;
@@ -36,6 +36,10 @@ export default function Search() {
   const [goTosearch, setSearch] = useState<boolean>(
     search === "yes" || search === undefined ? true : false
   );
+  const [filterParam, stateFilterParam] = useState<string | undefined>(
+    stateFilter
+  );
+
   console.log("search", search);
   console.log("goTosearch", goTosearch);
 
@@ -53,34 +57,43 @@ export default function Search() {
     await saveUser(user);
   };
 
-  const getData = async () => {
-    await findPetsAsync(state.filter).then((res) => {
-      setMyPets(res.myPets);
-      setSearch(false);
-    });
-  };
+  const getData = async (action: number) => {
+    console.log("optAcion", action);
+    console.log("isFirst", isFirst);
 
-  const getFilter = async () => {
-    await getFilterAsync().then((state) => {
-      console.log("PEPE state", state);
-      if (state) {
+    await findPetsAsync(action, isFirst, filterParam !== undefined).then(
+      (res) => {
+        setMyPets(res.myPets);
+        setSearch(false);
         dispatch({
           type: ACTION.CHANGE_OBJECT,
           payload: {
-            field: "object",
-            value: state.filter,
+            field: "filter",
+            value: res.filter,
           },
         });
-      } else {
-        getData();
+        setLoad(false);
       }
-    });
+    );
   };
 
   const saveFilter = async () => {
-    let filter = JSON.parse(stateFilter);
-    await saveFilterAsync(filter);
+    console.log("entro a ", state.filter);
+    await saveFilterAsync(JSON.stringify(state.filter));
   };
+
+  function changeValue(value: number, field: string) {
+    console.log("value", ACCTIONS[value]);
+    setAcion(value);
+    dispatch({
+      type: ACTION.CHANGE_FILTER,
+      payload: {
+        field: field,
+        value: value,
+      },
+    });
+    getData(value);
+  }
 
   useEffect(() => {
     if (state.filter.action && isFirst) {
@@ -97,38 +110,28 @@ export default function Search() {
   }, [user]);
 
   useEffect(() => {
-    if (stateFilter === undefined) {
-      getFilter();
-    }
-  }, []);
+    goTosearch && getData(state.filter.action);
+  }, [goTosearch]);
+
+  //useEffect(() => {
+  //  !isFirst && saveFilter();
+  //}, [state.filter]);
 
   useEffect(() => {
-    if (stateFilter) {
+    if (filterParam !== undefined && goTosearch) {
+      stateFilterParam(undefined);
+      console.log("saveFilter que no se hace", state.filter.action);
       saveFilter();
+      console.log("saveFilter que no se hace");
     }
-    if (goTosearch) {
-      getData();
-    }
-  }, [optAcion, goTosearch]);
+  }, [filterParam]);
 
-  function changeValue(value: number, field: string) {
-    console.log("value", ACCTIONS[value]);
-    setAcion(value);
-    dispatch({
-      type: ACTION.CHANGE_FILTER,
-      payload: {
-        field: field,
-        value: value,
-      },
-    });
-    saveFilter();
-    getData();
-  }
   const clear = async () => {
     await cleanAllAsync();
   };
 
   function goToFilter() {
+    saveFilter();
     router.push({
       pathname: "/filter",
       params: { stateFilter: JSON.stringify(state) },
@@ -140,7 +143,7 @@ export default function Search() {
   }
 
   return (
-    <ParallaxScrollView>
+    <ViewCustom>
       <HeaderCustom
         childrenRight={
           <Pressable onPress={goToFilter}>
@@ -155,20 +158,27 @@ export default function Search() {
         title="Portal Pet"
       />
       <View style={styles.containerCenter}>
-        <PanelButtons
-          changeOption={(t) => {
-            changeValue(t, "action");
-          }}
-          option={optAcion}
-          labels={LABELS_ACCTION}
-        />
+        {load && (
+          <SafeAreaView>
+            <StatusBar style="light" />
+          </SafeAreaView>
+        )}
+        {!load && (
+          <PanelButtons
+            changeOption={(t) => {
+              changeValue(t, "action");
+            }}
+            option={optAcion}
+            labels={LABELS_ACCTION}
+          />
+        )}
+        {!load && user && (
+          <View style={styles.containerSwiper}>
+            <Swiper pets={myPets} />
+          </View>
+        )}
       </View>
-      {user && (
-        <View style={styles.containerSwiper}>
-          <Swiper pets={myPets} />
-        </View>
-      )}
-    </ParallaxScrollView>
+    </ViewCustom>
   );
 }
 

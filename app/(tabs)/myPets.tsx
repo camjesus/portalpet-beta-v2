@@ -1,10 +1,10 @@
 import { StyleSheet, View, Text } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import ViewCustom from "@/components/ViewCustom";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import Button from "@/components/ui/Button";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import { myPetAsync } from "@/service/useDataBase";
+import { myPetAsync } from "@/service/usePetDataBase";
 import { useEffect, useState } from "react";
 import { PetId } from "@/models/Pet";
 import Card from "@/components/MyPets/Card";
@@ -40,8 +40,8 @@ export default function MyPets() {
 
   return (
     <View style={{ height: "100%" }}>
-      <ParallaxScrollView>
-        <HeaderCustom title="Mis mascotas"></HeaderCustom>
+      <ViewCustom>
+        <HeaderCustom title="Mis mascotas" />
         {myPets && (
           <FlatList
             data={myPets}
@@ -57,7 +57,7 @@ export default function MyPets() {
             <Text style={styles.message}>Subite unas mascoteiras!</Text>
           </View>
         )}
-      </ParallaxScrollView>
+      </ViewCustom>
 
       <View style={styles.float}>
         <Button circle={true}>

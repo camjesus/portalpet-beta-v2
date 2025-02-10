@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from "react-native";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import ViewCustom from "@/components/ViewCustom";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import { useEffect, useReducer, useState } from "react";
@@ -37,7 +37,7 @@ export default function Filters() {
     });
   }
   return (
-    <ParallaxScrollView>
+    <ViewCustom>
       <HeaderCustom
         title="Filtros"
         childrenLeft={
@@ -66,7 +66,7 @@ export default function Filters() {
           <Button label="Guardar" onPress={goTosearch} />
         </View>
       </View>
-    </ParallaxScrollView>
+    </ViewCustom>
   );
 }
 

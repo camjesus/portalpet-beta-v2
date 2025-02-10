@@ -4,7 +4,7 @@ import { useState, useReducer, useEffect } from "react";
 import { scale } from "react-native-size-matters";
 import { User } from "@/models/User";
 import { petReducer, initalPet, ACTION } from "@/hooks/usePetReducer";
-import { savePetAsync } from "@/service/useDataBase";
+import { savePetAsync } from "@/service/usePetDataBase";
 //components
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import HeaderCustom from "@/components/ui/HeaderCustom";
@@ -16,7 +16,7 @@ import InputImage from "./components/InputImage";
 import Toast from "@/components/ui/Toast";
 import InputType from "./components/InputType";
 import InputSex from "./components/InputSex";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import ViewCustom from "@/components/ViewCustom";
 import InputAction from "./components/InputAction";
 import InputDescription from "./components/InputDescription";
 import Animated, {
@@ -116,7 +116,7 @@ export default function ManagementPet() {
   });
 
   return (
-    <ParallaxScrollView>
+    <ViewCustom>
       <HeaderCustom
         title="Nueva mascota"
         childrenLeft={
@@ -194,7 +194,7 @@ export default function ManagementPet() {
           />
         )}
       </View>
-    </ParallaxScrollView>
+    </ViewCustom>
   );
 }
 

@@ -36,6 +36,8 @@ export default function SwiperCard({
   const [data, setData] = useState({ name: "", action: "", color: "" });
   const translationX = useSharedValue(0);
 
+  console.log("PETimage", encodeURI(pet.image));
+
   const animatedCard = useAnimatedStyle(() => ({
     opacity: interpolate(
       activeIndex.value,
@@ -106,7 +108,7 @@ export default function SwiperCard({
       params: {
         petId: petId,
         stringPet: JSON.stringify(pet),
-        image: pet.image,
+        image: encodeURI(pet.image),
       },
     });
   }
@@ -171,12 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
 
     position: "absolute",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    elevation: 10,
     backgroundColor: "white",
   },
   pawSize: {

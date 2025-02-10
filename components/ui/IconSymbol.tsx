@@ -22,7 +22,10 @@ const MAPPING = {
   'add-image':'camera-plus',
   'add-location': 'map-marker-plus',
   'clipboard': 'clipboard-text',
-  'filter': 'filter'
+  'filter': 'filter',
+  'bullhorn': 'bullhorn',
+  'money-off': 'currency-usd-off',
+  'alert': 'alert-outline'
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

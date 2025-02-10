@@ -49,6 +49,7 @@ export const petReducer = (state: State, action: Action) => {
 				...state.pet,
 				[action.payload.field]: action.payload.value
 			} ;
+			
 				return { pet: updatePet };
 
 		default:

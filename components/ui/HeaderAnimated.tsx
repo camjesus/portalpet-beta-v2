@@ -8,11 +8,20 @@ import Animated, {
 } from "react-native-reanimated";
 import { useEffect } from "react";
 type Props = {
-  children?: React.ReactNode;
+  childrenTitle?: React.ReactNode;
   childrenLeft?: React.ReactNode;
+  childrenRight?: React.ReactNode;
+  onPressRight?: () => void;
+  onPressLeft?: () => void;
 };
 
-export default function HeaderAnimated({ children, childrenLeft }: Props) {
+export default function HeaderAnimated({
+  childrenTitle,
+  childrenLeft,
+  childrenRight,
+  onPressRight,
+  onPressLeft,
+}: Props) {
   const height = useSharedValue(0);
   const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -35,8 +44,13 @@ export default function HeaderAnimated({ children, childrenLeft }: Props) {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.animatedBox, animatedStyle]}>
-        <Pressable style={styles.buttonLeft}>{childrenLeft}</Pressable>
-        {children}
+        <Pressable style={styles.buttonLeft} onPress={onPressLeft}>
+          {childrenLeft}
+        </Pressable>
+        {childrenTitle}
+        <Pressable style={styles.buttonRight} onPress={onPressRight}>
+          {childrenRight}
+        </Pressable>
       </Animated.View>
     </View>
   );
@@ -67,5 +81,12 @@ const styles = StyleSheet.create({
     padding: 0,
     marginBottom: 0,
     textTransform: "capitalize",
+  },
+  buttonRight: {
+    right: 0,
+    width: scale(30),
+    marginEnd: scale(30),
+    position: "absolute",
+    paddingTop: scale(60),
   },
 });

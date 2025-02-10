@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 
 type Props = {
-  title: string;
+  title?: string;
   childrenRight?: React.ReactNode;
   childrenLeft?: React.ReactNode;
   onPressRight?: () => void;
@@ -22,7 +22,7 @@ export default function HeaderCustom({
       <Pressable style={styles.buttonLeft} onPress={onPressLeft}>
         {childrenLeft}
       </Pressable>
-      <Text style={styles.title}>{title}</Text>
+      {title !== undefined && <Text style={styles.titleS}>{title}</Text>}
       <Pressable style={styles.buttonRight} onPress={onPressRight}>
         {childrenRight}
       </Pressable>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: scale(10),
   },
-  title: {
+  titleS: {
     fontSize: scale(30),
     textAlign: "center",
     color: "#FFFFFF",

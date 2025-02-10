@@ -6,11 +6,11 @@ import {
   Pressable,
   Dimensions,
 } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
 import HeaderAnimated from "@/components/ui/HeaderAnimated";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import InfoAnimated from "./components/InfoAnimated";
 
 const SCREEN_HEIGHT = (Dimensions.get("window").height / 2) * 0.2;
@@ -22,12 +22,21 @@ export default function PetProfile() {
     image: string;
   }>();
   const pet = JSON.parse(stringPet);
+  console.log("pet", pet);
+  console.log("petId", petId);
 
+  function goToBack() {
+    router.push("../");
+  }
+
+  function goToReport() {
+    router.push({ pathname: "/report", params: { petId: petId } });
+  }
   return (
     <View>
       <View>
         <HeaderAnimated
-          children={
+          childrenTitle={
             <>
               <View style={styles.titleRow}>
                 <Text style={styles.title}>Ficha</Text>
@@ -38,17 +47,23 @@ export default function PetProfile() {
                   color="#4B4B4B"
                 />
               </View>
-              {pet.image && (
-                <View style={styles.imageRow}>
-                  <Image style={styles.image} source={{ uri: pet.image }} />
-                </View>
-              )}
+              <View style={styles.imageRow}>
+                {pet.image && (
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri: image,
+                    }}
+                  />
+                )}
+              </View>
             </>
           }
+          onPressLeft={goToBack}
+          onPressRight={goToReport}
+          childrenRight={<IconSymbol size={35} name="bullhorn" color="white" />}
           childrenLeft={
-            <Link href={"/(tabs)"}>
-              <IconSymbol size={35} name="arrow-back" color="white" />
-            </Link>
+            <IconSymbol size={35} name="arrow-back" color="white" />
           }
         />
       </View>
