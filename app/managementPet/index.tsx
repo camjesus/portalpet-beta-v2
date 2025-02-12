@@ -1,10 +1,10 @@
 import { StyleSheet, View } from "react-native";
-import { Link, useRouter, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, router } from "expo-router";
 import { useState, useReducer, useEffect } from "react";
 import { scale } from "react-native-size-matters";
 import { User } from "@/models/User";
-import { petReducer, initalPet, ACTION } from "@/hooks/usePetReducer";
-import { savePetAsync } from "@/service/usePetDataBase";
+import { petReducer, initalPet, ACTION } from "@/hooks/reducers/usePet";
+import { savePetAsync } from "@/service/dataBase/usePet";
 //components
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import HeaderCustom from "@/components/ui/HeaderCustom";
@@ -25,7 +25,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { validatePet } from "@/hooks/useLoadPet";
+import { validatePet } from "@/service/utils/usePet";
 
 export default function ManagementPet() {
   const [noName, setNoName] = useState(false);
@@ -34,12 +34,10 @@ export default function ManagementPet() {
   const [state, dispatch] = useReducer(petReducer, initalPet);
   const [toast, setToast] = useState(false);
   const [user, setUser] = useState<User>();
-  const default_image = "./components/default.png";
   const [toastConfig, setToastConfig] = useState({
     title: "Eureka!",
     message: "La mascota se ha creado con éxito!",
   });
-  const router = useRouter();
 
   const { uid, name, lastname } = useLocalSearchParams<{
     uid: string;
@@ -47,16 +45,15 @@ export default function ManagementPet() {
     lastname: string;
   }>();
   var scrollY = useSharedValue(0);
+  const default_image = "./components/default.png";
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.set(event.contentOffset.y);
-      //console.log("scrollY.value" + scrollY.get());
     },
   });
 
   useEffect(() => {
-    //console.log("user my pets", uid, name, lastname);
     if (uid !== undefined) {
       setUser({ uid: uid, name: name, lastname: lastname });
     }
@@ -73,12 +70,12 @@ export default function ManagementPet() {
   }
 
   async function savePet() {
-    var error = validatePet(state.pet, noName);
+    var errorMessage = validatePet(state.pet, noName);
 
-    if (error !== "") {
+    if (errorMessage !== "") {
       setToastConfig({
         title: "Validación",
-        message: error,
+        message: errorMessage,
       });
       setToast(true);
       return;
@@ -91,8 +88,8 @@ export default function ManagementPet() {
     setToast(true);
     try {
       await savePetAsync(state.pet, user);
-    } catch {
-      throw Error("error en savePetAsync");
+    } catch(error) {
+      throw Error("error en ManagementPet: savePetAsync" + error);
     }
     router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
   }
@@ -136,10 +133,7 @@ export default function ManagementPet() {
         />
 
         <InputImage changeImage={changeValue} />
-        <Animated.ScrollView
-          onScroll={scrollHandler}
-          scrollEventThrottle={10} // Optimiza la frecuencia del scroll
-        >
+        <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={10}>
           <View style={styles.row}>
             <InputName
               name={state.pet.name}

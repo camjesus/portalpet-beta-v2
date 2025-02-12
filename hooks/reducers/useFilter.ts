@@ -40,10 +40,9 @@ export const filterReducer = (state: State, action: Action) => {
                 [action.payload.field]: action.payload.value
             }  };
         case ACTION.CHANGE_OBJECT:    
-        console.log("filterReducer", action.payload.value)
         return { filter: action.payload.value };
         default:
-            throw Error('error en filterReducer');
+            throw Error('error Reducers: useFilter: filterReducer');
     }
 };
 

@@ -4,7 +4,7 @@ import ViewCustom from "@/components/ViewCustom";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import Button from "@/components/ui/Button";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import { myPetAsync } from "@/service/usePetDataBase";
+import { myPetAsync } from "@/service/dataBase/usePet";
 import { useEffect, useState } from "react";
 import { PetId } from "@/models/Pet";
 import Card from "@/components/MyPets/Card";
@@ -21,7 +21,6 @@ export default function MyPets() {
   const [goTosearch, setSearch] = useState<boolean>(
     search === "yes" || search === undefined ? true : false
   );
-  console.log("VOLVIII", search);
 
   const getData = async () => {
     await myPetAsync().then((res) => {
@@ -33,7 +32,6 @@ export default function MyPets() {
 
   useEffect(() => {
     if (goTosearch) {
-      console.log("goTosearch");
       getData();
     }
   }, []);
@@ -45,7 +43,7 @@ export default function MyPets() {
         {myPets && (
           <FlatList
             data={myPets}
-            renderItem={({ item }) => <Card pet={item.pet} />}
+            renderItem={({ item }) => <Card item={item} />}
             keyExtractor={(item) => item.docId}
             showsHorizontalScrollIndicator={true}
             numColumns={2}

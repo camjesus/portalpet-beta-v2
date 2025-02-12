@@ -1,5 +1,4 @@
-import { Pressable, View, Text, Dimensions } from "react-native";
-import { StyleSheet } from "react-native";
+import { Pressable, View, Dimensions, StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 import Animated, {
   useSharedValue,
@@ -58,13 +57,14 @@ export default function HeaderAnimated({
 
 const styles = StyleSheet.create({
   buttonLeft: {
+    left: 0,
     width: scale(30),
     marginStart: scale(30),
     position: "absolute",
     paddingTop: scale(60),
   },
   container: {
-    justifyContent: "flex-start", // Comienza desde la parte superior
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   animatedBox: {

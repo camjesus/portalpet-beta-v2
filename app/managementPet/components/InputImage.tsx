@@ -22,8 +22,6 @@ export default function InputImage({ changeImage }: Props) {
       quality: 1,
     });
 
-    //console.log(result);
-
     if (!result.canceled) {
       setActive(true);
       changeImage(result.assets[0].uri, "image");

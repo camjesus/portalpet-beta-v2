@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-export default function AMBPetLayout() {
+export default function ManagementPetLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />

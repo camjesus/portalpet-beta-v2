@@ -1,11 +1,5 @@
-import { Dispatch, FC, SetStateAction } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TextInputProps,
-} from "react-native";
+import { FC } from "react";
+import { Text, StyleSheet, TextInput, TextInputProps } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { scale } from "react-native-size-matters";
 

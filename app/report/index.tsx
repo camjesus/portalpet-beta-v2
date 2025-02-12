@@ -3,7 +3,7 @@ import HeaderCustom from "@/components/ui/HeaderCustom";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TextInputCustom from "@/components/ui/TextInputCustom";
 import ViewCustom from "@/components/ViewCustom";
-import { reportPetAsync } from "@/service/useReportDataBase";
+import { reportPetAsync } from "@/service/dataBase/useReport";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View, Text, TextInput } from "react-native";
@@ -11,7 +11,7 @@ import { scale } from "react-native-size-matters";
 import Toast from "@/components/ui/Toast";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function ReportIndex() {
+export default function Report() {
   const [other, setOther] = useState("");
   const [option, setOption] = useState(0);
   const [toast, setToast] = useState(false);

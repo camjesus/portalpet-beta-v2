@@ -1,16 +1,9 @@
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  Pressable,
-  Dimensions,
-} from "react-native";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
 import HeaderAnimated from "@/components/ui/HeaderAnimated";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import InfoAnimated from "./components/InfoAnimated";
 
 const SCREEN_HEIGHT = (Dimensions.get("window").height / 2) * 0.2;
@@ -22,11 +15,9 @@ export default function PetProfile() {
     image: string;
   }>();
   const pet = JSON.parse(stringPet);
-  console.log("pet", pet);
-  console.log("petId", petId);
 
   function goToBack() {
-    router.push("../");
+    router.push({ pathname: "../", params: { search: "no" } });
   }
 
   function goToReport() {

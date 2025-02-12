@@ -1,4 +1,4 @@
-import { Pressable, View, Text, Dimensions } from "react-native";
+import { View, Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 import Animated, {
@@ -45,7 +45,7 @@ export default function InfoAnimated({ children }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end", // Comienza desde la parte inferior
+    justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: "#f5f5f5",
   },

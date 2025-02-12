@@ -1,12 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
-import PanelButtons from "../../../components/ui/PanelButtons";
-import TitleCustom from "@/components/ui/TitleCustom";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import {
-  LABEL_SIZE,
-  PLACEHOLDER_DESCRIPTION,
-  SIZE,
-} from "@/constants/StaticData";
+import { StyleSheet } from "react-native";
+import { PLACEHOLDER_DESCRIPTION } from "@/constants/StaticData";
 import React from "react";
 import { scale } from "react-native-size-matters";
 import TextInputCustom from "@/components/ui/TextInputCustom";

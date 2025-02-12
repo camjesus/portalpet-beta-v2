@@ -1,9 +1,9 @@
 import { Pressable, View, Text, StyleSheet } from "react-native";
 import TitleCustom from "@/components/ui/TitleCustom";
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { scale } from "react-native-size-matters";
 import { Age } from "@/models/Enums";
-import Slider, { MarkerProps } from "@react-native-community/slider";
+import Slider from "@react-native-community/slider";
 import { MAXIMUN_AGE } from "@/constants/StaticData";
 
 type Props = {
@@ -24,8 +24,6 @@ export default function FilterAge({
   );
   const [sliderFrom, setSliderFrom] = useState(ageFrom);
   const [sliderTo, setSliderTo] = useState(ageTo);
-
-  const firstToValue = ageTo;
 
   function changeAgeType(ageType: string) {
     if (ageType === Age.MONTH) {

@@ -1,32 +1,46 @@
-import { View, StyleSheet, Image, Text, Dimensions } from "react-native";
-import React, { act, useEffect, useState } from "react";
-import { loadPet } from "@/hooks/useLoadPet";
-import { Pet } from "@/models/Pet";
+import { View, StyleSheet, Image, Text, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { loadPet } from "@/service/utils/usePet";
+import { Pet, PetId } from "@/models/Pet";
 import { scale } from "react-native-size-matters";
+import { router } from "expo-router";
 
 type Props = {
-  pet: Pet;
+  item: PetId;
 };
 
-export default function Card({ pet }: Props) {
+export default function Card({ item }: Props) {
   const [data, setData] = useState({ name: "", action: "", color: "" });
 
   useEffect(() => {
-    let { name, action, color } = loadPet(pet);
+    let { name, action, color } = loadPet(item.pet);
     console.log("efect" + name, action, color);
     setData({ name: name, action: action, color: color });
   }, []);
 
+  function goToPetProfile() {
+    router.push({
+      pathname: "/petProfile",
+      params: {
+        petId: item.docId,
+        stringPet: JSON.stringify(item.pet),
+        image: encodeURI(item.pet.image),
+      },
+    });
+  }
+
   return (
-    <View
-      style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}
-    >
-      <Image source={{ uri: pet.image }} style={[styles.image]} />
-      <Text style={styles.textName}>{data.name}</Text>
-      <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>
-        {data.action}
-      </Text>
-    </View>
+    <Pressable onPress={goToPetProfile}>
+      <View
+        style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}
+      >
+        <Image source={{ uri: item.pet.image }} style={[styles.image]} />
+        <Text style={styles.textName}>{data.name}</Text>
+        <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>
+          {data.action}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 

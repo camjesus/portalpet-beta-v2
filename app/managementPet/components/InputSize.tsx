@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import PanelButtons from "../../../components/ui/PanelButtons";
+import PanelButtons from "@/components/ui/PanelButtons";
 import TitleCustom from "@/components/ui/TitleCustom";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { LABEL_SIZE, SIZE } from "@/constants/StaticData";

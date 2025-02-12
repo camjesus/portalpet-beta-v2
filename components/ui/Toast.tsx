@@ -8,7 +8,7 @@ type Props = {
   setToast: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Toast = ({ message, title, setToast }: Props) => {
+export default function Toast({ message, title, setToast }: Props) {
   const bottom = React.useRef(new Animated.Value(-80)).current;
   const opacity = React.useRef(new Animated.Value(3)).current;
 
@@ -41,7 +41,7 @@ const Toast = ({ message, title, setToast }: Props) => {
       </View>
     </Animated.View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -56,5 +56,3 @@ const styles = StyleSheet.create({
   message: { color: "white", fontSize: scale(15) },
   title: { color: "white", fontWeight: "bold" },
 });
-
-export default Toast;
