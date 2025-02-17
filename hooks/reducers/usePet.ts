@@ -15,12 +15,11 @@ interface State {
 
 export const initalPet: State = {	
 	pet: {
-		id: "",
 		name: '',
 		size: 'SMALL',
 		type: 'DOG',
 		sex: 'FEMALE',
-		age: null,
+		age: undefined,
 		ageType: 'YEAR',
 		description: '',
 		image: "./components/default.png",

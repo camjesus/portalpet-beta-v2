@@ -22,8 +22,8 @@ export default function Card({ item }: Props) {
     router.push({
       pathname: "/petProfile",
       params: {
-        petId: item.docId,
-        stringPet: JSON.stringify(item.pet),
+        petId: item.petId,
+        stringItem: JSON.stringify(item),
         image: encodeURI(item.pet.image),
       },
     });
@@ -32,8 +32,7 @@ export default function Card({ item }: Props) {
   return (
     <Pressable onPress={goToPetProfile}>
       <View
-        style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}
-      >
+        style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}>
         <Image source={{ uri: item.pet.image }} style={[styles.image]} />
         <Text style={styles.textName}>{data.name}</Text>
         <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>

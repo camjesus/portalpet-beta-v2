@@ -22,11 +22,12 @@ import {
 import { LABELS_ACCTION } from "@/constants/StaticData";
 import { PetId } from "@/models/Pet";
 import { User } from "@/models/User";
+import Loading from "@/components/ui/Loading";
 
 export default function Home() {
   const [user, setUser] = useState<User>();
   const [myPets, setMyPets] = useState<PetId[]>([]);
-  const [load, setLoad] = useState(true);
+  const [load, setLoad] = useState(false);
   const [state, dispatch] = useReducer(filterReducer, initalFilter);
   const [optAction, setAction] = useState(0);
   const { search } = useLocalSearchParams<{
@@ -38,9 +39,10 @@ export default function Home() {
 
   const getUser = async () => {
     let user = {
-      uid: "4dede6e5-504c-4f46-8339-9d6280a693b0",
+      id: "4dede6e5-504c-4f46-8339-9d6280a693b0",
       name: "Martin",
       lastname: "Palermo",
+      email: "boquita_palermo@gmail.com",
     };
     setUser(user);
     await saveUserAsync(user);
@@ -49,8 +51,8 @@ export default function Home() {
   const getData = async () => {
     await findPetsAsync().then((res) => {
       setMyPets(res.myPets);
-      setSearch(false);
       setAction(res.action);
+      setSearch(false);
       dispatch({
         type: ACTION.CHANGE_OBJECT,
         payload: {
@@ -73,6 +75,7 @@ export default function Home() {
   }
 
   useEffect(() => {
+    setLoad(true);
     if (user === undefined) {
       getUser();
     }
@@ -113,8 +116,9 @@ export default function Home() {
         }
         title="Portal Pet"
       />
+      {load && <Loading />}
       <View style={styles.containerCenter}>
-        {!load && (
+        {!load && user && (
           <PanelButtons
             changeOption={(t) => {
               changeValue(t);
@@ -123,7 +127,7 @@ export default function Home() {
             labels={LABELS_ACCTION}
           />
         )}
-        {!load && user && (
+        {!load && user && myPets && (
           <View style={styles.containerSwiper}>
             <Swiper pets={myPets} />
           </View>

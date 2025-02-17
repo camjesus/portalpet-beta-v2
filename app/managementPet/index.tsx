@@ -28,22 +28,24 @@ import Animated, {
 import { validatePet } from "@/service/utils/usePet";
 
 export default function ManagementPet() {
+  const { stringItem } = useLocalSearchParams<{
+    stringItem: string;
+  }>();
+  const petObj = stringItem && JSON.parse(stringItem);
   const [noName, setNoName] = useState(false);
   const [optAcion, setAcion] = useState(0);
   const [optSize, setSize] = useState(0);
-  const [state, dispatch] = useReducer(petReducer, initalPet);
+  const [state, dispatch] = useReducer(
+    petReducer,
+    petObj ? petObj.pet : initalPet
+  );
   const [toast, setToast] = useState(false);
-  const [user, setUser] = useState<User>();
+
   const [toastConfig, setToastConfig] = useState({
     title: "Eureka!",
     message: "La mascota se ha creado con éxito!",
   });
 
-  const { uid, name, lastname } = useLocalSearchParams<{
-    uid: string;
-    name: string;
-    lastname: string;
-  }>();
   var scrollY = useSharedValue(0);
   const default_image = "./components/default.png";
 
@@ -52,12 +54,6 @@ export default function ManagementPet() {
       scrollY.set(event.contentOffset.y);
     },
   });
-
-  useEffect(() => {
-    if (uid !== undefined) {
-      setUser({ uid: uid, name: name, lastname: lastname });
-    }
-  }, []);
 
   function changeValue(value: any, field: string) {
     dispatch({
@@ -86,17 +82,18 @@ export default function ManagementPet() {
       });
     }
     setToast(true);
-    try {
-      await savePetAsync(state.pet, user);
-    } catch(error) {
-      throw Error("error en ManagementPet: savePetAsync" + error);
-    }
+    console.log("petObj", petObj);
+    await savePetAsync(petObj && petObj.id, state.pet);
     router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
   }
 
   function changeNoName() {
     setNoName(!noName);
     if (!noName) changeValue("", "name");
+  }
+
+  function submit() {
+    savePet();
   }
 
   const IMAGE_HEIGHT = scale(300);
@@ -155,7 +152,7 @@ export default function ManagementPet() {
           </View>
           <View style={[styles.row, { gap: scale(5) }]}>
             <InputAge
-              age={state.pet.age !== null ? state.pet.age?.toString() : ""}
+              age={state.pet.age !== undefined ? state.pet.age?.toString() : ""}
               type={state.pet.ageType}
               changeAge={changeValue}
               changeAgeType={changeValue}
@@ -175,7 +172,7 @@ export default function ManagementPet() {
             />
           </View>
           <View style={styles.submit}>
-            <Button label="Crear" onPress={savePet} />
+            <Button label="Crear" onPress={submit} />
           </View>
         </Animated.ScrollView>
       </View>

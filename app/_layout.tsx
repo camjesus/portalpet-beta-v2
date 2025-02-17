@@ -34,13 +34,14 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={DarkTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="managementPet" options={{ headerShown: false }} />
           <Stack.Screen name="petProfile" options={{ headerShown: false }} />
           <Stack.Screen name="filter" options={{ headerShown: false }} />
           <Stack.Screen name="report" options={{ headerShown: false }} />
+          <Stack.Screen name="chat" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="dark" />

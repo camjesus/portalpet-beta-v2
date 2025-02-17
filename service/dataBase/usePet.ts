@@ -1,7 +1,6 @@
 import { db , storage } from "../../FirebaseConfig";
 import { collection, addDoc, where, query, getDocs, orderBy , doc, updateDoc} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import * as Crypto from "expo-crypto";
 import { getUserAsync } from '@/service/storeData/useUser';
 import { getFilters, getAction } from './useFilter';
 import { Pet } from '@/models/Pet';
@@ -9,44 +8,49 @@ import { User } from '@/models/User';
 import { ACCTIONS } from '@/constants/StaticData';
 
 //public
-export const savePetAsync = async (pet:Pet, user:User|any) => {
-    pet = loadInitPet(pet, user);
-    pet.image = await loadImage(pet);
+export const savePetAsync = async (petId:string, pet:Pet) => {
+    const edit = petId ? true : false;
+    const user = await getUserAsync();
 
-    const newDoc = await addDoc(collection(db, "pets"), pet).then();
-    //console.log(newDoc);
-    //console.log("newPet");
-    return newDoc;
+    pet = loadInitPet(pet, user);
+    pet.image = pet.image.substring(0,5) !== "https" ?  await loadImage(user.id, pet) : pet.image;
+
+    if(edit){
+        try{
+            const docRef = doc(db, "pets", petId);
+            await updateDoc(docRef, pet);
+        }catch(error){
+            throw Error("error DataBase: UsePet: savePetAsync.updateDoc" + error);
+        }
+    }else{
+        await addDoc(collection(db, "pets"), pet);
+    }
 }
 
 export const myPetAsync =  async () => {
     const user = await getUserAsync();
-    //console.log("user ", user);
     const myPets: any[] = [];
+
     const q = query(collection(db, "pets"), 
-                where("rescuerId", "==", user.uid),
-                where("active", "==", true), 
-                orderBy("createDate", "desc"));
+              where("rescuerId", "==", user.id),
+              where("active", "==", true), 
+              orderBy("createDate", "desc"));
 
     const querySnapshot = await getDocs(q);
-    
     querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-
         if (doc != null) {
             myPets.push({
-                docId: doc.id,
+                petId: doc.id,
                 pet: doc.data()});
           }
       });
-    return {user: user, myPets:myPets};
+      
+    return {user: user, myPets: myPets};
 }
 
 
 export const findPetsAsync =  async () => {
-    console.log("entro findPetsAsync");
     const user = await getUserAsync();
-    //console.log("user ", user);
     let filter = await getFilters();
     let action = await getAction();
     
@@ -68,7 +72,7 @@ export const findPetsAsync =  async () => {
         console.log(doc.id, " => ", doc.data());
         if (doc != null) {
             myPets.push({
-                docId: doc.id,
+                petId: doc.id,
                 pet: doc.data()});
         }
         });
@@ -89,25 +93,24 @@ export const disablePetAsync =  async (id:string) => {
 //private
 function loadInitPet(pet:Pet, user:User)
 {
-    if(pet.id === "") pet.id = Crypto.randomUUID();
-
     if(pet.name === "") pet.name = "No tiene";
-
+    
     pet.rescuer = {
-        uid: user.uid,
+        id: user.id,
         name: user.name,
-        lastName: user.lastname
+        lastName: user.lastname,
+        email: user.email
     };
-    pet.rescuerId = user.uid;
+    pet.rescuerId = user.id;
     pet.dateStart = pet.action === "FOUND" ? new Date() : null;
 
     return pet;
 }
 
-async function loadImage(pet:Pet){
+async function loadImage(id:string|null, pet:Pet){
     const response = await fetch(pet.image);
     const blob = await response.blob();
-    const refImage = ref(storage, "petImages/" + pet.id);
+    const refImage = ref(storage, "petImages/" + id + pet.createDate.getMilliseconds().toString());
     const uploadTask = await uploadBytesResumable(refImage, blob);
     const downloadURL = await getDownloadURL((uploadTask).ref);
     return downloadURL;

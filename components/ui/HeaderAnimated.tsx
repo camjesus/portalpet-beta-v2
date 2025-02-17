@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
   animatedBox: {
     width: "100%",
     backgroundColor: "#ffb13d",
-    borderBottomLeftRadius: scale(60),
-    borderBottomRightRadius: scale(60),
+    borderBottomLeftRadius: scale(30),
+    borderBottomRightRadius: scale(30),
   },
   title: {
     fontSize: scale(30),
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     marginTop: scale(15),
     padding: 0,
     marginBottom: 0,
-    textTransform: "capitalize",
+    //textTransform: "capitalize",
   },
   buttonRight: {
     right: 0,

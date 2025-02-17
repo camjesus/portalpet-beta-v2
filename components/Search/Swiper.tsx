@@ -16,13 +16,12 @@ export default function Swiper({ pets }: Props) {
       {pets.map((item, index) => {
         return (
           <SwiperCard
-            key={item.docId}
+            key={item.petId}
             numOfCards={pets.length}
             index={index}
             activeIndex={activeIndex}
-            pet={item.pet}
-            petId={item.docId}
-          ></SwiperCard>
+            item={item}
+            petId={item.petId}></SwiperCard>
         );
       })}
     </View>

@@ -6,11 +6,11 @@ import { Report } from "@/models/Report";
 
 export const reportPetAsync = async (report:Report) => {
     const user = await getUserAsync();
-    report.idReporter = user.uid;
+    report.idReporter = user.id;
     
     try{
         const q = query(collection(db, "report"), 
-                    where("idRescuer", "!=", user.uid),
+                    where("idRescuer", "!=", user.id),
                     where("IdPet", "==", report.idPet), 
                     orderBy("createDate", "desc"));
 

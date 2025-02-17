@@ -1,10 +1,11 @@
+import { Rescuer } from "./Rescuer";
+
 export type Pet = {
-	id: string;
 	name: string; //NO_NAME
 	size: string; //SMALL - MEDIUM - BIG
 	type: string; //DOG - CAT
 	sex: string; //FAMALE - MALE
-	age: number | null;
+	age: number | undefined;
 	ageType: string;
 	description: string;
 	image: string;
@@ -16,16 +17,12 @@ export type Pet = {
 	longitud: string| null;
 	idAdopter: string| null;
 	rescuerId: string| null;
-	rescuer: {
-		lastName: string;
-		name: string;
-		uid: string;
-	} | null;
-	createDate: Date;
+	rescuer: Rescuer| null;
+	createDate: Date ;
 	//ubication: undefined; // N/A
 };
 
 export interface PetId {
-	docId: string;
+	petId: string;
 	pet: Pet;
   }

@@ -17,7 +17,7 @@ import { Link, router } from "expo-router";
 
 type Props = {
   petId: string;
-  pet: Pet;
+  item: PetId;
   numOfCards: number;
   index: number;
   activeIndex: SharedValue<number>;
@@ -28,11 +28,12 @@ const screenHeight = Dimensions.get("screen").height;
 
 export default function SwiperCard({
   petId,
-  pet,
+  item,
   numOfCards,
   index,
   activeIndex,
 }: Props) {
+  const { pet } = item;
   const [data, setData] = useState({ name: "", action: "", color: "" });
   const translationX = useSharedValue(0);
 
@@ -70,6 +71,7 @@ export default function SwiperCard({
         )}deg`,
       },
     ],
+
   }));
 
   const gesture = Gesture.Pan()
@@ -79,7 +81,7 @@ export default function SwiperCard({
       activeIndex.value = interpolate(
         Math.abs(translationX.value),
         [0, 200],
-        [index, index + 0.8]
+        [index, index + 0.9]
       );
     })
     .onEnd((event) => {
@@ -97,17 +99,15 @@ export default function SwiperCard({
 
   useEffect(() => {
     let { name, action, color } = loadPet(pet);
-    //console.log("efect" + name, action, color);
     setData({ name: name, action: action, color: color });
   }, []);
 
   function goToPetProfile(petId: string, pet: Pet) {
-    //console.log("pet", pet);
     router.push({
       pathname: "/petProfile",
       params: {
         petId: petId,
-        stringPet: JSON.stringify(pet),
+        stringItem: JSON.stringify(item),
         image: encodeURI(pet.image),
       },
     });
@@ -122,8 +122,7 @@ export default function SwiperCard({
           {
             zIndex: numOfCards - index,
           },
-        ]}
-      >
+        ]}>
         <Image
           style={[styles.image, StyleSheet.absoluteFillObject]}
           source={{ uri: pet.image }}

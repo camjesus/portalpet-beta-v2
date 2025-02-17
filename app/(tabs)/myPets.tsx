@@ -14,7 +14,6 @@ import { User } from "@/models/User";
 
 export default function MyPets() {
   const [myPets, setMyPets] = useState<PetId[]>([]);
-  const [user, setUser] = useState<User>();
   const { search } = useLocalSearchParams<{
     search: string;
   }>();
@@ -25,7 +24,6 @@ export default function MyPets() {
   const getData = async () => {
     await myPetAsync().then((res) => {
       setMyPets(res.myPets);
-      setUser(res.user);
       setSearch(false);
     });
   };
@@ -43,8 +41,8 @@ export default function MyPets() {
         {myPets && (
           <FlatList
             data={myPets}
-            renderItem={({ item }) => <Card item={item} />}
-            keyExtractor={(item) => item.docId}
+            renderItem={({ item }) => <Card key={item.petId} item={item} />}
+            keyExtractor={(item) => item.petId}
             showsHorizontalScrollIndicator={true}
             numColumns={2}
             contentContainerStyle={styles.flatList}
@@ -62,14 +60,8 @@ export default function MyPets() {
           <Link
             href={{
               pathname: "/managementPet",
-              params: {
-                uid: user && user.uid,
-                name: user && user.name,
-                lastname: user && user.lastname,
-              },
-            }}
-          >
-            <IconSymbol size={25} name="add" color="black" />
+            }}>
+            <IconSymbol size={30} name="add" color="black" />
           </Link>
         </Button>
       </View>

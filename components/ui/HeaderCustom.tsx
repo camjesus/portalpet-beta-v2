@@ -32,8 +32,8 @@ export default function HeaderCustom({
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: scale(15),
-    paddingTop: scale(25),
+    paddingBottom: scale(10),
+    paddingTop: scale(10),
     alignItems: "center",
     backgroundColor: "#ffb13d",
     borderBottomLeftRadius: 25,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     padding: 0,
     flex: 5,
     marginBottom: 0,
-    textTransform: "capitalize",
+    //textTransform: "capitalize",
   },
   buttonLeft: {
     width: scale(30),

@@ -25,7 +25,10 @@ const MAPPING = {
   'filter': 'filter',
   'bullhorn': 'bullhorn',
   'money-off': 'currency-usd-off',
-  'alert': 'alert-outline'
+  'alert': 'alert-outline',
+  'account': 'account',
+  'edit': 'pencil',
+  'send': 'send'
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

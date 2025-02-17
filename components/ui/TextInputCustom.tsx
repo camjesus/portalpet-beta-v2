@@ -5,7 +5,7 @@ import { scale } from "react-native-size-matters";
 
 type Props = {
   options: TextInputProps;
-  editable?: boolean;
+  editable?: boolean | true;
   multiline?: boolean;
   label?: string;
 };
@@ -23,7 +23,11 @@ const TextInputCustom: FC<Props> = ({
         <TextInput
           editable={editable}
           multiline={multiline}
-          style={[styles.default, multiline ? styles.box : styles.input]}
+          style={[
+            styles.default,
+            multiline ? styles.box : styles.input,
+            editable === false && styles.disable,
+          ]}
           {...options}
         />
       </SafeAreaView>
@@ -56,5 +60,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     marginBottom: scale(5),
+  },
+  disable: {
+    color: "#A5A5A5",
   },
 });
