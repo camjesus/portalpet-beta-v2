@@ -3,9 +3,11 @@ import { collection, addDoc, where, query, getDocs, orderBy , doc, updateDoc} fr
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { getUserAsync } from '@/service/storeData/useUser';
 import { getFilters, getAction } from './useFilter';
-import { Pet } from '@/models/Pet';
+import { Pet, PetId } from '@/models/Pet';
 import { User } from '@/models/User';
 import { ACCTIONS } from '@/constants/StaticData';
+import { Filter } from "@/models/Filter";
+import { dataToPetMap } from "../mapping/useMapping";
 
 //public
 export const savePetAsync = async (petId:string, pet:Pet) => {
@@ -53,8 +55,14 @@ export const findPetsAsync =  async () => {
     const user = await getUserAsync();
     let filter = await getFilters();
     let action = await getAction();
+
+    let myPets: PetId[] = [];
+
+    if(filter.ageType === "YEAR")
+    {
+        myPets = await getPetsAgeTypeMonth(action, filter);
+    }
     
-    const myPets: any[] = [];
     const q = query(collection(db, "pets"), 
             //where("rescuerId", "!=", user.uid),
             where("active", "==", true), 
@@ -71,11 +79,9 @@ export const findPetsAsync =  async () => {
         querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
         if (doc != null) {
-            myPets.push({
-                petId: doc.id,
-                pet: doc.data()});
+            myPets.push(dataToPetMap(doc.id, doc.data()))
         }
-        });
+    });
     
     return {user: user, myPets: myPets, filter: filter, action: action};
 }
@@ -110,8 +116,34 @@ function loadInitPet(pet:Pet, user:User)
 async function loadImage(id:string|null, pet:Pet){
     const response = await fetch(pet.image);
     const blob = await response.blob();
-    const refImage = ref(storage, "petImages/" + id + pet.createDate.getMilliseconds().toString());
+    const refImage = ref(storage, "petImages/" + id  + Math.floor(Math.random() * 1000));
     const uploadTask = await uploadBytesResumable(refImage, blob);
     const downloadURL = await getDownloadURL((uploadTask).ref);
     return downloadURL;
+}
+
+
+async function getPetsAgeTypeMonth(action:number, filter:Filter){
+    const myPets: PetId[] = [];
+
+    const q = query(collection(db, "pets"), 
+    //where("rescuerId", "!=", user.uid),
+    where("active", "==", true), 
+    where("action", "==", ACCTIONS[action]), 
+    where("sex", "in", filter.sex), 
+    where("size", "in", filter.size), 
+    where("age", ">=", 1), 
+    where("age", "<=", 11), 
+    where("ageType", "==", "MONTH"), 
+    where("type", "in", filter.type), 
+    orderBy("createDate", "desc"));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+    if (doc != null) {
+        myPets.push(dataToPetMap(doc.id, doc.data()));
+    }
+    });
+    return myPets;
 }

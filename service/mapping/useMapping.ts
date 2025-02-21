@@ -10,10 +10,10 @@ export function dataToChatMap(id:string, data:any){
     return chat;
 }
 
-export function dataToPetMap(id:string, data:any){
+export function dataToPetMap(id:string, pet:any){
     const newPet : PetId = {
         petId: id,
-        pet: data
+        pet: pet
     };
     return newPet;
 }

@@ -16,6 +16,7 @@ export default function InputMessage({ sendMessage }: Props) {
     sendMessage(message);
     setMessage("");
   }
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -26,6 +27,7 @@ export default function InputMessage({ sendMessage }: Props) {
               value: message,
               onChangeText: (t) => setMessage(t),
               placeholder: "Mensaje",
+              numberOfLines: message.length < 100 ? 1 : 2,
             }}
           />
         </View>

@@ -1,7 +1,7 @@
 export type ChatId = {
     id: string;
-    chat: Chat | null;
-} | undefined;
+    chat: Chat;
+};
 
 export type Chat = {
     createDate: Date | null;
@@ -9,6 +9,7 @@ export type Chat = {
         id: string | null;
         name: string | null;
         image: string | null;
+        action: string;
     }| null;
     rescuer: {
         id: string | null | undefined;

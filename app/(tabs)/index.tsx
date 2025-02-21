@@ -48,8 +48,11 @@ export default function Home() {
     await saveUserAsync(user);
   };
 
+  console.log("user", user);
+
   const getData = async () => {
     await findPetsAsync().then((res) => {
+      console.log("res.myPets", res.myPets);
       setMyPets(res.myPets);
       setAction(res.action);
       setSearch(false);

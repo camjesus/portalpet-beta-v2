@@ -33,11 +33,12 @@ export default function BubbleUser({ isMyMessage, name }: Props) {
 const styles = StyleSheet.create({
   leftIcon: {
     alignSelf: "flex-start",
-    marginTop: scale(2),
+    marginTop: scale(10),
   },
   rightIcon: {
     alignSelf: "flex-end",
-    marginTop: scale(2),
+    marginTop: scale(10),
+    marginBottom: scale(2),
   },
   text: {
     fontSize: scale(13),

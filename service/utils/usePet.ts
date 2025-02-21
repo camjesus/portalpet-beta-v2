@@ -6,7 +6,7 @@ const default_image = "./components/default.png";
 //public
 export const loadPet = (pet:Pet) => {
   let name = loadName(pet);
-  var [action, color] =  loadAction(pet);
+  var [action, color] =  loadAction(pet.action);
   return {name, action, color};
 }
 
@@ -48,6 +48,27 @@ export function loadLabels(size: string[]) {
   return labelInit;
 }
 
+export function loadAction(petAction:string) {
+  let action = "";
+  let color = "";
+  switch (petAction) {
+    case "ADOPTION":
+      action = "ADOPCIÓN";
+      color = "#9D69A3";
+      break;
+    case "WANTED":
+      action = "BUSCADO";
+      color = "#C73E1D";
+      break;
+    case "FOUND":
+      action = "ENCONTRADO";
+      color = "#2E86AB";
+      break;
+    default:
+      return action;
+  }
+  return [action, color];
+}
 
 //private
 function loadName(pet:Pet) {
@@ -69,24 +90,3 @@ function loadName(pet:Pet) {
   return `${pet.name}, ${pet.age} ${ageType} `;
 }
 
-function loadAction(pet:Pet) {
-  let action = "";
-  let color = "";
-  switch (pet.action) {
-    case "ADOPTION":
-      action = "ADOPCIÓN";
-      color = "#9D69A3";
-      break;
-    case "WANTED":
-      action = "LO BUSCO";
-      color = "#C73E1D";
-      break;
-    case "FOUND":
-      action = "LO ENCONTRÉ";
-      color = "#2E86AB";
-      break;
-    default:
-      return action;
-  }
-  return [action, color];
-}

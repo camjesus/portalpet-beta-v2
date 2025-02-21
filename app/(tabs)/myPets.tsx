@@ -10,7 +10,6 @@ import { PetId } from "@/models/Pet";
 import Card from "@/components/MyPets/Card";
 import { FlatList } from "react-native-gesture-handler";
 import { scale } from "react-native-size-matters";
-import { User } from "@/models/User";
 
 export default function MyPets() {
   const [myPets, setMyPets] = useState<PetId[]>([]);

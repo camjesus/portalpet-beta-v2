@@ -40,17 +40,6 @@
     "plugins": [
       "expo-router",
       [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#ffb13d",
-          "image": "./assets/images/splash-icon.png",
-          "dark": {
-            "image": "./assets/images/splash-icon.png",
-            "backgroundColor": "#ffb13d"
-          }
-        }
-      ],
-      [
         "expo-media-library",
         {
           "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",

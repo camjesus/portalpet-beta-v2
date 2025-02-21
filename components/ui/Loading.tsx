@@ -28,7 +28,7 @@ export default function Loading() {
       <Animated.View style={[styles.box, animatedStyle]}>
         <Image
           style={styles.image}
-          source={require("@/assets/images/logo.png")}
+          source={require("@/assets/images/react-logo.png")}
         />
       </Animated.View>
     </View>
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    alignContent: "center",
     height: "100%",
   },
   box: {

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, Pressable, View, FlatList } from "react-native";
+import { StyleSheet, Pressable, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import ViewCustom from "@/components/ViewCustom";
@@ -6,7 +6,7 @@ import HeaderCustom from "@/components/ui/HeaderCustom";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import InputMessage from "./components/InputMessage";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { loadChatAsync } from "@/service/dataBase/useChat";
+import { loadChatAsync, getChatById } from "@/service/dataBase/useChat";
 import { MessageId } from "@/models/Message";
 import { ChatId } from "@/models/Chat";
 import { newMessageAsync } from "@/service/dataBase/useMessage";
@@ -19,20 +19,25 @@ export default function PetProfile() {
   const [messages, setMessages] = useState<MessageId[]>([]);
   const [chat, setChat] = useState<ChatId>();
   const [user, setUser] = useState<User>();
+  const [goToSearch, setGoToSearch] = useState(true);
   const scrollViewRef = useRef<ScrollView>(null);
+  const title =
+    chat?.chat.rescuer?.id === user?.id
+      ? chat?.chat.user?.name
+      : chat?.chat.rescuer?.name;
 
   useEffect(() => {
-    // Espera a que el componente se monte y luego se desplaza al final
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
-  const { stringItem } = useLocalSearchParams<{
+  const { chatId, stringItem } = useLocalSearchParams<{
+    chatId: string;
     stringItem: string;
   }>();
-  const petId = JSON.parse(stringItem);
+  const petId = stringItem !== undefined ? JSON.parse(stringItem) : undefined;
 
   function goToBack() {
-    router.push({ pathname: "/(tabs)" });
+    router.push({ pathname: "../" });
   }
 
   function sendMessage(message: string) {
@@ -40,11 +45,25 @@ export default function PetProfile() {
   }
 
   const getChatAsync = async () => {
-    await loadChatAsync(petId).then((res) => {
-      setMessages(res.messages);
-      setChat(res.chat);
-      setUser(res.user);
-    });
+    if (petId !== undefined) {
+      await loadChatAsync(petId).then((res) => {
+        setMessages(res.messages);
+        setChat(res.chat);
+        setUser(res.user);
+      });
+      setGoToSearch(false);
+    }
+  };
+
+  const getChatByIdAsync = async () => {
+    if (chatId !== undefined) {
+      await getChatById(chatId).then((res) => {
+        setChat(res.chat);
+        setMessages(res.messages);
+        setUser(res.user);
+      });
+      setGoToSearch(false);
+    }
   };
 
   const saveMessageAsync = async (message: string) => {
@@ -56,15 +75,21 @@ export default function PetProfile() {
   };
 
   useEffect(() => {
-    if (!chat) {
-      getChatAsync();
+    if (goToSearch) {
+      if (chatId !== undefined) {
+        getChatByIdAsync();
+      }
+
+      if (!chat && petId !== undefined) {
+        getChatAsync();
+      }
     }
-  }, [chat]);
+  }, [goToSearch]);
 
   return (
     <ViewCustom>
       <HeaderCustom
-        title="Chat"
+        title={title}
         childrenLeft={
           <Pressable onPress={goToBack}>
             <IconSymbol size={30} name="arrow-back" color="white" />
@@ -97,13 +122,13 @@ export default function PetProfile() {
 
 const styles = StyleSheet.create({
   footer: {
-    margin: 16,
+    margin: scale(5),
     right: 0,
     bottom: 0,
     position: "absolute",
   },
   flatList: {
-    marginHorizontal: scale(20),
+    marginHorizontal: scale(10),
   },
   leftIcon: {
     alignSelf: "flex-start",

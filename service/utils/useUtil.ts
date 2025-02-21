@@ -13,10 +13,20 @@ export function formatTimestampToDate(timestamp:Timestamp|undefined)
 export function getTime(timestamp:Timestamp|undefined)
 {
     const date = formatTimestampToDate(timestamp);
-    return date?.getHours() + ":" + date?.getMinutes();
+    if(date)
+    {
+        return date?.getHours() + ":" + (date?.getMinutes() >= 10 ? date?.getMinutes() : "0"+ date?.getMinutes()) ;
+    }
+    return "";
 }
 
 export function capitalize(value:string)
 {
     return value.substring(0,1).toUpperCase() + value.substring(1,value.length);
+}
+
+export function formatURL(url:string)
+{
+    console.log(url.replace("petImages/", "petImages%2F"))
+    return url.replace("petImages/", "petImages%2F");
 }

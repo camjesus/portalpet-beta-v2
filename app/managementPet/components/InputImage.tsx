@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -37,8 +37,7 @@ export default function InputImage({ changeImage }: Props) {
             permissions?.status === ImagePicker.PermissionStatus.GRANTED
               ? pickImage
               : requestPermission
-          }
-        >
+          }>
           <IconSymbol
             size={25}
             name="add-image"

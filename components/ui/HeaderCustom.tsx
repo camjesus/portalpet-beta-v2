@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 
 type Props = {
-  title?: string;
+  title?: string | null | undefined;
   childrenRight?: React.ReactNode;
   childrenLeft?: React.ReactNode;
   onPressRight?: () => void;

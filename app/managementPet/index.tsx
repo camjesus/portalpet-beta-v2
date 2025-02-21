@@ -26,6 +26,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { validatePet } from "@/service/utils/usePet";
+import Loading from "@/components/ui/Loading";
 
 export default function ManagementPet() {
   const { stringItem } = useLocalSearchParams<{
@@ -39,6 +40,7 @@ export default function ManagementPet() {
     petReducer,
     petObj ? petObj.pet : initalPet
   );
+  const [load, seLoad] = useState(false);
   const [toast, setToast] = useState(false);
 
   const [toastConfig, setToastConfig] = useState({
@@ -82,9 +84,11 @@ export default function ManagementPet() {
       });
     }
     setToast(true);
+    seLoad(true);
     console.log("petObj", petObj);
     await savePetAsync(petObj && petObj.id, state.pet);
     router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
+    seLoad(false);
   }
 
   function changeNoName() {
@@ -119,63 +123,71 @@ export default function ManagementPet() {
           </Link>
         }
       />
-      <View style={styles.container}>
-        <Animated.Image
-          source={
-            state.pet.image === default_image
-              ? require(default_image)
-              : { uri: state.pet.image }
-          }
-          style={[styles.image, imageStyle]}
-        />
+      {load && <Loading />}
+      {!load && (
+        <View style={styles.container}>
+          <Animated.Image
+            source={
+              state.pet.image === default_image
+                ? require(default_image)
+                : { uri: state.pet.image }
+            }
+            style={[styles.image, imageStyle]}
+          />
 
-        <InputImage changeImage={changeValue} />
-        <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={10}>
-          <View style={styles.row}>
-            <InputName
-              name={state.pet.name}
-              noName={noName}
-              changeName={changeValue}
-              changeNoName={changeNoName}
-            />
-          </View>
-          <View style={styles.containerCenter}>
-            <InputAction
-              option={optAcion}
-              changeValue={setAcion}
-              changeOption={changeValue}
-            />
-          </View>
-          <View style={[styles.row, { gap: scale(50) }]}>
-            <InputType type={state.pet.type} changeValue={changeValue} />
-            <InputSex sex={state.pet.sex} changeValue={changeValue} />
-          </View>
-          <View style={[styles.row, { gap: scale(5) }]}>
-            <InputAge
-              age={state.pet.age !== undefined ? state.pet.age?.toString() : ""}
-              type={state.pet.ageType}
-              changeAge={changeValue}
-              changeAgeType={changeValue}
-            />
-            <InputSize
-              option={optSize}
-              changeValue={setSize}
-              changeOption={changeValue}
-            />
-          </View>
+          <InputImage changeImage={changeValue} />
+          <Animated.ScrollView
+            onScroll={scrollHandler}
+            scrollEventThrottle={10}>
+            <View style={styles.row}>
+              <InputName
+                name={state.pet.name}
+                noName={noName}
+                changeName={changeValue}
+                changeNoName={changeNoName}
+              />
+            </View>
+            <View style={styles.containerCenter}>
+              <InputAction
+                option={optAcion}
+                changeValue={setAcion}
+                changeOption={changeValue}
+              />
+            </View>
+            <View style={[styles.row, { gap: scale(50) }]}>
+              <InputType type={state.pet.type} changeValue={changeValue} />
+              <InputSex sex={state.pet.sex} changeValue={changeValue} />
+            </View>
+            <View style={[styles.row, { gap: scale(5) }]}>
+              <InputAge
+                age={
+                  state.pet.age !== undefined ? state.pet.age?.toString() : ""
+                }
+                type={state.pet.ageType}
+                changeAge={changeValue}
+                changeAgeType={changeValue}
+              />
+              <InputSize
+                option={optSize}
+                changeValue={setSize}
+                changeOption={changeValue}
+              />
+            </View>
 
-          <View style={{ marginTop: scale(16) }}>
-            <InputDescription
-              optAcion={optAcion}
-              description={state.pet.description}
-              changeValue={changeValue}
-            />
-          </View>
-          <View style={styles.submit}>
-            <Button label="Crear" onPress={submit} />
-          </View>
-        </Animated.ScrollView>
-      </View>
+            <View style={{ marginTop: scale(16) }}>
+              <InputDescription
+                optAcion={optAcion}
+                description={state.pet.description}
+                changeValue={changeValue}
+              />
+            </View>
+            <View style={styles.submit}>
+              <Button label="Crear" onPress={submit} />
+            </View>
+          </Animated.ScrollView>
+        </View>
+      )}
+
       <View style={styles.containerCenter}>
         {toast && (
           <Toast

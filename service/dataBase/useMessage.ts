@@ -46,7 +46,6 @@ function addSystemMessage(messages: MessageId[], userId:string)
     const dateToday = new Date();
     let newMessages : MessageId[] = [];
     let lastUser : string = "";
-    let isfirst : string = "";
 
     messages.forEach((message, index) => {
         let dateAt = formatTimestampToDate(message.message?.createAt);
