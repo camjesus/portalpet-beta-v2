@@ -28,7 +28,7 @@ const MAPPING = {
   'alert': 'alert-outline',
   'account': 'account',
   'edit': 'pencil',
-  'send': 'send'
+  'send': 'send',
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

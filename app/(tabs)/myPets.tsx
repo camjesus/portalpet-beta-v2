@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(20),
     justifyContent: "center",
     alignContent: "center",
-
     marginTop: scale(15),
   },
   float: {
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
   message: {
     marginTop: 400,
     textAlign: "center",
-    color: "#FFFFFF",
+    color: "white",
     fontSize: 26,
   },
 });

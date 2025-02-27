@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "1014944540583",
-    "project_id": "portalpetbeta-v2",
-    "storage_bucket": "portalpetbeta-v2.firebasestorage.app"
+    "project_number": "411434491747",
+    "project_id": "webportapetbeta",
+    "storage_bucket": "webportapetbeta.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1014944540583:android:00de232310560f9e0ef882",
+        "mobilesdk_app_id": "1:411434491747:android:9f6f5344883e1ba8ac3d56",
         "android_client_info": {
-          "package_name": "portalpet.beta.v2"
+          "package_name": "com.camjesus.portalpetbetav2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1014944540583-g9hsbp8bum64pv0ma6i264j1lk28l7l5.apps.googleusercontent.com",
+          "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBmXHBW3neWYI29o3HyXtfs9xKN-X3QAfY"
+          "current_key": "AIzaSyAivYnNersN4_NK4Uaq7S9RTrTn9opFC9E"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1014944540583-g9hsbp8bum64pv0ma6i264j1lk28l7l5.apps.googleusercontent.com",
+              "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "411434491747-sts3qfu2en9agd82guuopgamrsbkvpop.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.camjesus.portalpetbetav2"
+              }
             }
           ]
         }

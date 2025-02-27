@@ -5,12 +5,19 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/splash-icon.png",
-    "scheme": "myapp",
+    "scheme": "portalpet",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.camjesus.portalpetbetav2"
+      "bundleIdentifier": "com.camjesus.portalpetbetav2",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["com.googleusercontent.apps.411434491747-sts3qfu2en9agd82guuopgamrsbkvpop"]
+          }
+        ]
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",

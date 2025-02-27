@@ -31,6 +31,7 @@
         <data android:scheme="com.camjesus.portalpetbetav2"/>
         <data android:scheme="exp+portalpet-beta-v2"/>
         <data android:scheme="exp+portalpet-beta"/>
+        <data android:scheme="portalpet"/>
       </intent-filter>
     </activity>
   </application>

@@ -1,6 +1,5 @@
 import { PropsWithChildren, useState } from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -17,8 +16,7 @@ export function Collapsible({
       <TouchableOpacity
         style={styles.heading}
         onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}
-      >
+        activeOpacity={0.8}>
         <IconSymbol
           name="paw"
           size={18}

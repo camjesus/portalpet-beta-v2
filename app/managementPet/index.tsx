@@ -1,8 +1,7 @@
 import { StyleSheet, View } from "react-native";
 import { Link, useLocalSearchParams, router } from "expo-router";
-import { useState, useReducer, useEffect } from "react";
+import { useState, useReducer } from "react";
 import { scale } from "react-native-size-matters";
-import { User } from "@/models/User";
 import { petReducer, initalPet, ACTION } from "@/hooks/reducers/usePet";
 import { savePetAsync } from "@/service/dataBase/usePet";
 //components

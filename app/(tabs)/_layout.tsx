@@ -1,30 +1,32 @@
-import { Tabs } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 
 export default function TabLayout() {
+  const pathname = usePathname();
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#ffb13d",
         headerShown: false,
         //tabBarButton: HapticTab,
-        //tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
+        tabBarStyle: pathname === "/" ? { display: "none" } : {},
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Buscar",
+          href: null,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="search" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="home"
+        options={{
+          title: "Buscar",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="account" color={color} />
           ),
         }}
       />

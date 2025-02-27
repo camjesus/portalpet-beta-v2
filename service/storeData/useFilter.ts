@@ -44,14 +44,5 @@ export const getActionFilterAsync = async()=>
 };
 
 export const cleanAllAsync = async() => {
-    console.log("limpiete")
-    //await AsyncStorage.clear();
-    try{
-        var keys = await AsyncStorage.getAllKeys();
-        console.log("keys",  keys)
-        var filter = await AsyncStorage.getItem('@filter');
-        console.log("filter",  filter != null ? JSON.parse(filter) : null)
-    }catch(error){
-        throw Error("error StoreData: UseFilter: cleanAllAsync" + error);
-    }
+    await AsyncStorage.clear();
 }

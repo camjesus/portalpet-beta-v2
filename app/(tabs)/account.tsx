@@ -7,6 +7,8 @@ import { getUserAsync, updateUserAsync } from "@/service/storeData/useUser";
 import { scale } from "react-native-size-matters";
 import TextInputCustom from "@/components/ui/TextInputCustom";
 import Button from "@/components/ui/Button";
+import { cleanAllAsync } from "@/service/storeData/useFilter";
+import { router } from "expo-router";
 
 export default function Account() {
   const [user, setUser] = useState<User>();
@@ -31,6 +33,7 @@ export default function Account() {
       name: name ? name : null,
       lastname: lastname ? lastname : null,
       email: user ? user?.email : null,
+      image: user ? user?.image : null,
     };
     await updateUserAsync(newUser);
     setEdit(false);
@@ -50,6 +53,16 @@ export default function Account() {
       getUser();
     }
   }, [user]);
+
+  //para pruebas
+  const clear = async () => {
+    await cleanAllAsync();
+  };
+
+  function clearAll() {
+    clear();
+    router.push("/signin");
+  }
 
   return (
     <ViewCustom>
@@ -90,6 +103,7 @@ export default function Account() {
         </View>
         <View style={styles.submit}>
           <Button label={labelButton} onPress={submit} />
+          <Button label="Cerrar sesión" onPress={clearAll} />
         </View>
       </View>
     </ViewCustom>
