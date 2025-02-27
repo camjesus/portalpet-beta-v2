@@ -6,7 +6,7 @@ import {
   GOOGLE_ANDROID_ID,
   GOOGLE_IOS_ID,
   GOOGLE_WEB_ID,
-} from "@/constants/StaticData";
+} from "@/secret-google";
 import { router } from "expo-router";
 import ViewCustom from "@/components/ViewCustom";
 import { Pressable } from "react-native";
