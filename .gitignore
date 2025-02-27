@@ -32,6 +32,10 @@ yarn-error.*
 # local env files
 .env*.local
 secret-google.ts
+google-sevices.json
+
+# andoid
+andoid/app/google-sevices.json
 
 # typescript
 *.tsbuildinfo
