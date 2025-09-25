@@ -5,6 +5,7 @@ import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { scale } from "react-native-size-matters";
+import { router } from "expo-router";
 
 type Props = {
   changeImage: (text: string, field: string) => void;
@@ -28,6 +29,10 @@ export default function InputImage({ changeImage }: Props) {
     }
   };
 
+  function goToMap() {
+    //router.push("/map");
+  }
+
   return (
     <>
       <View style={styles.viewRowIcon}>
@@ -44,7 +49,7 @@ export default function InputImage({ changeImage }: Props) {
             color={active ? "#4B4B4B" : "#A5A5A5"}
           />
         </Button>
-        <Button circle={true}>
+        <Button circle={true} onPress={goToMap}>
           <IconSymbol
             size={25}
             name="add-location"

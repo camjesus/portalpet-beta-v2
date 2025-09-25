@@ -56,50 +56,13 @@ export default function FilterAge({
               style={{
                 color: "white",
                 fontWeight: "bold",
-              }}
-            >
+              }}>
               Max:
             </Text>
             <Text style={{ color: "white" }}>{sliderTo}</Text>
           </View>
         </View>
-
-        <Slider
-          style={[styles.slider, { marginTop: scale(10) }]}
-          minimumValue={1}
-          maximumValue={maxValue}
-          tapToSeek
-          minimumTrackTintColor="#ffb13d"
-          maximumTrackTintColor="#A5A5A5"
-          thumbTintColor="#ffb13d"
-          step={1}
-          value={ageTo}
-          onValueChange={(value) => {
-            if (value > sliderFrom) {
-              setSliderTo(value);
-              changeValue(value, "ageTo");
-            }
-          }}
-        />
       </View>
-
-      <Slider
-        style={styles.slider}
-        minimumValue={1}
-        maximumValue={maxValue}
-        tapToSeek
-        minimumTrackTintColor="#ffb13d"
-        maximumTrackTintColor="#A5A5A5"
-        thumbTintColor="#ffb13d"
-        step={1}
-        value={ageFrom}
-        onValueChange={(value) => {
-          if (value < sliderTo) {
-            setSliderFrom(value);
-            changeValue(value, "ageFrom");
-          }
-        }}
-      />
 
       <View style={[styles.row, { gap: scale(10) }]}>
         <View style={styles.box}>
@@ -112,8 +75,7 @@ export default function FilterAge({
               styles.year,
               type === Age.YEAR ? styles.active : styles.default,
             ]}
-            onPress={() => changeAgeType(Age.YEAR)}
-          >
+            onPress={() => changeAgeType(Age.YEAR)}>
             <Text style={type === Age.YEAR ? styles.labelActive : styles.label}>
               Años
             </Text>
@@ -128,11 +90,9 @@ export default function FilterAge({
               styles.button,
               type === Age.MONTH ? styles.active : styles.default,
             ]}
-            onPress={() => changeAgeType(Age.MONTH)}
-          >
+            onPress={() => changeAgeType(Age.MONTH)}>
             <Text
-              style={type === Age.MONTH ? styles.labelActive : styles.label}
-            >
+              style={type === Age.MONTH ? styles.labelActive : styles.label}>
               Meses
             </Text>
           </Pressable>

@@ -27,7 +27,8 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.googleusercontent.apps.411434491747-sts3qfu2en9agd82guuopgamrsbkvpop</string>
+          <string>portalpet</string>
+          <string>com.camjesus.portalpetbetav2</string>
         </array>
       </dict>
       <dict>
@@ -52,6 +53,12 @@
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Permitir que $(PRODUCT_NAME) tenga acceso a tu ubicación?</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your location</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your location</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryAddUsageDescription</key>

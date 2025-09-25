@@ -9,15 +9,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.camjesus.portalpetbetav2",
-      "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleURLSchemes": ["com.googleusercontent.apps.411434491747-sts3qfu2en9agd82guuopgamrsbkvpop"]
-          }
-        ]
-      }
+      "bundleIdentifier": "com.camjesus.portalpetbetav2"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -58,8 +50,14 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
+          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tuπs fotos para subir esa bella mascota?",
           "cameraPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tu ubicación?"
         }
       ]
     ],

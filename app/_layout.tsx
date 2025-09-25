@@ -44,6 +44,7 @@ export default function RootLayout() {
           <Stack.Screen name="chat" options={{ headerShown: false }} />
           <Stack.Screen name="home" options={{ headerShown: false }} />
           <Stack.Screen name="signin" options={{ headerShown: false }} />
+          <Stack.Screen name="map" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
