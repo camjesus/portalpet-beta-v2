@@ -36,6 +36,8 @@ export default function Prueba() {
   const navigation = useNavigation();
 
   useEffect(() => {
+    console.log("entro a hone");
+
     return () => {
       navigation.setOptions({ tabBarStyle: undefined }); // Restaurar Tabs al salir
     };
@@ -43,7 +45,8 @@ export default function Prueba() {
 
   const getData = async () => {
     await findPetsAsync().then((res) => {
-      console.log("res.myPets", res.myPets);
+      //console.log("res.myPets", res.myPets);
+      console.log("entro a hone");
       setMyPets(res.myPets);
       setAction(res.action);
       setSearch(false);

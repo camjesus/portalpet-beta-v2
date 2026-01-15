@@ -14,6 +14,9 @@ export default function Search() {
   };
 
   useEffect(() => {
+    console.log("Search user ");
+    console.log(user);
+
     if (user === null) {
       getUser();
     } else {

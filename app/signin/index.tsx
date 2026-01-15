@@ -13,6 +13,8 @@ import { Pressable } from "react-native";
 import { scale } from "react-native-size-matters";
 import { getGoogleUserInfo } from "@/service/dataBase/useGoogleSignin";
 
+import { logo, googleSignin } from "@/assets/images";
+
 export default function Signin() {
   const [user, setUser] = useState<User | null>(null);
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -32,6 +34,8 @@ export default function Signin() {
   async function handleEffect() {
     if (response?.type === "success") {
       await getUserInfo(response?.authentication?.accessToken);
+    } else {
+      router.push("signin");
     }
   }
 
@@ -42,24 +46,20 @@ export default function Signin() {
         goToHome();
       }
     });
+
+    console.log("salida getUserInfo user " + user);
   };
 
   return (
     <ViewCustom>
       <View style={styles.back}>
-        <Image
-          style={styles.logoImage}
-          source={require("@/assets/images/house_paw.png")}
-        />
+        <Image style={styles.logoImage} source={logo} />
         <Text style={styles.text}>Bienvenido a </Text>
         <Text style={styles.title}>Portal pet</Text>
       </View>
 
       <Pressable style={styles.press} onPress={() => promptAsync()}>
-        <Image
-          style={styles.image}
-          source={require("@/assets/images/googleSignin.png")}
-        />
+        <Image style={styles.image} source={googleSignin} />
       </Pressable>
     </ViewCustom>
   );

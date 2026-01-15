@@ -1,8 +1,7 @@
 import { LABEL_SIZE } from "@/constants/StaticData";
 import { Size } from "@/models/Enums";
 import { Pet } from "@/models/Pet";
-const default_image = "./components/default.png";
-
+import { defaultImg } from "@/assets/images"
 //public
 export const loadPet = (pet:Pet) => {
   let name = loadName(pet);
@@ -23,7 +22,7 @@ export function validatePet(pet:Pet, noName:boolean)
   if (pet.description === "") 
     return errorMessage = "Es necesario ingresar alguna descripción."
 
-  if (pet.image === default_image) 
+  if (pet.image === defaultImg) 
     return errorMessage = "Es necesario ingresar alguna imagen."
 
   return errorMessage;

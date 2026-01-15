@@ -1,3 +1,4 @@
+import { defaultImg, logo } from '@/assets/images';
 import { Pet } from '@/models/Pet';
 
 interface Action {
@@ -13,7 +14,7 @@ interface State {
 	pet: Pet;
 }
 
-export const initalPet: State = {	
+export const initialPet: State = {	
 	pet: {
 		name: '',
 		size: 'SMALL',
@@ -22,7 +23,7 @@ export const initalPet: State = {
 		age: undefined,
 		ageType: 'YEAR',
 		description: '',
-		image: "./components/default.png",
+		image: defaultImg,
 		action: 'ADOPTION',
 		dateStart: null,
 		dateStart_string: null,

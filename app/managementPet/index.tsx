@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { Link, useLocalSearchParams, router } from "expo-router";
 import { useState, useReducer } from "react";
 import { scale } from "react-native-size-matters";
-import { petReducer, initalPet, ACTION } from "@/hooks/reducers/usePet";
+import { petReducer, initialPet, ACTION } from "@/hooks/reducers/usePet";
 import { savePetAsync } from "@/service/dataBase/usePet";
 //components
 import { IconSymbol } from "@/components/ui/IconSymbol";
@@ -26,6 +26,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { validatePet } from "@/service/utils/usePet";
 import Loading from "@/components/ui/Loading";
+import { defaultImg, logo } from "@/assets/images";
 
 export default function ManagementPet() {
   const { stringItem } = useLocalSearchParams<{
@@ -37,9 +38,9 @@ export default function ManagementPet() {
   const [optSize, setSize] = useState(0);
   const [state, dispatch] = useReducer(
     petReducer,
-    petObj ? petObj.pet : initalPet
+    petObj ? petObj.pet : initialPet
   );
-  const [load, seLoad] = useState(false);
+  const [load, setLoad] = useState(false);
   const [toast, setToast] = useState(false);
 
   const [toastConfig, setToastConfig] = useState({
@@ -48,8 +49,6 @@ export default function ManagementPet() {
   });
 
   var scrollY = useSharedValue(0);
-  const default_image = "./components/default.png";
-
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.set(event.contentOffset.y);
@@ -83,11 +82,11 @@ export default function ManagementPet() {
       });
     }
     setToast(true);
-    seLoad(true);
+    setLoad(true);
     console.log("petObj", petObj);
     await savePetAsync(petObj && petObj.id, state.pet);
     router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
-    seLoad(false);
+    setLoad(false);
   }
 
   function changeNoName() {
@@ -127,8 +126,8 @@ export default function ManagementPet() {
         <View style={styles.container}>
           <Animated.Image
             source={
-              state.pet.image === default_image
-                ? require(default_image)
+              state.pet.image === defaultImg
+                ? defaultImg
                 : { uri: state.pet.image }
             }
             style={[styles.image, imageStyle]}

@@ -10,19 +10,20 @@ import ViewCustom from "@/components/ViewCustom";
 
 const isBigger = Dimensions.get("screen").height > 830;
 const SCREEN_HEIGHT = ((Dimensions.get("screen").height * 0.6) / 3) * 0.2;
-console.log("dimension", Dimensions.get("screen").height);
+//console.log("dimension", Dimensions.get("screen").height);
 export default function PetProfile() {
-  const { petId, stringItem, image } = useLocalSearchParams<{
+  const { petId, stringItem, image, chat } = useLocalSearchParams<{
     petId: string;
     stringItem: string;
     image: string;
+    chat: string;
   }>();
   const item = JSON.parse(stringItem);
 
   const { pet } = item;
 
   function goToBack() {
-    router.push({ pathname: "../", params: { search: "no" } });
+    router.back();
   }
 
   function goToReport() {
@@ -109,20 +110,22 @@ export default function PetProfile() {
           }
         />
       </View>
-      <View style={styles.float}>
-        <Button circle={true}>
-          <Link
-            href={{
-              pathname: "/chat",
-              params: {
-                petId: petId,
-                stringItem: stringItem,
-              },
-            }}>
-            <IconSymbol size={30} name="chat" color="white" />
-          </Link>
-        </Button>
-      </View>
+      {chat && (
+        <View style={styles.float}>
+          <Button circle={true}>
+            <Link
+              href={{
+                pathname: "/chat",
+                params: {
+                  petId: petId,
+                  stringItem: stringItem,
+                },
+              }}>
+              <IconSymbol size={30} name="chat" color="white" />
+            </Link>
+          </Button>
+        </View>
+      )}
     </ViewCustom>
   );
 }

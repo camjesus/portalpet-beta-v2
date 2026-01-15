@@ -8,6 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { StyleSheet, View, Image } from "react-native";
 import { scale } from "react-native-size-matters";
+import { loading } from "@/assets/images";
 
 const duration = 2000;
 const easing = Easing.bezier(0.25, -0.5, 0.25, 1);
@@ -26,10 +27,7 @@ export default function Loading() {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.box, animatedStyle]}>
-        <Image
-          style={styles.image}
-          source={require("@/assets/images/react-logo.png")}
-        />
+        <Image style={styles.image} source={loading} />
       </Animated.View>
     </View>
   );

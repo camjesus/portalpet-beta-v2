@@ -14,7 +14,7 @@ export default function Card({ item }: Props) {
 
   useEffect(() => {
     let { name, action, color } = loadPet(item.pet);
-    console.log("efect" + name, action, color);
+    //console.log("efect" + name, action, color);
     setData({ name: name, action: action, color: color });
   }, []);
 

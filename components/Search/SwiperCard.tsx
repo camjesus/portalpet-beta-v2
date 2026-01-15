@@ -37,7 +37,7 @@ export default function SwiperCard({
   const [data, setData] = useState({ name: "", action: "", color: "" });
   const translationX = useSharedValue(0);
 
-  console.log("PETimage", encodeURI(pet.image));
+  //console.log("PETimage", encodeURI(pet.image));
 
   const animatedCard = useAnimatedStyle(() => ({
     opacity: interpolate(
@@ -71,7 +71,6 @@ export default function SwiperCard({
         )}deg`,
       },
     ],
-
   }));
 
   const gesture = Gesture.Pan()
@@ -109,6 +108,7 @@ export default function SwiperCard({
         petId: petId,
         stringItem: JSON.stringify(item),
         image: encodeURI(pet.image),
+        chat: "ok",
       },
     });
   }

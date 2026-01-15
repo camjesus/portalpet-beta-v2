@@ -1,3 +1,7 @@
+//ROUTES: Inprogres
+//<Stack.Screen name="home" options={{ headerShown: false }} />
+//<Stack.Screen name="map" options={{ headerShown: false }} />
+
 import {
   DarkTheme,
   DefaultTheme,
@@ -10,6 +14,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { base } from "@/assets/fonts";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 
@@ -19,14 +24,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    SpaceMono: base,
   });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
 
   if (!loaded) {
     return null;
@@ -42,9 +41,7 @@ export default function RootLayout() {
           <Stack.Screen name="filter" options={{ headerShown: false }} />
           <Stack.Screen name="report" options={{ headerShown: false }} />
           <Stack.Screen name="chat" options={{ headerShown: false }} />
-          <Stack.Screen name="home" options={{ headerShown: false }} />
           <Stack.Screen name="signin" options={{ headerShown: false }} />
-          <Stack.Screen name="map" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
