@@ -6,7 +6,7 @@ import { scale } from "react-native-size-matters";
 import ViewCustom from "@/components/ViewCustom";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import PanelButtons from "@/components/ui/PanelButtons";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import Swiper from "@/components/Search/Swiper";
 import { findPetsAsync } from "@/service/dataBase/usePet";
 import {

@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import HeaderCustom from "@/components/ui/HeaderCustom";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import TextInputCustom from "@/components/ui/TextInputCustom";
 import ViewCustom from "@/components/ViewCustom";
 import { reportPetAsync } from "@/service/dataBase/useReport";
@@ -63,8 +63,7 @@ export default function Report() {
                 option !== 2
                   ? styles.boxDefault
                   : [styles.boxDefault, styles.boxActive]
-              }
-            >
+              }>
               <IconSymbol size={35} name="money-off" color="#151718" />
 
               <Text style={styles.text}>
@@ -79,8 +78,7 @@ export default function Report() {
                 option !== 1
                   ? styles.boxDefault
                   : [styles.boxDefault, styles.boxActive]
-              }
-            >
+              }>
               <IconSymbol size={35} name="alert" color="#151718" />
 
               <Text style={styles.text}>

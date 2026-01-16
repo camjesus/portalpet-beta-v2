@@ -19,7 +19,7 @@ export type Message = {
     
 }
 
-export function newSystemMessageId(index:number, text: string)
+export default function newSystemMessageId(index:number, text: string)
 {
     const newSystem : MessageId = {
         id: index.toString(),

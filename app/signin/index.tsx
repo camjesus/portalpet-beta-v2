@@ -8,7 +8,7 @@ import {
   GOOGLE_WEB_ID,
 } from "@/secret-google";
 import { router } from "expo-router";
-import ViewCustom from "@/components/ViewCustom";
+import ViewCustom from "../../components/ViewCustom";
 import { Pressable } from "react-native";
 import { scale } from "react-native-size-matters";
 import { getGoogleUserInfo } from "@/service/dataBase/useGoogleSignin";

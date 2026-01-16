@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import ViewCustom from "@/components/ViewCustom";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import { useReducer, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";

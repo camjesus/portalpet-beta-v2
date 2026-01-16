@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import ViewCustom from "@/components/ViewCustom";
 import HeaderCustom from "@/components/ui/HeaderCustom";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import InputMessage from "./components/InputMessage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { loadChatAsync, getChatById } from "@/service/dataBase/useChat";

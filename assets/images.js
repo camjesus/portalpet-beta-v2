@@ -16,7 +16,7 @@ export const IMAGES = {
 },
 };
 
-const env = Constants.expoConfig.extra.ENV || "dev";
+const env = Constants.expoConfig?.extra.ENV || "dev";
 
 export const logo = IMAGES[env].logo;
 export const defaultImg = IMAGES[env].defaultImg;

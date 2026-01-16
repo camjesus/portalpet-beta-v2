@@ -10,6 +10,6 @@ export const FONTS = {
 };
 
 
-const env = Constants.expoConfig.extra.ENV || "dev";
+const env = Constants.expoConfig?.extra.ENV || "dev";
 
 export const base = FONTS[env].base;

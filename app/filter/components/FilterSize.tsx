@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import TitleCustom from "@/components/ui/TitleCustom";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import { LABEL_SIZE, SIZE } from "@/constants/StaticData";
 import { Size } from "@/models/Enums";
 import React, { useState } from "react";
@@ -42,8 +42,7 @@ export default function FilterSize({ size, changeValue }: Props) {
               styles.button,
               opt0 ? styles.active : styles.desactive,
             ]}
-            onPress={() => changeSize(0)}
-          >
+            onPress={() => changeSize(0)}>
             <IconSymbol
               key={"opt0"}
               size={20}
@@ -61,8 +60,7 @@ export default function FilterSize({ size, changeValue }: Props) {
               styles.button,
               opt1 ? styles.active : styles.desactive,
             ]}
-            onPress={() => changeSize(1)}
-          >
+            onPress={() => changeSize(1)}>
             <IconSymbol
               key={"opt1"}
               size={23}
@@ -80,8 +78,7 @@ export default function FilterSize({ size, changeValue }: Props) {
               styles.button,
               opt2 ? styles.active : styles.desactive,
             ]}
-            onPress={() => changeSize(2)}
-          >
+            onPress={() => changeSize(2)}>
             <IconSymbol
               key={"opt2"}
               size={26}

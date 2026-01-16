@@ -1,6 +1,6 @@
 import React from "react";
 import InputOption from "@/components/ui/InputOption";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import { Sex } from "@/models/Enums";
 
 type Props = {

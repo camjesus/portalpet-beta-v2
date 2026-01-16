@@ -5,7 +5,7 @@ import { scale } from "react-native-size-matters";
 import { petReducer, initialPet, ACTION } from "@/hooks/reducers/usePet";
 import { savePetAsync } from "@/service/dataBase/usePet";
 //components
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import InputName from "./components/InputName";
 import InputSize from "./components/InputSize";

@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
 import HeaderAnimated from "@/components/ui/HeaderAnimated";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import React from "react";
 import InfoAnimated from "./components/InfoAnimated";
 import Button from "@/components/ui/Button";

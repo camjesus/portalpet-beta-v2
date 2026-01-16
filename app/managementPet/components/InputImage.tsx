@@ -1,5 +1,5 @@
 import Button from "@/components/ui/Button";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";

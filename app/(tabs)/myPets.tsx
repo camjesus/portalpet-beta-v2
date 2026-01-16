@@ -3,7 +3,7 @@ import { Link, useLocalSearchParams } from "expo-router";
 import ViewCustom from "@/components/ViewCustom";
 import HeaderCustom from "@/components/ui/HeaderCustom";
 import Button from "@/components/ui/Button";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import { myPetAsync } from "@/service/dataBase/usePet";
 import { useEffect, useState } from "react";
 import { PetId } from "@/models/Pet";

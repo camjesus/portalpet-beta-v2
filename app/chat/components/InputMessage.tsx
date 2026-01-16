@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import { scale } from "react-native-size-matters";
 import TextInputCustom from "@/components/ui/TextInputCustom";
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import IconSymbol from "@/components/ui/IconSymbol";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = {
