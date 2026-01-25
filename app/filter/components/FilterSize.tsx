@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { TitleCustom, IconSymbol } from "@/components/ui";
 import { LABEL_SIZE, SIZE } from "@/constants/StaticData";
-import { Size } from "@/models/Enums";
+import { Size } from "@/models";
 import React, { useState } from "react";
 import { scale } from "react-native-size-matters";
 import { loadLabels } from "@/service/utils/usePet";

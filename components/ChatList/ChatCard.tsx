@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { loadAction } from "@/service/utils/usePet";
 import { scale } from "react-native-size-matters";
 import { router } from "expo-router";
-import { ChatId } from "@/models/Chat";
+import { ChatId } from "@/models";
 import IconSymbol from "../ui/IconSymbol";
 import { formatURL } from "@/service/utils/useUtil";
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { InputOption, IconSymbol } from "@/components/ui";
-import { Type } from "@/models/Enums";
+import { Type } from "@/models";
 
 type Props = {
   type: string[];

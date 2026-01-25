@@ -1,4 +1,4 @@
-import { Pet, PetId } from "@/models/Pet";
+import { Pet, PetId } from "@/models";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const saveMyPetsAsync = async(pets:PetId[])=> 

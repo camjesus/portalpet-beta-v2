@@ -1,5 +1,5 @@
 import { defaultImg, logo } from '@/assets/images';
-import { Pet } from '@/models/Pet';
+import { Pet } from '@/models';
 
 interface Action {
 	type: string;

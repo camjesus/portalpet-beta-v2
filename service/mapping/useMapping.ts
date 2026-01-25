@@ -1,7 +1,4 @@
-import { ChatId } from "@/models/Chat";
-import { MessageId } from "@/models/Message";
-import { PetId } from "@/models/Pet";
-import { Report } from "@/models/Report";
+import { ChatId , Report, MessageId, PetId} from "@/models";
 
 export function dataToChatMap(id: string, data: any) {
   const chat: ChatId = {

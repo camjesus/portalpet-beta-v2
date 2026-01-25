@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image, Text, Dimensions } from "react-native";
 import React, { act, useEffect, useState } from "react";
 import { loadPet } from "@/service/utils/usePet";
-import { Pet, PetId } from "@/models/Pet";
+import { Pet, PetId } from "@/models";
 import { scale } from "react-native-size-matters";
 import IconSymbol from "../ui/IconSymbol";
 import Button from "../ui/Button";

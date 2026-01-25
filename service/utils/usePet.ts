@@ -1,6 +1,5 @@
 import { LABEL_SIZE } from "@/constants/StaticData";
-import { AgeType, Size } from "@/models/Enums";
-import { Pet } from "@/models/Pet";
+import { AgeType, Size, Pet } from "@/models";
 import { defaultImg } from "@/assets/images"
 //public
 export const loadPet = (pet:Pet) => {

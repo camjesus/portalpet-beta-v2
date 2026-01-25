@@ -1,7 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
-import {ViewCustom, Button, TextInputCustom, HeaderCustom} from "@/components/ui";
+import {
+  ViewCustom,
+  Button,
+  TextInputCustom,
+  HeaderCustom,
+} from "@/components/ui";
 import { useEffect, useState } from "react";
-import { User } from "@/models/User";
+import { User } from "@/models";
 import { getUserAsync, updateUserAsync } from "@/service/storeData/useUser";
 import { scale } from "react-native-size-matters";
 import { cleanAllAsync } from "@/service/storeData/useFilter";

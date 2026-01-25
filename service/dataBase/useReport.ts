@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { getUserAsync } from "@/service/storeData/useUser";
 import { disablePetAsync } from "./usePet";
-import { Report } from "@/models/Report";
+import { Report } from "@/models";
 import { dataToReportMap } from "../mapping/useMapping";
 
 //public

@@ -2,7 +2,7 @@ import { Pressable, View, Text, StyleSheet } from "react-native";
 import { TextInputCustom, TitleCustom } from "@/components/ui";
 import React from "react";
 import { scale } from "react-native-size-matters";
-import { AgeType } from "@/models/Enums";
+import { AgeType } from "@/models";
 
 type Props = {
   title: string;

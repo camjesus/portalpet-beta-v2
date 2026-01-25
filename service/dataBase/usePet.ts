@@ -12,11 +12,9 @@ import {
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { getUserAsync } from "@/service/storeData/useUser";
 import { getFilters, getAction } from "./useFilter";
-import { Pet, PetId } from "@/models/Pet";
-import { User } from "@/models/User";
+import { Pet, PetId, User, AgeType } from "@/models";
 import { ACCTIONS } from "@/constants/StaticData";
 import { dataToPetMap } from "../mapping/useMapping";
-import { AgeType } from "@/models/Enums";
 
 //public
 export const savePetAsync = async (petId: string, pet: Pet) => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { InputOption, IconSymbol } from "@/components/ui";
-import { Sex } from "@/models/Enums";
+import { Sex } from "@/models";
 
 type Props = {
   sex: string[];

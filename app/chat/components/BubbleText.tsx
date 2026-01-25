@@ -1,7 +1,7 @@
 import { Text, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { scale } from "react-native-size-matters";
-import { Message } from "@/models/Message";
+import { Message } from "@/models";
 import { getTime } from "@/service/utils/useUtil";
 type Props = {
   isMyMessage: boolean;

@@ -1,7 +1,5 @@
 import { ACTION } from "@/hooks/reducers/useFilter";
-import { AgeType } from "@/models/Enums";
-import { Filter } from "@/models/Filter";
-import { Error } from "@/models/Error";
+import { AgeType, Filter } from "@/models";
 import { AGE_VALIDATION } from "@/constants/ErrorMsg";
 
 type Dispatch = React.Dispatch<any>;

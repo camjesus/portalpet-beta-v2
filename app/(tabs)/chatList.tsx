@@ -1,11 +1,10 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { HeaderCustom, Loading, ViewCustom } from "@/components/ui";
 import { useEffect, useState } from "react";
-import { ChatId } from "@/models/Chat";
+import { ChatId, User } from "@/models";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/ChatList/ChatCard";
 import { getChatsAsync } from "@/service/dataBase/useChat";
-import { User } from "@/models/User";
 
 export default function ChatList() {
   const [chats, setChats] = useState<ChatId[]>([]);

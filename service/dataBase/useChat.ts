@@ -9,12 +9,9 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { Chat, ChatId } from "@/models/Chat";
+import { Chat, ChatId, User , PetId, MessageId} from "@/models";
 import { dataToChatMap } from "../mapping/useMapping";
-import { MessageId } from "@/models/Message";
 import { findMessagesAsync } from "./useMessage";
-import { PetId } from "@/models/Pet";
-import { User } from "@/models/User";
 import { getUserAsync } from "../storeData/useUser";
 
 //public
@@ -57,7 +54,7 @@ const findChatAsync = async (petObj: PetId, user: User) => {
     where("rescuer.id", "==", pet.rescuerId),
     //where("rescuer.id", "==", "0dede6e5-504c-4f46-8339-9d6280a693b0"),
     where("user.id", "==", user.id),
-    where("pet.id", "==", petObj.petId),
+    where("pet.id", "==", petObj.id),
     orderBy("createDate", "desc"),
   );
 
@@ -84,7 +81,7 @@ const newChatAsync = async (petObj: PetId, user: User) => {
       name: pet.rescuer?.name,
     },
     pet: {
-      id: petObj.petId,
+      id: petObj.id,
       name: pet.name,
       image: pet.image,
       action: pet.action,

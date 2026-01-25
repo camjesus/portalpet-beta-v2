@@ -10,7 +10,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { dataToMessageMap } from "../mapping/useMapping";
-import { MessageId, Message, newSystemMessageId } from "@/models/Message";
+import { MessageId, Message, newSystemMessageId } from "@/models";
 import { getUserAsync } from "../storeData/useUser";
 import { capitalize, formatTimestampToDate } from "../utils/useUtil";
 

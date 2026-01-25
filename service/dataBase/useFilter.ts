@@ -1,6 +1,6 @@
 import { initalFilter } from "@/hooks/reducers/useFilter";
 import { getActionFilterAsync, getFilterAsync } from "@/service/storeData/useFilter";
-import { Filter } from "@/models/Filter";
+import { Filter } from "@/models";
 
 
 export async function  getFilters() : Promise<Filter> {

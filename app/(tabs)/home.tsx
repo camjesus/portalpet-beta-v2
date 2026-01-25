@@ -21,7 +21,7 @@ import {
   ACTION,
 } from "@/hooks/reducers/useFilter";
 import { LABELS_ACCTION } from "@/constants/StaticData";
-import { PetId } from "@/models/Pet";
+import { PetId } from "@/models";
 
 export default function Prueba() {
   const [myPets, setMyPets] = useState<PetId[]>([]);

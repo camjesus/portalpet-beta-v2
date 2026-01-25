@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image, Text, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { loadPet } from "@/service/utils/usePet";
-import { Pet, PetId } from "@/models/Pet";
+import { PetId } from "@/models";
 import { scale } from "react-native-size-matters";
 import { router } from "expo-router";
 
@@ -22,7 +22,7 @@ export default function Card({ item }: Props) {
     router.push({
       pathname: "/petProfile",
       params: {
-        petId: item.petId,
+        petId: item.id,
         stringItem: JSON.stringify(item),
         image: encodeURI(item.pet.image),
       },

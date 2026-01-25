@@ -3,7 +3,7 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { ViewCustom, HeaderCustom, Button, IconSymbol } from "@/components/ui";
 import { findMyPetsAsync } from "@/service/pet/petActions";
 import { useEffect, useState } from "react";
-import { PetId } from "@/models/Pet";
+import { PetId } from "@/models";
 import Card from "@/components/MyPets/Card";
 import { FlatList } from "react-native-gesture-handler";
 import { scale } from "react-native-size-matters";

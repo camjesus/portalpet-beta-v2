@@ -11,13 +11,11 @@ import { ViewCustom, HeaderCustom, IconSymbol } from "@/components/ui";
 import InputMessage from "./components/InputMessage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { loadChatAsync, getChatById } from "@/service/dataBase/useChat";
-import { MessageId } from "@/models/Message";
-import { ChatId } from "@/models/Chat";
+import { MessageId, ChatId, User } from "@/models";
 import { newMessageAsync, listenMessages } from "@/service/dataBase/useMessage";
 import Bubble from "./components/Bubble";
 import { scale } from "react-native-size-matters";
 import { ScrollView } from "react-native-gesture-handler";
-import { User } from "@/models/User";
 
 export default function PetProfile() {
   const [messages, setMessages] = useState<MessageId[]>([]);

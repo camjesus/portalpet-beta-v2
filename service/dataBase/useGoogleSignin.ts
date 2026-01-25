@@ -1,4 +1,4 @@
-import { User } from "@/models/User";
+import { User } from "@/models";
 import { saveUserAsync } from "../storeData/useUser";
 
 export const getGoogleUserInfo = async (token: string | undefined) => {

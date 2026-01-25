@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import React from "react";
-import { MessageId } from "@/models/Message";
+import { MessageId } from "@/models";
 import BubbleText from "./BubbleText";
 import BubbleUser from "./BubbleUser";
 type Props = {

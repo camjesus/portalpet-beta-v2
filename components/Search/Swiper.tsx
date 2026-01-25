@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import SwiperCard from "./SwiperCard";
-import { PetId } from "@/models/Pet";
+import { PetId } from "@/models";
 import { useSharedValue } from "react-native-reanimated";
 
 type Props = {

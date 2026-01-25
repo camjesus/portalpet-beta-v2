@@ -1,4 +1,4 @@
-import { PetId } from "@/models/Pet";
+import { PetId } from "@/models";
 import { getMyPetsAsync, saveMyPetsAsync } from "../storeData/usePets";
 import { myPetAsync } from "../dataBase/usePet";
 

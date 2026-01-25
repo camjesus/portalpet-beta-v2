@@ -1,5 +1,4 @@
-import { AgeType } from "@/models/Enums";
-import { Filter } from "@/models/Filter";
+import { AgeType, Filter } from "@/models";
 
 interface Action {
   type: string;

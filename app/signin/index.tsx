@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { User } from "@/models/User";
+import { User } from "@/models";
 import * as Google from "expo-auth-session/providers/google";
 import { Image, StyleSheet, View, Text } from "react-native";
 import {
