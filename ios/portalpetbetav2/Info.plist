@@ -27,6 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>portalpet</string>
           <string>com.camjesus.portalpetbetav2</string>
         </array>
       </dict>

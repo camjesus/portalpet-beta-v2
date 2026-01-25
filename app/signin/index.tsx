@@ -33,7 +33,7 @@ export default function Signin() {
   }, [response]);
 
   function goToHome() {
-    router.push("/(tabs)");
+    router.replace("/(tabs)");
   }
 
   async function handleEffect() {

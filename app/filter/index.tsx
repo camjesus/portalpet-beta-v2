@@ -10,11 +10,8 @@ import {
 } from "@/components/ui";
 import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
-import FilterType from "./components/FilterType";
-import { filterReducer, ACTION } from "@/hooks/reducers/useFilter";
-import FilterSize from "./components/FilterSize";
-import FilterSex from "./components/FilterSex";
-import { saveFilterAsync } from "@/service/storeData/useFilter";
+import { filterReducer } from "@/hooks/reducers/useFilter";
+import { FilterSex, FilterSize, FilterType } from "./components";
 import { filterActions } from "@/service/filter/filterActions";
 
 export default function Filters() {
@@ -27,19 +24,16 @@ export default function Filters() {
   const [toast, setToast] = useState(false);
 
   const [toastConfig, setToastConfig] = useState({
-    title: "Eureka!",
-    message: "La mascota se ha creado con éxito!",
+    title: "",
+    message: "",
   });
 
   useEffect(() => {
     console.log(firstLoad.current);
     if (!firstLoad) {
-      console.log("firstLoad");
-      console.log(firstLoad);
       setSearch("yes");
     }
     firstLoad.current = false;
-    console.log(firstLoad.current);
   }, [state]);
 
   function changeValue(value: any, field: string) {
@@ -54,19 +48,15 @@ export default function Filters() {
     filterActions.changeUntil(dispatch, field, value, state.filter);
   }
 
-  const saveFilter = async () => {
-    await saveFilterAsync(JSON.stringify(state.filter)).then(() => {
-      router.push({
-        pathname: "/(tabs)/home",
-        params: { search: search },
-      });
-    });
-  };
-
-  function save() {
+  async function saveAsync() {
     var error = filterActions.validateFilter(state.filter);
     if (!error) {
-      saveFilter();
+      await filterActions.saveAsync(state.filter).then(() => {
+        router.push({
+          pathname: "/(tabs)/home",
+          params: { search: search },
+        });
+      });
     } else {
       setToastConfig({ title: error.type, message: error.msg });
       setToast(true);
@@ -78,7 +68,7 @@ export default function Filters() {
       <HeaderCustom
         title="Filtros"
         childrenLeft={
-          <Pressable onPress={save}>
+          <Pressable onPress={saveAsync}>
             <IconSymbol size={30} name="arrow-back" color="white" />
           </Pressable>
         }
@@ -110,7 +100,7 @@ export default function Filters() {
           />
         </View>
         <View style={styles.submit}>
-          <Button label="Guardar" onPress={save} />
+          <Button label="Guardar" onPress={saveAsync} />
         </View>
 
         {toast && (

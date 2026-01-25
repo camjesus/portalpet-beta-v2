@@ -1,6 +1,7 @@
 import { ACTION } from "@/hooks/reducers/useFilter";
 import { AgeType, Filter } from "@/models";
 import { AGE_VALIDATION } from "@/constants/ErrorMsg";
+import { updateAsync } from "../storeData/useFilter";
 
 type Dispatch = React.Dispatch<any>;
 
@@ -45,5 +46,14 @@ export const filterActions = {
     ) {
       return AGE_VALIDATION;
     }
+    if(!filter.from.age || !filter.until.age)
+      {
+      return AGE_VALIDATION;
+    }
   },
+
+  async saveAsync(filter: Filter)
+  {
+    await updateAsync(JSON.stringify(filter));
+  }
 };

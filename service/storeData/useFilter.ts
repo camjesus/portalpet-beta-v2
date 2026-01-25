@@ -13,7 +13,7 @@ export const getFilterAsync = async()=>
     return null;
 };
 
-export const saveFilterAsync = async(filter:string)=> 
+export const updateAsync = async(filter:string)=> 
 {
     try{
         await AsyncStorage.removeItem('@filter');
