@@ -5,10 +5,7 @@ export default ({ config }) => ({
   slug: "portalpet-beta-v2",
   scheme: "portalpet",
 
-  android: {
-    ...config.android,
-    package: "com.camjesus.portalpetbetav2",
-  },
+ 
 
   extra: {
     //API_URL: process.env.API_URL,
@@ -19,7 +16,16 @@ export default ({ config }) => ({
     ASSET_SET: process.env.ASSET_SET,
   },
   expo: {
+    name: "portalpet-beta-v2",
+    slug: "portalpet-beta-v2",
+
+    scheme: "portalpet",
     sdkVersion: "54.0.0",
+     android: {
+    ...config.android,
+    package: "com.camjesus.portalpetbetav2",
+    softwareKeyboardLayoutMode: "resize",
+  },
     extra: {
       eas: {
         projectId: "f3967fa5-3be1-48ad-b2aa-f62e4242487d",

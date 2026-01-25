@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { User } from "@/models/User";
 import * as Google from "expo-auth-session/providers/google";
 import { Image, StyleSheet, View, Text } from "react-native";
@@ -8,15 +8,20 @@ import {
   GOOGLE_WEB_ID,
 } from "@/secret-google";
 import { router } from "expo-router";
-import ViewCustom from "../../components/ViewCustom";
+import ViewCustom from "../../components/ui/ViewCustom";
 import { Pressable } from "react-native";
 import { scale } from "react-native-size-matters";
-import { getGoogleUserInfo } from "@/service/dataBase/useGoogleSignin";
+import {
+  getGoogleUserInfo,
+  setDefaultUser,
+  setDefaultUser2,
+} from "@/service/dataBase/useGoogleSignin";
 
 import { logo, googleSignin } from "@/assets/images";
 
 export default function Signin() {
   const [user, setUser] = useState<User | null>(null);
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: GOOGLE_ANDROID_ID,
     iosClientId: GOOGLE_IOS_ID,
@@ -34,8 +39,6 @@ export default function Signin() {
   async function handleEffect() {
     if (response?.type === "success") {
       await getUserInfo(response?.authentication?.accessToken);
-    } else {
-      router.push("signin");
     }
   }
 
@@ -46,8 +49,24 @@ export default function Signin() {
         goToHome();
       }
     });
+  };
 
-    console.log("salida getUserInfo user " + user);
+  const setDefault = async () => {
+    await setDefaultUser().then((user) => {
+      if (user) {
+        setUser(user);
+        goToHome();
+      }
+    });
+  };
+
+  const setDefault2 = async () => {
+    await setDefaultUser2().then((user) => {
+      if (user) {
+        setUser(user);
+        goToHome();
+      }
+    });
   };
 
   return (
@@ -59,6 +78,12 @@ export default function Signin() {
       </View>
 
       <Pressable style={styles.press} onPress={() => promptAsync()}>
+        <Image style={styles.image} source={googleSignin} />
+      </Pressable>
+      <Pressable style={styles.press} onPress={() => setDefault()}>
+        <Image style={styles.image} source={googleSignin} />
+      </Pressable>
+      <Pressable style={styles.press} onPress={() => setDefault2()}>
         <Image style={styles.image} source={googleSignin} />
       </Pressable>
     </ViewCustom>

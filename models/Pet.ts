@@ -5,8 +5,9 @@ export type Pet = {
 	size: string; //SMALL - MEDIUM - BIG
 	type: string; //DOG - CAT
 	sex: string; //FAMALE - MALE
-	age: number | undefined;
-	ageType: string;
+	age: number | null; 
+	ageInMoths: number | null;
+	ageType: string; //MONTH - YEAR
 	description: string;
 	image: string;
 	action: string; //ADOPTION - WANTED - FOUND
@@ -23,6 +24,6 @@ export type Pet = {
 };
 
 export interface PetId {
-	petId: string;
+	id: string;
 	pet: Pet;
   }

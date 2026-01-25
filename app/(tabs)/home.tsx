@@ -1,12 +1,14 @@
 import { useEffect, useReducer, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Pressable } from "react-native-gesture-handler";
+import { StyleSheet, View, Pressable } from "react-native";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { scale } from "react-native-size-matters";
-import ViewCustom from "@/components/ViewCustom";
-import HeaderCustom from "@/components/ui/HeaderCustom";
-import PanelButtons from "@/components/ui/PanelButtons";
-import IconSymbol from "@/components/ui/IconSymbol";
+import {
+  ViewCustom,
+  HeaderCustom,
+  PanelButtons,
+  IconSymbol,
+  Loading,
+} from "@/components/ui";
 import Swiper from "@/components/Search/Swiper";
 import { findPetsAsync } from "@/service/dataBase/usePet";
 import {
@@ -20,7 +22,6 @@ import {
 } from "@/hooks/reducers/useFilter";
 import { LABELS_ACCTION } from "@/constants/StaticData";
 import { PetId } from "@/models/Pet";
-import Loading from "@/components/ui/Loading";
 
 export default function Prueba() {
   const [myPets, setMyPets] = useState<PetId[]>([]);
@@ -31,22 +32,23 @@ export default function Prueba() {
     search: string;
   }>();
   const [goTosearch, setSearch] = useState<boolean>(
-    search === "yes" || search === undefined ? true : false
+    search === "yes" || search === undefined ? true : false,
   );
   const navigation = useNavigation();
 
   useEffect(() => {
     console.log("entro a hone");
-
     return () => {
       navigation.setOptions({ tabBarStyle: undefined }); // Restaurar Tabs al salir
     };
   }, [navigation]);
 
   const getData = async () => {
+    console.log("goTosearch");
+    console.log(goTosearch);
     await findPetsAsync().then((res) => {
       //console.log("res.myPets", res.myPets);
-      console.log("entro a hone");
+      console.log("busco las mascotas otra vee");
       setMyPets(res.myPets);
       setAction(res.action);
       setSearch(false);

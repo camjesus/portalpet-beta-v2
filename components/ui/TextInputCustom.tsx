@@ -1,8 +1,14 @@
 import { FC } from "react";
-import { Text, StyleSheet, TextInput, TextInputProps } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  TextInput,
+  TextInputProps,
+  Keyboard,
+} from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { scale } from "react-native-size-matters";
-
+import { useEffect, useRef } from "react";
 type Props = {
   options: TextInputProps;
   editable?: boolean | true;
@@ -16,11 +22,21 @@ const TextInputCustom: FC<Props> = ({
   multiline,
   label,
 }) => {
+  const inputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    const sub = Keyboard.addListener("keyboardDidHide", () => {
+      inputRef.current?.blur();
+    });
+
+    return () => sub.remove();
+  }, []);
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         {label && <Text style={styles.label}>{label}</Text>}
         <TextInput
+          ref={inputRef}
           editable={editable}
           multiline={multiline}
           style={[

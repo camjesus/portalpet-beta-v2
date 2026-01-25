@@ -26,6 +26,7 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   alert: "alert-outline",
   account: "account",
   edit: "pencil",
+  "folder-search": "folder-search",
   send: "send",
 };
 

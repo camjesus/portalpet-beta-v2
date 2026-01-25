@@ -1,7 +1,7 @@
 import { Text, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { scale } from "react-native-size-matters";
-import IconSymbol from "@/components/ui/IconSymbol";
+import { IconSymbol } from "@/components/ui";
 
 type Props = {
   isMyMessage: boolean;

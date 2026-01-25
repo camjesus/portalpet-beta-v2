@@ -1,23 +1,27 @@
-import { StyleSheet, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 import { Link, useLocalSearchParams, router } from "expo-router";
 import { useState, useReducer } from "react";
 import { scale } from "react-native-size-matters";
 import { petReducer, initialPet, ACTION } from "@/hooks/reducers/usePet";
 import { savePetAsync } from "@/service/dataBase/usePet";
+import { KeyboardAvoidingView, Platform } from "react-native";
 //components
-import IconSymbol from "@/components/ui/IconSymbol";
-import HeaderCustom from "@/components/ui/HeaderCustom";
-import InputName from "./components/InputName";
-import InputSize from "./components/InputSize";
-import InputAge from "./components/InputAge";
-import Button from "@/components/ui/Button";
-import InputImage from "./components/InputImage";
-import Toast from "@/components/ui/Toast";
-import InputType from "./components/InputType";
-import InputSex from "./components/InputSex";
-import ViewCustom from "@/components/ViewCustom";
-import InputAction from "./components/InputAction";
-import InputDescription from "./components/InputDescription";
+import {
+  IconSymbol,
+  HeaderCustom,
+  Button,
+  Toast,
+  ViewCustom,
+  Loading,
+} from "@/components/ui";
+import InputName from "./loadData/components/InputName";
+import InputSize from "./loadData/components/InputSize";
+import InputAge from "../../components/ui/InputAge";
+import InputImage from "./loadData/components/InputImage";
+import InputType from "./loadData/components/InputType";
+import InputSex from "./loadData/components/InputSex";
+import InputAction from "./loadData/components/InputAction";
+import InputDescription from "./loadData/components/InputDescription";
 import Animated, {
   interpolate,
   useAnimatedScrollHandler,
@@ -25,7 +29,6 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { validatePet } from "@/service/utils/usePet";
-import Loading from "@/components/ui/Loading";
 import { defaultImg, logo } from "@/assets/images";
 
 export default function ManagementPet() {
@@ -38,7 +41,7 @@ export default function ManagementPet() {
   const [optSize, setSize] = useState(0);
   const [state, dispatch] = useReducer(
     petReducer,
-    petObj ? petObj.pet : initialPet
+    petObj ? petObj.pet : initialPet,
   );
   const [load, setLoad] = useState(false);
   const [toast, setToast] = useState(false);
@@ -103,7 +106,7 @@ export default function ManagementPet() {
     const height = interpolate(
       scrollY.get(),
       [0, IMAGE_HEIGHT],
-      [IMAGE_HEIGHT, 200]
+      [IMAGE_HEIGHT, 200],
     );
 
     return {
@@ -134,67 +137,68 @@ export default function ManagementPet() {
           />
 
           <InputImage changeImage={changeValue} />
-          <Animated.ScrollView
-            onScroll={scrollHandler}
-            scrollEventThrottle={10}>
-            <View style={styles.row}>
-              <InputName
-                name={state.pet.name}
-                noName={noName}
-                changeName={changeValue}
-                changeNoName={changeNoName}
-              />
-            </View>
-            <View style={styles.containerCenter}>
-              <InputAction
-                option={optAcion}
-                changeValue={setAcion}
-                changeOption={changeValue}
-              />
-            </View>
-            <View style={[styles.row, { gap: scale(50) }]}>
-              <InputType type={state.pet.type} changeValue={changeValue} />
-              <InputSex sex={state.pet.sex} changeValue={changeValue} />
-            </View>
-            <View style={[styles.row, { gap: scale(5) }]}>
-              <InputAge
-                age={
-                  state.pet.age !== undefined ? state.pet.age?.toString() : ""
-                }
-                type={state.pet.ageType}
-                changeAge={changeValue}
-                changeAgeType={changeValue}
-              />
-              <InputSize
-                option={optSize}
-                changeValue={setSize}
-                changeOption={changeValue}
-              />
-            </View>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
+            <Animated.ScrollView
+              onScroll={scrollHandler}
+              scrollEventThrottle={10}>
+              <View style={styles.row}>
+                <InputName
+                  name={state.pet.name}
+                  noName={noName}
+                  changeName={changeValue}
+                  changeNoName={changeNoName}
+                />
+              </View>
+              <View style={styles.containerCenter}>
+                <InputAction
+                  option={optAcion}
+                  changeValue={setAcion}
+                  changeOption={changeValue}
+                />
+              </View>
+              <View style={[styles.row, { gap: scale(50) }]}>
+                <InputType type={state.pet.type} changeValue={changeValue} />
+                <InputSex sex={state.pet.sex} changeValue={changeValue} />
+              </View>
+              <View style={[styles.row, { gap: scale(5) }]}>
+                <InputAge
+                  title="Edad"
+                  age={state.pet.age ? state.pet.age?.toString() : ""}
+                  type={state.pet.ageType}
+                  changeAge={changeValue}
+                  changeAgeType={changeValue}
+                />
+                <InputSize
+                  option={optSize}
+                  changeValue={setSize}
+                  changeOption={changeValue}
+                />
+              </View>
+              <View style={{ marginTop: scale(16) }}>
+                <InputDescription
+                  optAcion={optAcion}
+                  description={state.pet.description}
+                  changeValue={changeValue}
+                />
+              </View>
 
-            <View style={{ marginTop: scale(16) }}>
-              <InputDescription
-                optAcion={optAcion}
-                description={state.pet.description}
-                changeValue={changeValue}
-              />
-            </View>
-            <View style={styles.submit}>
-              <Button label="Crear" onPress={submit} />
-            </View>
-          </Animated.ScrollView>
+              <View style={styles.submit}>
+                <Button label="Crear" onPress={submit} />
+              </View>
+            </Animated.ScrollView>
+          </KeyboardAvoidingView>
+          {toast && (
+            <Toast
+              title={toastConfig.title}
+              message={toastConfig.message}
+              setToast={setToast}
+            />
+          )}
         </View>
       )}
-
-      <View style={styles.containerCenter}>
-        {toast && (
-          <Toast
-            title={toastConfig.title}
-            message={toastConfig.message}
-            setToast={setToast}
-          />
-        )}
-      </View>
     </ViewCustom>
   );
 }
@@ -211,6 +215,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    alignItems: "center",
   },
   submit: {
     marginBottom: scale(16),

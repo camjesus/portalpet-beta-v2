@@ -1,14 +1,23 @@
-import Button from "@/components/ui/Button";
-import HeaderCustom from "@/components/ui/HeaderCustom";
-import IconSymbol from "@/components/ui/IconSymbol";
-import TextInputCustom from "@/components/ui/TextInputCustom";
-import ViewCustom from "@/components/ViewCustom";
+import {
+  Button,
+  Toast,
+  HeaderCustom,
+  IconSymbol,
+  TextInputCustom,
+  ViewCustom,
+} from "@/components/ui";
 import { reportPetAsync } from "@/service/dataBase/useReport";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, View, Text, TextInput } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { scale } from "react-native-size-matters";
-import Toast from "@/components/ui/Toast";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function Report() {
@@ -28,7 +37,7 @@ export default function Report() {
       description: other,
       createDate: new Date(),
     }).then(() => {
-      router.push({ pathname: "/(tabs)", params: { search: "yes" } });
+      router.push({ pathname: "/(tabs)/home", params: { search: "yes" } });
     });
   };
 
@@ -55,52 +64,55 @@ export default function Report() {
           </Link>
         }
       />
-      <ScrollView>
-        <View style={styles.viewOptions}>
-          <Pressable onPress={() => changeOption(2)}>
-            <View
-              style={
-                option !== 2
-                  ? styles.boxDefault
-                  : [styles.boxDefault, styles.boxActive]
-              }>
-              <IconSymbol size={35} name="money-off" color="#151718" />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
+        <ScrollView>
+          <View style={styles.viewOptions}>
+            <Pressable onPress={() => changeOption(2)}>
+              <View
+                style={
+                  option !== 2
+                    ? styles.boxDefault
+                    : [styles.boxDefault, styles.boxActive]
+                }>
+                <IconSymbol size={35} name="money-off" color="#151718" />
 
-              <Text style={styles.text}>
-                Estan pidiendo dinero por esta mascota
-              </Text>
-            </View>
-          </Pressable>
-
-          <Pressable onPress={() => changeOption(1)}>
-            <View
-              style={
-                option !== 1
-                  ? styles.boxDefault
-                  : [styles.boxDefault, styles.boxActive]
-              }>
-              <IconSymbol size={35} name="alert" color="#151718" />
-
-              <Text style={styles.text}>
-                La información tiene contenido inapropiado
-              </Text>
-            </View>
-          </Pressable>
-          <TextInputCustom
-            label={"Otro (" + (200 - other.length) + ")"}
-            options={{
-              value: other,
-              onChangeText: (texto) => {
-                setOther(texto);
-              },
-              placeholder: "Ingrese otro motivo",
-              maxLength: 200,
-              numberOfLines: 4,
-            }}
-            multiline={true}
-          />
-        </View>
-      </ScrollView>
+                <Text style={styles.text}>
+                  Estan pidiendo dinero por esta mascota
+                </Text>
+              </View>
+            </Pressable>
+            <Pressable onPress={() => changeOption(1)}>
+              <View
+                style={
+                  option !== 1
+                    ? styles.boxDefault
+                    : [styles.boxDefault, styles.boxActive]
+                }>
+                <IconSymbol size={35} name="alert" color="#151718" />
+                <Text style={styles.text}>
+                  La información tiene contenido inapropiado
+                </Text>
+              </View>
+            </Pressable>
+            <TextInputCustom
+              label={"Otro (" + (200 - other.length) + ")"}
+              options={{
+                value: other,
+                onChangeText: (texto) => {
+                  setOther(texto);
+                },
+                placeholder: "Ingrese otro motivo",
+                maxLength: 200,
+                numberOfLines: 4,
+              }}
+              multiline={true}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
       <View style={styles.submit}>
         <Button label="Enviar" onPress={handlePress} />
       </View>

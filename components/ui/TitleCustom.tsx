@@ -13,7 +13,7 @@ export default function TitleCustom({ title, children }: Props) {
       <View style={styles.titleBackground}>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <View style={[{ paddingHorizontal: scale(8) }]}>{children}</View>
+      <View style={styles.content}>{children}</View>
     </View>
   );
 }
@@ -39,5 +39,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: scale(15),
+  },
+  content: {
+    paddingHorizontal: scale(8),
   },
 });

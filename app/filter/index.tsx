@@ -1,55 +1,84 @@
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import ViewCustom from "@/components/ViewCustom";
-import IconSymbol from "@/components/ui/IconSymbol";
-import HeaderCustom from "@/components/ui/HeaderCustom";
-import { useReducer, useState } from "react";
+import {
+  ViewCustom,
+  Toast,
+  InputAge,
+  Button,
+  HeaderCustom,
+  IconSymbol,
+} from "@/components/ui";
 import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
-import Button from "@/components/ui/Button";
 import FilterType from "./components/FilterType";
 import { filterReducer, ACTION } from "@/hooks/reducers/useFilter";
 import FilterSize from "./components/FilterSize";
 import FilterSex from "./components/FilterSex";
-import FilterAge from "./components/FilterAge";
 import { saveFilterAsync } from "@/service/storeData/useFilter";
+import { filterActions } from "@/service/filter/filterActions";
 
 export default function Filters() {
   const { stateFilter } = useLocalSearchParams<{
     stateFilter: string;
   }>();
   const [state, dispatch] = useReducer(filterReducer, JSON.parse(stateFilter));
-  //console.log("Filters: state: ", state);
   const [search, setSearch] = useState("no");
+  const firstLoad = useRef(true);
+  const [toast, setToast] = useState(false);
+
+  const [toastConfig, setToastConfig] = useState({
+    title: "Eureka!",
+    message: "La mascota se ha creado con éxito!",
+  });
+
+  useEffect(() => {
+    console.log(firstLoad.current);
+    if (!firstLoad) {
+      console.log("firstLoad");
+      console.log(firstLoad);
+      setSearch("yes");
+    }
+    firstLoad.current = false;
+    console.log(firstLoad.current);
+  }, [state]);
+
   function changeValue(value: any, field: string) {
-    setSearch("yes");
-    dispatch({
-      type: ACTION.CHANGE_FILTER,
-      payload: {
-        field: field,
-        value: value,
-      },
-    });
+    filterActions.changeFilter(dispatch, field, value);
+  }
+
+  function changeFrom(value: any, field: string) {
+    filterActions.changeFrom(dispatch, field, value, state.filter);
+  }
+
+  function changeUntil(value: any, field: string) {
+    filterActions.changeUntil(dispatch, field, value, state.filter);
   }
 
   const saveFilter = async () => {
-    console.log("entro a ", state.filter);
     await saveFilterAsync(JSON.stringify(state.filter)).then(() => {
       router.push({
-        pathname: "../",
+        pathname: "/(tabs)/home",
         params: { search: search },
       });
     });
   };
 
-  function goTosearch() {
-    saveFilter();
+  function save() {
+    var error = filterActions.validateFilter(state.filter);
+    if (!error) {
+      saveFilter();
+    } else {
+      setToastConfig({ title: error.type, message: error.msg });
+      setToast(true);
+    }
   }
+
   return (
     <ViewCustom>
       <HeaderCustom
         title="Filtros"
         childrenLeft={
-          <Pressable onPress={goTosearch}>
+          <Pressable onPress={save}>
             <IconSymbol size={30} name="arrow-back" color="white" />
           </Pressable>
         }
@@ -62,17 +91,35 @@ export default function Filters() {
         <View style={[styles.row, { gap: scale(5) }]}>
           <FilterSize size={state.filter.size} changeValue={changeValue} />
         </View>
-        <View style={styles.age}>
-          <FilterAge
-            ageFrom={state.filter.ageFrom}
-            ageTo={state.filter.ageTo}
-            type={state.filter.ageType}
-            changeValue={changeValue}
+        <View style={[styles.row, { gap: scale(5) }]}>
+          <InputAge
+            title="Desde"
+            age={state.filter.from.age ? state.filter.from.age.toString() : ""}
+            type={state.filter.from.ageType}
+            changeAge={changeFrom}
+            changeAgeType={changeFrom}
+          />
+          <InputAge
+            title="Hasta"
+            age={
+              state.filter.until.age ? state.filter.until.age.toString() : ""
+            }
+            type={state.filter.until.ageType}
+            changeAge={changeUntil}
+            changeAgeType={changeUntil}
           />
         </View>
         <View style={styles.submit}>
-          <Button label="Guardar" onPress={goTosearch} />
+          <Button label="Guardar" onPress={save} />
         </View>
+
+        {toast && (
+          <Toast
+            title={toastConfig.title}
+            message={toastConfig.message}
+            setToast={setToast}
+          />
+        )}
       </View>
     </ViewCustom>
   );
@@ -86,10 +133,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
   },
-  containerCenter: {
-    alignItems: "center",
-    marginTop: scale(16),
-  },
   row: {
     flexDirection: "row",
     marginHorizontal: "auto",
@@ -99,6 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: scale(16),
     gap: scale(20),
+    alignItems: "center",
   },
   age: {
     marginHorizontal: scale(20),

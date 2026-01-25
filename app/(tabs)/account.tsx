@@ -1,12 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
-import ViewCustom from "@/components/ViewCustom";
-import HeaderCustom from "@/components/ui/HeaderCustom";
+import {ViewCustom, Button, TextInputCustom, HeaderCustom} from "@/components/ui";
 import { useEffect, useState } from "react";
 import { User } from "@/models/User";
 import { getUserAsync, updateUserAsync } from "@/service/storeData/useUser";
 import { scale } from "react-native-size-matters";
-import TextInputCustom from "@/components/ui/TextInputCustom";
-import Button from "@/components/ui/Button";
 import { cleanAllAsync } from "@/service/storeData/useFilter";
 import { router } from "expo-router";
 

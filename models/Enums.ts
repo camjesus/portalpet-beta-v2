@@ -1,4 +1,4 @@
-export enum Age {
+export enum AgeType {
     YEAR = "YEAR",
     MONTH = "MONTH"
 }

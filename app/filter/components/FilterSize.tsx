@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import TitleCustom from "@/components/ui/TitleCustom";
-import IconSymbol from "@/components/ui/IconSymbol";
+import { TitleCustom, IconSymbol } from "@/components/ui";
 import { LABEL_SIZE, SIZE } from "@/constants/StaticData";
 import { Size } from "@/models/Enums";
 import React, { useState } from "react";

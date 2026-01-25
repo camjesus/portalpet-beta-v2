@@ -1,12 +1,10 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import ViewCustom from "@/components/ViewCustom";
-import HeaderCustom from "@/components/ui/HeaderCustom";
+import { HeaderCustom, Loading, ViewCustom } from "@/components/ui";
 import { useEffect, useState } from "react";
 import { ChatId } from "@/models/Chat";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/ChatList/ChatCard";
 import { getChatsAsync } from "@/service/dataBase/useChat";
-import Loading from "@/components/ui/Loading";
 import { User } from "@/models/User";
 
 export default function ChatList() {

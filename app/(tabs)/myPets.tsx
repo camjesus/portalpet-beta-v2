@@ -1,10 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
-import ViewCustom from "@/components/ViewCustom";
-import HeaderCustom from "@/components/ui/HeaderCustom";
-import Button from "@/components/ui/Button";
-import IconSymbol from "@/components/ui/IconSymbol";
-import { myPetAsync } from "@/service/dataBase/usePet";
+import { ViewCustom, HeaderCustom, Button, IconSymbol } from "@/components/ui";
+import { findMyPetsAsync } from "@/service/pet/petActions";
 import { useEffect, useState } from "react";
 import { PetId } from "@/models/Pet";
 import Card from "@/components/MyPets/Card";
@@ -17,20 +14,18 @@ export default function MyPets() {
     search: string;
   }>();
   const [goTosearch, setSearch] = useState<boolean>(
-    search === "yes" || search === undefined ? true : false
+    search === "yes" || search === undefined ? true : false,
   );
 
-  const getData = async () => {
-    await myPetAsync().then((res) => {
-      setMyPets(res.myPets);
+  const getData = async (serach: boolean) => {
+    await findMyPetsAsync(serach).then((res) => {
+      setMyPets(res);
       setSearch(false);
     });
   };
 
   useEffect(() => {
-    if (goTosearch) {
-      getData();
-    }
+    getData(goTosearch);
   }, []);
 
   return (
@@ -40,8 +35,8 @@ export default function MyPets() {
         {myPets && (
           <FlatList
             data={myPets}
-            renderItem={({ item }) => <Card key={item.petId} item={item} />}
-            keyExtractor={(item) => item.petId}
+            renderItem={({ item }) => <Card key={item.id} item={item} />}
+            keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={true}
             numColumns={2}
             contentContainerStyle={styles.flatList}
@@ -70,10 +65,11 @@ export default function MyPets() {
 
 const styles = StyleSheet.create({
   flatList: {
-    marginHorizontal: scale(20),
     justifyContent: "center",
     alignContent: "center",
     marginTop: scale(15),
+    paddingBottom: scale(15),
+    marginHorizontal: scale(20),
   },
   float: {
     margin: 16,

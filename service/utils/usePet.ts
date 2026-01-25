@@ -1,5 +1,5 @@
 import { LABEL_SIZE } from "@/constants/StaticData";
-import { Size } from "@/models/Enums";
+import { AgeType, Size } from "@/models/Enums";
 import { Pet } from "@/models/Pet";
 import { defaultImg } from "@/assets/images"
 //public
@@ -47,6 +47,10 @@ export function loadLabels(size: string[]) {
   return labelInit;
 }
 
+export function calculateAgeByMonths(age: number) {
+  return age * 12;
+}
+
 export function loadAction(petAction:string) {
   let action = "";
   let color = "";
@@ -73,13 +77,13 @@ export function loadAction(petAction:string) {
 function loadName(pet:Pet) {
   let ageType = "";
   if (pet.age === 1) {
-    if (pet.ageType === "YEAR") {
+    if (pet.ageType === AgeType.YEAR) {
       ageType = "Año";
     } else {
       ageType = "Mes";
     }
   } else {
-    if (pet.ageType === "YEAR") {
+    if (pet.ageType === AgeType.YEAR) {
       ageType = "Años";
     } else {
       ageType = "Meses";

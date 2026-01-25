@@ -1,6 +1,6 @@
 import { Tabs, usePathname } from "expo-router";
 import React from "react";
-import IconSymbol from "@/components/ui/IconSymbol";
+import { IconSymbol } from "@/components/ui";
 
 export default function TabLayout() {
   const pathname = usePathname();

@@ -1,22 +1,24 @@
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
-import HeaderAnimated from "@/components/ui/HeaderAnimated";
-import IconSymbol from "@/components/ui/IconSymbol";
+import {
+  HeaderAnimated,
+  IconSymbol,
+  Button,
+  ViewCustom,
+} from "@/components/ui";
 import React from "react";
 import InfoAnimated from "./components/InfoAnimated";
-import Button from "@/components/ui/Button";
-import ViewCustom from "@/components/ViewCustom";
 
 const isBigger = Dimensions.get("screen").height > 830;
 const SCREEN_HEIGHT = ((Dimensions.get("screen").height * 0.6) / 3) * 0.2;
 //console.log("dimension", Dimensions.get("screen").height);
 export default function PetProfile() {
-  const { petId, stringItem, image, chat } = useLocalSearchParams<{
+  const { petId, stringItem, image, isMy } = useLocalSearchParams<{
     petId: string;
     stringItem: string;
     image: string;
-    chat: string;
+    isMy: string;
   }>();
   const item = JSON.parse(stringItem);
 
@@ -70,7 +72,7 @@ export default function PetProfile() {
             onPressLeft={goToBack}
             onPressRight={goToReport}
             childrenRight={
-              <IconSymbol size={35} name="bullhorn" color="white" />
+              isMy && <IconSymbol size={35} name="bullhorn" color="white" />
             }
             childrenLeft={
               <IconSymbol size={35} name="arrow-back" color="white" />
@@ -110,7 +112,7 @@ export default function PetProfile() {
           }
         />
       </View>
-      {chat && (
+      {isMy && (
         <View style={styles.float}>
           <Button circle={true}>
             <Link

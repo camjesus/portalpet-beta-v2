@@ -1,15 +1,19 @@
-import { StyleSheet, Pressable, View } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  View,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import ViewCustom from "@/components/ViewCustom";
-import HeaderCustom from "@/components/ui/HeaderCustom";
-import IconSymbol from "@/components/ui/IconSymbol";
+import { ViewCustom, HeaderCustom, IconSymbol } from "@/components/ui";
 import InputMessage from "./components/InputMessage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { loadChatAsync, getChatById } from "@/service/dataBase/useChat";
 import { MessageId } from "@/models/Message";
 import { ChatId } from "@/models/Chat";
-import { newMessageAsync } from "@/service/dataBase/useMessage";
+import { newMessageAsync, listenMessages } from "@/service/dataBase/useMessage";
 import Bubble from "./components/Bubble";
 import { scale } from "react-native-size-matters";
 import { ScrollView } from "react-native-gesture-handler";
@@ -30,6 +34,26 @@ export default function PetProfile() {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
+  useEffect(() => {
+    console.log("CHAT:", chat?.id);
+    console.log("USER:", user?.id);
+  }, [chat, user]);
+
+  useEffect(() => {
+    if (!chat?.id || !user?.id) return;
+
+    const unsubscribe = listenMessages(chat.id, (msgs) => {
+      setMessages(msgs);
+      requestAnimationFrame(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      });
+      console.log("user.id:", user.id);
+      console.log("msgs:", msgs);
+    });
+
+    return unsubscribe;
+  }, [chat?.id, user?.id]);
+
   const { chatId, stringItem } = useLocalSearchParams<{
     chatId: string;
     stringItem: string;
@@ -37,7 +61,7 @@ export default function PetProfile() {
   const petId = stringItem !== undefined ? JSON.parse(stringItem) : undefined;
 
   function goToBack() {
-    router.push({ pathname: "../" });
+    router.back();
   }
 
   function sendMessage(message: string) {
@@ -47,7 +71,6 @@ export default function PetProfile() {
   const getChatAsync = async () => {
     if (petId !== undefined) {
       await loadChatAsync(petId).then((res) => {
-        setMessages(res.messages);
         setChat(res.chat);
         setUser(res.user);
       });
@@ -59,7 +82,6 @@ export default function PetProfile() {
     if (chatId !== undefined) {
       await getChatById(chatId).then((res) => {
         setChat(res.chat);
-        setMessages(res.messages);
         setUser(res.user);
       });
       setGoToSearch(false);
@@ -96,7 +118,10 @@ export default function PetProfile() {
           </Pressable>
         }
       />
-      <SafeAreaView style={{ flex: 1, marginBottom: scale(60) }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         <ScrollView
           ref={scrollViewRef}
           onContentSizeChange={() =>
@@ -111,21 +136,20 @@ export default function PetProfile() {
             />
           ))}
         </ScrollView>
-      </SafeAreaView>
 
-      <View style={styles.footer}>
-        <InputMessage sendMessage={sendMessage} />
-      </View>
+        <View style={styles.footer}>
+          <InputMessage sendMessage={sendMessage} />
+        </View>
+      </KeyboardAvoidingView>
     </ViewCustom>
   );
 }
 
 const styles = StyleSheet.create({
   footer: {
-    margin: scale(5),
+    margin: scale(2),
     right: 0,
     bottom: 0,
-    position: "absolute",
   },
   flatList: {
     marginHorizontal: scale(10),

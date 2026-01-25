@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 import { scale } from "react-native-size-matters";
 
@@ -9,6 +9,7 @@ type Props = {
 };
 
 export default function Toast({ message, title, setToast }: Props) {
+  const [height, setHeight] = useState(0);
   const bottom = React.useRef(new Animated.Value(-80)).current;
   const opacity = React.useRef(new Animated.Value(3)).current;
 
@@ -20,7 +21,7 @@ export default function Toast({ message, title, setToast }: Props) {
     }).start(() => {
       Animated.timing(opacity, {
         toValue: 0,
-        duration: 8000,
+        duration: 3000,
         useNativeDriver: false,
       }).start(() => {
         setToast(false);
@@ -33,7 +34,12 @@ export default function Toast({ message, title, setToast }: Props) {
   }, []);
 
   return (
-    <Animated.View style={[styles.container, { bottom, opacity }]}>
+    <Animated.View
+      onLayout={(e) => setHeight(e.nativeEvent.layout.height)}
+      style={[
+        styles.container,
+        { top: "50%", transform: [{ translateY: -height / 2 }], opacity },
+      ]}>
       <Text style={{ fontSize: 25 }}>💬</Text>
       <View style={{ marginLeft: scale(12) }}>
         <Text style={styles.title}>{title}</Text>
@@ -46,13 +52,21 @@ export default function Toast({ message, title, setToast }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    paddingHorizontal: scale(30),
+    paddingHorizontal: scale(10),
     paddingVertical: scale(10),
-    backgroundColor: "#555555",
-    position: "absolute",
-    alignItems: "center",
+    backgroundColor: "white",
     borderRadius: 10,
+    position: "absolute",
+    alignContent: "center",
+    borderColor: "#DCAD5F",
+    borderWidth: scale(2),
   },
-  message: { color: "white", fontSize: scale(15) },
-  title: { color: "white", fontWeight: "bold" },
+  message: {
+    color: "#4B4B4B",
+    fontSize: scale(15),
+  },
+  title: {
+    color: "#ffb13d",
+    fontWeight: "bold",
+  },
 });
