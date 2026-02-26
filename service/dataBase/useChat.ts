@@ -9,29 +9,12 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { Chat, ChatId, User , PetId, MessageId} from "@/models";
+import { Chat, ChatId, User, PetId, MessageId, ChatInfo, Pet } from "@/models";
 import { dataToChatMap } from "../mapping/useMapping";
 import { findMessagesAsync } from "./useMessage";
 import { getUserAsync } from "../storeData/useUser";
 
 //public
-export const loadChatAsync = async (petObj: PetId) => {
-  let messages: MessageId[] = [];
-  let newDoc: ChatId | undefined;
-  const user = await getUserAsync();
-  const chat = await findChatAsync(petObj, user);
-
-  if (chat?.id && user?.id) {
-    await findMessagesAsync(chat?.id, user?.id).then((data) => {
-      messages = data;
-    });
-  } else {
-    newDoc = await newChatAsync(petObj, user);
-  }
-
-  return { chat: newDoc ? newDoc : chat, messages: messages, user: user };
-};
-
 export const getChatsAsync = async () => {
   let chats: ChatId[] = [];
   const user = await getUserAsync();
@@ -44,17 +27,24 @@ export const getChatsAsync = async () => {
   return { chats: chats, user: user };
 };
 
+export const addAsync = async (newChat: Chat) => {
+  const newDoc = await addDoc(collection(db, "chats"), newChat);
+  return dataToChatMap(newDoc.id, newChat);
+};
+
 //private
-const findChatAsync = async (petObj: PetId, user: User) => {
-  const { pet } = petObj;
+export const findChatAsync = async (
+  rescuerId: string,
+  userId: string,
+  petId: string,
+) => {
   let chat: ChatId | undefined;
 
   const q = query(
     collection(db, "chats"),
-    where("rescuer.id", "==", pet.rescuerId),
-    //where("rescuer.id", "==", "0dede6e5-504c-4f46-8339-9d6280a693b0"),
-    where("user.id", "==", user.id),
-    where("pet.id", "==", petObj.id),
+    where("rescuer.id", "==", rescuerId),
+    where("user.id", "==", userId),
+    where("pet.id", "==", petId),
     orderBy("createDate", "desc"),
   );
 
@@ -64,33 +54,36 @@ const findChatAsync = async (petObj: PetId, user: User) => {
       chat = dataToChatMap(doc.id, doc.data());
     }
   });
-
+ console.log("findChatAsync", chat)
   return chat;
 };
 
-const newChatAsync = async (petObj: PetId, user: User) => {
+const newChat = (petObj: PetId, user: User) => {
   const { pet } = petObj;
-  const newChat: Chat = {
-    createDate: new Date(),
-    user: {
-      id: user.id,
-      name: user.name,
+  const newChat: ChatId = {
+    id: "",
+    chat: {
+      createDate: new Date(),
+      user: {
+        id: user.id,
+        name: user.name,
+      },
+      rescuer: {
+        id: pet.rescuer?.id,
+        name: pet.rescuer?.name,
+      },
+      pet: {
+        id: petObj.id,
+        name: pet.name,
+        image: pet.image,
+        action: pet.action,
+      },
+      required: false,
     },
-    rescuer: {
-      id: pet.rescuer?.id,
-      name: pet.rescuer?.name,
-    },
-    pet: {
-      id: petObj.id,
-      name: pet.name,
-      image: pet.image,
-      action: pet.action,
-    },
-    required: false,
   };
-  const newDoc = await addDoc(collection(db, "chats"), newChat);
+  //const newDoc = await addDoc(collection(db, "chats"), newChat);
 
-  return dataToChatMap(newDoc.id, newChat);
+  return newChat;
 };
 
 const myQuestionsAsync = async (userId: string) => {
@@ -137,9 +130,48 @@ export const getChatById = async (id: string) => {
   const chat = dataToChatMap(chatDoc.id, chatDoc.data());
   console.log("chatDoc.id", chatDoc.id);
   if (chat?.id && user?.id) {
-    await findMessagesAsync(chat?.id, user?.id).then((data) => {
-      messages = data;
-    });
+    messages = await findMessagesAsync(chat?.id);
   }
-  return { chat: chat, messages: messages, user: user };
+  return { chat: chat, messages: messages, user: user } as ChatInfo;
 };
+
+export async function resolveChat(chatId: string | undefined, pet: Pet | undefined, petId: string | undefined) {
+  const user = await getUserAsync();
+
+  // 1️⃣ Si viene chatId → directo
+  if (chatId) {
+    return await getChatById(chatId);
+  }
+
+    if(!pet || !petId) return;
+
+  // 2️⃣ Buscar chat existente por pet + user
+  const existingChat = await findChatAsync(pet.rescuerId, user.id, petId);
+
+  if (existingChat) {
+    const messages = await findMessagesAsync(existingChat.id);
+    return { chat: existingChat, messages, user } as ChatInfo;
+  }
+
+  // 3️⃣ Crear chat BASE (no persistido)
+  const baseChat: ChatId = {
+    id: "", // 👈 CLAVE
+    chat: {
+      createDate: new Date(),
+      user: { id: user.id, name: user.name },
+      rescuer: {
+        id: pet.rescuer.id,
+        name: pet.rescuer.name,
+      },
+      pet: {
+        id: petId,
+        name: pet.name,
+        image: pet.image,
+        action: pet.action,
+      },
+      required: false,
+    },
+  };
+
+  return { chat: baseChat, messages: [], user } as ChatInfo;
+}

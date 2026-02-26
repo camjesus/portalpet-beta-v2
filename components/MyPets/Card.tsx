@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { loadPet } from "@/service/utils/usePet";
 import { PetId } from "@/models";
 import { scale } from "react-native-size-matters";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
+import { Button, IconSymbol } from "../ui";
 
 type Props = {
   item: PetId;
@@ -11,13 +12,14 @@ type Props = {
 
 export default function Card({ item }: Props) {
   const [data, setData] = useState({ name: "", action: "", color: "" });
-
+  const statePet = { statePet: item };
   useEffect(() => {
-    let { name, action, color } = loadPet(item.pet);
+    let data = loadPet(item.pet);
     //console.log("efect" + name, action, color);
-    setData({ name: name, action: action, color: color });
+    setData(data);
+    
   }, []);
-
+  console.log();
   function goToPetProfile() {
     router.push({
       pathname: "/petProfile",
@@ -33,7 +35,22 @@ export default function Card({ item }: Props) {
     <Pressable onPress={goToPetProfile}>
       <View
         style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}>
-        <Image source={{ uri: item.pet.image }} style={[styles.image]} />
+        <View>
+          <Image source={{ uri: item.pet.image }} style={[styles.image]} />
+          <View style={styles.float}>
+            <Link
+              href={{
+                pathname: "/managementPet/loadData",
+                params: {
+                  stringItem: JSON.stringify(statePet),
+                  image: encodeURI(item.pet.image),
+                },
+              }}>
+              <IconSymbol size={30} name="edit" color="white" />
+            </Link>
+          </View>
+        </View>
+
         <Text style={styles.textName}>{data.name}</Text>
         <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>
           {data.action}
@@ -44,6 +61,11 @@ export default function Card({ item }: Props) {
 }
 
 const styles = StyleSheet.create({
+  float: {
+    right: 10,
+    top: 10,
+    position: "absolute",
+  },
   card: {
     borderRadius: 10,
     borderWidth: scale(3),

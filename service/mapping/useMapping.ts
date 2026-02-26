@@ -1,4 +1,4 @@
-import { ChatId , Report, MessageId, PetId} from "@/models";
+import { ChatId , Report, MessageId, PetId, Message} from "@/models";
 
 export function dataToChatMap(id: string, data: any) {
   const chat: ChatId = {
@@ -16,14 +16,27 @@ export function dataToPetMap(id: string, pet: any) {
   return newPet;
 }
 
-export function dataToMessageMap(id: string, message: any) {
+export function dataToMessageIdMap(id: string, message: any) {
   const newMessage: MessageId = {
     id: id,
     bubbleUser: false,
     system: false,
-    message: message,
+    message: dataToMessageMap(message),
   };
-  console.log(id, message);
+  return newMessage;
+}
+
+function dataToMessageMap(message: any) {
+  const newMessage: Message = {
+   createAt: message.createAt,
+       chatId: message.chatId,
+       text: message.text,
+       sender: {
+           id: message.sender.id,
+           name: message.sender.name
+       }
+  };
+  console.log(message.sender);
   return newMessage;
 }
 
@@ -36,4 +49,10 @@ export function dataToReportMap(dataReport: any) {
     createDate: dataReport.createDate,
   };
   return report;
+}
+
+export function paramToPetId(param: string)
+{
+  const obj = JSON.parse(param);
+  return dataToPetMap(obj.id, obj);
 }

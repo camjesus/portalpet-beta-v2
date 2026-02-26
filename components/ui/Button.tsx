@@ -7,12 +7,20 @@ type Props = {
   onPress?: () => void;
   children?: React.ReactNode;
   circle?: boolean;
+  disabled?: boolean | true;
 };
 
-export default function Button({ label, onPress, children, circle }: Props) {
+export default function Button({
+  label,
+  onPress,
+  children,
+  circle,
+  disabled,
+}: Props) {
   return (
     <View style={styles.containerButton}>
       <Pressable
+        disabled={disabled}
         style={({ pressed }) => [
           {
             backgroundColor: pressed ? "#DCAD5F" : "#ffb13d",
@@ -20,8 +28,7 @@ export default function Button({ label, onPress, children, circle }: Props) {
           styles.button,
           circle ? styles.circleStyle : styles.default,
         ]}
-        onPress={onPress}
-      >
+        onPress={onPress}>
         {children}
         {label && <Text style={styles.label}>{label}</Text>}
       </Pressable>
@@ -32,7 +39,6 @@ export default function Button({ label, onPress, children, circle }: Props) {
 const styles = StyleSheet.create({
   containerButton: {
     alignItems: "center",
-    marginTop: scale(16),
   },
   button: {
     borderWidth: 3,

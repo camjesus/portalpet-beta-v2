@@ -1,3 +1,4 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   StyleSheet,
   Pressable,
@@ -5,106 +6,84 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import { ViewCustom, HeaderCustom, IconSymbol } from "@/components/ui";
-import InputMessage from "./components/InputMessage";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { loadChatAsync, getChatById } from "@/service/dataBase/useChat";
-import { MessageId, ChatId, User } from "@/models";
-import { newMessageAsync, listenMessages } from "@/service/dataBase/useMessage";
-import Bubble from "./components/Bubble";
-import { scale } from "react-native-size-matters";
 import { ScrollView } from "react-native-gesture-handler";
+import { router, useLocalSearchParams } from "expo-router";
+import { scale } from "react-native-size-matters";
+import { MessageId, ChatId, User, PetId } from "@/models";
+import { ViewCustom, HeaderCustom, IconSymbol } from "@/components/ui";
+import { resolveChat } from "@/service/dataBase/useChat";
+import { listenMessages } from "@/service/dataBase/useMessage";
+import { sendMessageAsync } from "@/service/message/messageActions";
 
-export default function PetProfile() {
+import Bubble from "./components/Bubble";
+import InputMessage from "./components/InputMessage";
+
+export default function Chat() {
+  const { chatId, petString } = useLocalSearchParams<{
+    chatId: string;
+    petString: string;
+  }>();
   const [messages, setMessages] = useState<MessageId[]>([]);
   const [chat, setChat] = useState<ChatId>();
   const [user, setUser] = useState<User>();
-  const [goToSearch, setGoToSearch] = useState(true);
   const scrollViewRef = useRef<ScrollView>(null);
-  const title =
-    chat?.chat.rescuer?.id === user?.id
+
+  const title = chat?.chat.rescuer?.id === user?.id
       ? chat?.chat.user?.name
       : chat?.chat.rescuer?.name;
+
+  const petParse = useMemo(() => {
+    return petString ? (JSON.parse(petString) as PetId) : undefined;
+  }, [petString]);
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
   useEffect(() => {
-    console.log("CHAT:", chat?.id);
-    console.log("USER:", user?.id);
-  }, [chat, user]);
-
-  useEffect(() => {
-    if (!chat?.id || !user?.id) return;
-
-    const unsubscribe = listenMessages(chat.id, (msgs) => {
-      setMessages(msgs);
-      requestAnimationFrame(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
+    if (chat?.id) {
+      const unsubscribe = listenMessages(chat.id, (msgs) => {
+        setMessages(msgs);
+        requestAnimationFrame(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        });
       });
-      console.log("user.id:", user.id);
-      console.log("msgs:", msgs);
-    });
 
-    return unsubscribe;
-  }, [chat?.id, user?.id]);
-
-  const { chatId, stringItem } = useLocalSearchParams<{
-    chatId: string;
-    stringItem: string;
-  }>();
-  const petId = stringItem !== undefined ? JSON.parse(stringItem) : undefined;
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, [chat?.id]);
 
   function goToBack() {
     router.back();
   }
 
-  function sendMessage(message: string) {
-    saveMessageAsync(message);
-  }
-
-  const getChatAsync = async () => {
-    if (petId !== undefined) {
-      await loadChatAsync(petId).then((res) => {
-        setChat(res.chat);
-        setUser(res.user);
-      });
-      setGoToSearch(false);
-    }
-  };
-
-  const getChatByIdAsync = async () => {
-    if (chatId !== undefined) {
-      await getChatById(chatId).then((res) => {
-        setChat(res.chat);
-        setUser(res.user);
-      });
-      setGoToSearch(false);
-    }
-  };
-
-  const saveMessageAsync = async (message: string) => {
+  const sendMessage = async (message: string) => {
     if (chat) {
-      await newMessageAsync(chat.id, message, messages).then((res) => {
-        setMessages(res.messages);
-      });
+      try {
+        const isNewChat = chat.id === "";
+        const res = await sendMessageAsync(chat, message, user);
+
+        if (isNewChat && res?.chat?.id) {
+          setChat({ ...res.chat });
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
 
   useEffect(() => {
-    if (goToSearch) {
-      if (chatId !== undefined) {
-        getChatByIdAsync();
-      }
+    if (!petParse && !chatId) return;
 
-      if (!chat && petId !== undefined) {
-        getChatAsync();
+    resolveChat(chatId, petParse?.pet, petParse?.id).then((res) => {
+      if (res) {
+        setChat(res.chat);
+        setUser(res.user);
       }
-    }
-  }, [goToSearch]);
+    });
+  }, [chatId, petParse]);
 
   return (
     <ViewCustom>

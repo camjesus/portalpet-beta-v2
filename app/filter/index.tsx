@@ -13,6 +13,7 @@ import { scale } from "react-native-size-matters";
 import { filterReducer } from "@/hooks/reducers/useFilter";
 import { FilterSex, FilterSize, FilterType } from "./components";
 import { filterActions } from "@/service/filter/filterActions";
+import { Validation } from "@/models";
 
 export default function Filters() {
   const { stateFilter } = useLocalSearchParams<{
@@ -23,10 +24,7 @@ export default function Filters() {
   const firstLoad = useRef(true);
   const [toast, setToast] = useState(false);
 
-  const [toastConfig, setToastConfig] = useState({
-    title: "",
-    message: "",
-  });
+  const [toastConfig, setToastConfig] = useState<Validation>();
 
   useEffect(() => {
     console.log(firstLoad.current);
@@ -58,7 +56,7 @@ export default function Filters() {
         });
       });
     } else {
-      setToastConfig({ title: error.type, message: error.msg });
+      setToastConfig(error);
       setToast(true);
     }
   }
@@ -103,12 +101,8 @@ export default function Filters() {
           <Button label="Guardar" onPress={saveAsync} />
         </View>
 
-        {toast && (
-          <Toast
-            title={toastConfig.title}
-            message={toastConfig.message}
-            setToast={setToast}
-          />
+        {toast && toastConfig && (
+          <Toast validation={toastConfig} setToast={setToast} />
         )}
       </View>
     </ViewCustom>

@@ -12,6 +12,9 @@ export const getGoogleUserInfo = async (token: string | undefined) => {
       );
 
       const user = await response.json();
+      console.log(JSON.stringify(user))
+            console.log(JSON.stringify(token))
+
       const loginUser: User = {
         id: user.id,
         name: user.given_name,

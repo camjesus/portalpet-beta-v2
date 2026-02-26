@@ -4,20 +4,20 @@ export type ChatId = {
 };
 
 export type Chat = {
-    createDate: Date | null;
+    createDate: Date;
     pet: {
-        id: string | null;
-        name: string | null;
-        image: string | null;
+        id: string;
+        name: string ;
+        image: string ;
         action: string;
-    }| null;
+    };
     rescuer: {
-        id: string | null | undefined;
-        name: string | null| undefined;
-    }| null;
+        id: string;
+        name: string;
+    };
     user: {
-        id: string | null;
-        name: string | null;
-    }| null;
-    required: boolean| null;
+        id: string;
+        name: string;
+    };
+    required: boolean;
 };

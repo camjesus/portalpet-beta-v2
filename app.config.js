@@ -24,14 +24,22 @@ export default ({ config }) => ({
       softwareKeyboardLayoutMode: "resize",
       googleServicesFile: "./google-services.json",
     },
-      ios: {
-    bundleIdentifier: "com.camjesus.portalpetbetav2"
-  },
+    ios: {
+      bundleIdentifier: "com.camjesus.portalpetbetav2",
+    },
     extra: {
       eas: {
         projectId: "f3967fa5-3be1-48ad-b2aa-f62e4242487d",
       },
     },
-    plugins: [],
+    plugins: [
+      [
+        "expo-location",
+        {
+          locationAlwaysAndWhenInUsePermission:
+            "Allow $(PRODUCT_NAME) to use your location.",
+        },
+      ],
+    ],
   },
 });

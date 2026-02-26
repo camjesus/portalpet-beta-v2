@@ -4,6 +4,7 @@ import * as Google from "expo-auth-session/providers/google";
 import { Image, StyleSheet, View, Text } from "react-native";
 import {
   GOOGLE_ANDROID_ID,
+  GOOGLE_EXPO_ID,
   GOOGLE_IOS_ID,
   GOOGLE_WEB_ID,
 } from "@/secret-google";
@@ -11,24 +12,46 @@ import { router } from "expo-router";
 import ViewCustom from "../../components/ui/ViewCustom";
 import { Pressable } from "react-native";
 import { scale } from "react-native-size-matters";
+
 import {
   getGoogleUserInfo,
   setDefaultUser,
   setDefaultUser2,
 } from "@/service/dataBase/useGoogleSignin";
+import * as AuthSession from "expo-auth-session";
 
 import { logo, googleSignin } from "@/assets/images";
+import * as WebBrowser from "expo-web-browser";
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Signin() {
   const [user, setUser] = useState<User | null>(null);
-
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: GOOGLE_ANDROID_ID,
+    androidClientId: GOOGLE_WEB_ID,
     iosClientId: GOOGLE_IOS_ID,
     webClientId: GOOGLE_WEB_ID,
+    redirectUri: AuthSession.makeRedirectUri({
+      scheme: "portalpet", // El scheme de tu app.json
+    }),
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log("response", JSON.stringify(response));
+    console.log("GOOGLE_ANDROID_ID", JSON.stringify(GOOGLE_ANDROID_ID));
+
+    if (response) {
+      console.log("FULL RESPONSE:", response);
+    }
+
+    if (response?.type === "success") {
+      const { authentication } = response;
+      console.log("ACCESS TOKEN:", authentication?.accessToken);
+    }
+
+    if (response?.type === "error") {
+      console.log("AUTH ERROR:", response.error);
+    }
     handleEffect();
   }, [response]);
 
@@ -43,7 +66,11 @@ export default function Signin() {
   }
 
   const getUserInfo = async (token: string | undefined) => {
+    console.log("antes de entrar a getGoogleUserInfo");
+
     await getGoogleUserInfo(token).then((user) => {
+      console.log("entro a getGoogleUserInfo");
+
       if (user) {
         setUser(user);
         goToHome();
@@ -69,6 +96,21 @@ export default function Signin() {
     });
   };
 
+  const handleLogin = async () => {
+    if (!request || loading) return;
+
+    setLoading(true);
+
+    try {
+      const result = await promptAsync();
+      console.log("PROMPT RESULT:", result);
+    } catch (e) {
+      console.log("LOGIN ERROR:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <ViewCustom>
       <View style={styles.back}>
@@ -77,7 +119,7 @@ export default function Signin() {
         <Text style={styles.title}>Portal pet</Text>
       </View>
 
-      <Pressable style={styles.press} onPress={() => promptAsync()}>
+      <Pressable style={styles.press} onPress={() => handleLogin()}>
         <Image style={styles.image} source={googleSignin} />
       </Pressable>
       <Pressable style={styles.press} onPress={() => setDefault()}>

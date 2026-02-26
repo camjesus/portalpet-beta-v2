@@ -8,6 +8,7 @@ import {
   orderBy,
   doc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { getUserAsync } from "@/service/storeData/useUser";
@@ -15,27 +16,38 @@ import { getFilters, getAction } from "./useFilter";
 import { Pet, PetId, User, AgeType } from "@/models";
 import { ACCTIONS } from "@/constants/StaticData";
 import { dataToPetMap } from "../mapping/useMapping";
+import * as Crypto from "expo-crypto";
 
 //public
-export const savePetAsync = async (petId: string, pet: Pet) => {
-  const edit = petId ? true : false;
-  const user = await getUserAsync();
-
-  pet = loadInitPet(pet, user);
-  pet.image =
-    pet.image.substring(0, 5) !== "https"
-      ? await loadImage(user.id, pet)
-      : pet.image;
-
-  if (edit) {
-    try {
-      const docRef = doc(db, "pets", petId);
-      await updateDoc(docRef, pet);
-    } catch (error) {
-      throw Error("error DataBase: UsePet: savePetAsync.updateDoc" + error);
+export const saveAsync = async (pet: Pet) => {
+  try {
+    const image = await loadImage(pet.image);
+    if (image) {
+      pet.image = image;
     }
-  } else {
+
     await addDoc(collection(db, "pets"), pet);
+  } catch (error) {
+    throw Error("error DataBase: UsePet: savePetAsync.updateDoc" + error);
+  }
+};
+
+export const updateAsync = async (petId: string, pet: Pet) => {
+      console.log(" updateAsync petObj ", pet.size);
+
+  const sanitizePetUpdate = (pet: Pet) => {
+    const { createDate, rescuer, image, rescuerId, ...rest } = pet;
+    return rest;
+  };
+
+  try {
+    const image = await loadImage(pet.image);
+    if (image) {
+      pet.image = image;
+    }
+    await updateDoc(doc(db, "pets", petId), sanitizePetUpdate(pet));
+  } catch (error) {
+    throw Error("error DataBase: UsePet: updatePetAsync" + error);
   }
 };
 
@@ -53,7 +65,7 @@ export const myPetAsync = async () => {
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     if (doc != null) {
-      myPets.push(dataToPetMap(doc.id,doc.data()));
+      myPets.push(dataToPetMap(doc.id, doc.data()));
     }
   });
 
@@ -67,13 +79,14 @@ export const findPetsAsync = async () => {
   let action = await getAction();
 
   var from =
-    filter.from.ageType === AgeType.YEAR ? filter.from.age * 12 : filter.from.age;
+    filter.from.ageType === AgeType.YEAR
+      ? filter.from.age * 12
+      : filter.from.age;
 
   var until =
-    filter.until.ageType === AgeType.YEAR ? filter.until.age * 12 : filter.until.age;
-
-    console.log(from);
-    console.log(until);
+    filter.until.ageType === AgeType.YEAR
+      ? filter.until.age * 12
+      : filter.until.age;
 
   const q = query(
     collection(db, "pets"),
@@ -95,10 +108,6 @@ export const findPetsAsync = async () => {
       myPets.push(dataToPetMap(doc.id, doc.data()));
     }
   });
-
-  console.log("{ user: user, myPets: myPets, filter: filter, action: action }")
-  console.log(filter.from);
-  console.log(filter.until);
   return { user: user, myPets: myPets, filter: filter, action: action };
 };
 
@@ -111,32 +120,33 @@ export const disablePetAsync = async (id: string) => {
   }
 };
 
-//private
-function loadInitPet(pet: Pet, user: User) {
-  if (pet.name === "") pet.name = "No tiene";
-
-  pet.rescuer = {
-    id: user.id,
-    name: user.name,
-    lastName: user.lastname,
-    email: user.email,
-  };
-  pet.rescuerId = user.id;
-  pet.ageInMoths =
-    pet.age !== null && pet.ageType === "YEAR" ? pet.age * 12 : pet.age;
-  pet.dateStart = pet.action === "FOUND" ? new Date() : null;
-
-  return pet;
-}
-
-async function loadImage(id: string | null, pet: Pet) {
-  const response = await fetch(pet.image);
+async function uploadImage(image: string) {
+  const response = await fetch(image);
   const blob = await response.blob();
-  const refImage = ref(
-    storage,
-    "petImages/" + id + Math.floor(Math.random() * 1000),
-  );
+
+  const id = Crypto.randomUUID();
+  const refImage = ref(storage, `petImages/${id}`);
   const uploadTask = await uploadBytesResumable(refImage, blob);
   const downloadURL = await getDownloadURL(uploadTask.ref);
   return downloadURL;
 }
+
+async function loadImage(image: string) {
+  const imageDB =
+    image.substring(0, 5) !== "https" ? await uploadImage(image) : null;
+  return imageDB;
+}
+
+export const getByIdAsync = async (id: string) => {
+  try {
+    const petId = doc(db, "pets", id);
+    
+      const petDoc = await getDoc(petId);
+            console.log(id)
+
+      console.log(JSON.stringify(petDoc))
+      return dataToPetMap(petDoc.id, petDoc.data());
+  } catch (error) {
+    throw Error("error DataBase: UsePet: disablePetAsync" + error);
+  }
+};

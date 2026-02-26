@@ -22,7 +22,7 @@ export default function InputAge({
   function valideteAge(value: string) {
     type === AgeType.MONTH && parseInt(value) > 12
       ? age
-      : changeAge(value ? parseInt(value) : "", "age");
+      : changeAge(value !== "0" && value ? parseInt(value) : 0, "age");
   }
 
   function valideteAgeType(value: string) {

@@ -13,6 +13,7 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   search: "magnify",
   add: "plus",
   "arrow-back": "arrow-left",
+  "arrow-next": "arrow-right",
   male: "gender-male",
   female: "gender-female",
   cat: "cat",
@@ -28,6 +29,7 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   edit: "pencil",
   "folder-search": "folder-search",
   send: "send",
+  gallery: "image-multiple",
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

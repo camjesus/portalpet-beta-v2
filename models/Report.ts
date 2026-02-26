@@ -1,6 +1,6 @@
 export type Report = {
 	idPet: string;
-    idReporter: string | null;
+    idReporter: string;
     option: number;
     description: string;
     createDate: Date;

@@ -119,8 +119,7 @@ export default function PetProfile() {
               href={{
                 pathname: "/chat",
                 params: {
-                  petId: petId,
-                  stringItem: stringItem,
+                  petString: JSON.stringify(item),
                 },
               }}>
               <IconSymbol size={30} name="chat" color="white" />

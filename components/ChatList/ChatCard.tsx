@@ -23,12 +23,12 @@ export default function Card({ item, userId }: Props) {
     var [action, color] = loadAction(
       item?.chat.pet?.action !== null && item?.chat.pet?.action !== undefined
         ? item?.chat.pet?.action
-        : ""
+        : "",
     );
     setData({ action: action, color: color });
   }, []);
 
-  function goToPetProfile() {
+  function goToChat() {
     router.push({
       pathname: "/chat",
       params: {
@@ -38,7 +38,7 @@ export default function Card({ item, userId }: Props) {
   }
 
   return (
-    <Pressable onPress={goToPetProfile}>
+    <Pressable onPress={goToChat}>
       <View
         style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}>
         <View style={styles.viewImage}>

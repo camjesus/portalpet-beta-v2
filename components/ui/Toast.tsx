@@ -1,14 +1,14 @@
+import { Validation } from "@/models";
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
 import { scale } from "react-native-size-matters";
 
 type Props = {
-  message: string;
-  title: string;
+  validation: Validation;
   setToast: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function Toast({ message, title, setToast }: Props) {
+export default function Toast({ validation, setToast }: Props) {
   const [height, setHeight] = useState(0);
   const bottom = React.useRef(new Animated.Value(-80)).current;
   const opacity = React.useRef(new Animated.Value(3)).current;
@@ -42,8 +42,8 @@ export default function Toast({ message, title, setToast }: Props) {
       ]}>
       <Text style={{ fontSize: 25 }}>💬</Text>
       <View style={{ marginLeft: scale(12) }}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.message}>{message}</Text>
+        <Text style={styles.title}>{validation.type}</Text>
+        <Text style={styles.message}>{validation.msg}</Text>
       </View>
     </Animated.View>
   );

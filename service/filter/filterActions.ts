@@ -1,6 +1,6 @@
 import { ACTION } from "@/hooks/reducers/useFilter";
 import { AgeType, Filter } from "@/models";
-import { AGE_VALIDATION } from "@/constants/ErrorMsg";
+import { AGE_VALIDATION } from "@/constants/Validations";
 import { updateAsync } from "../storeData/useFilter";
 
 type Dispatch = React.Dispatch<any>;
@@ -36,7 +36,6 @@ export const filterActions = {
         filter.until.ageType === AgeType.MONTH)
     ) {
       if (filter.from.age > filter.until.age) {
-        console.log(AGE_VALIDATION);
         return AGE_VALIDATION;
       }
     }

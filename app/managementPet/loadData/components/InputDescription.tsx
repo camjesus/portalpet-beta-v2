@@ -8,12 +8,14 @@ type Props = {
   description: string;
   optAcion: number;
   changeValue: (opt: string, field: string) => void;
+  onFocus?: () => void;
 };
 
 export default function InputDescription({
   description,
   optAcion,
   changeValue,
+  onFocus,
 }: Props) {
   function change(value: string) {
     changeValue(value, "description");
@@ -28,6 +30,7 @@ export default function InputDescription({
           value: description,
           onChangeText: (t) => change(t),
           placeholder: PLACEHOLDER_DESCRIPTION[optAcion],
+          onFocus: onFocus,
         }}
         multiline={true}
       />

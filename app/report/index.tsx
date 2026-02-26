@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import { scale } from "react-native-size-matters";
 import { ScrollView } from "react-native-gesture-handler";
+import { OK_REPORT } from "@/constants/Validations";
 
 export default function Report() {
   const [other, setOther] = useState("");
@@ -117,13 +118,7 @@ export default function Report() {
         <Button label="Enviar" onPress={handlePress} />
       </View>
       <View style={styles.containerCenter}>
-        {toast && (
-          <Toast
-            title="Eureka!"
-            message="Se ha enviado el reporte, estamos solucionando el problema."
-            setToast={setToast}
-          />
-        )}
+        {toast && <Toast validation={OK_REPORT} setToast={setToast} />}
       </View>
     </ViewCustom>
   );

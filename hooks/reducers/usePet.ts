@@ -1,60 +1,68 @@
-import { defaultImg, logo } from '@/assets/images';
-import { Pet } from '@/models';
+import { defaultImg } from "@/assets/images";
+import { PetId } from "@/models";
 
 interface Action {
-	type: string;
+  type: string;
 
-	payload: {
-		field: string;
-		value: any;
-	} 
-} 
-
-interface State {
-	pet: Pet;
+  payload: {
+    field: string;
+    value: any;
+  };
 }
 
-export const initialPet: State = {	
-	pet: {
-		name: '',
-		size: 'SMALL',
-		type: 'DOG',
-		sex: 'FEMALE',
-		ageInMoths: 0,
-		age: null,
-		ageType: 'YEAR',
-		description: '',
-		image: defaultImg,
-		action: 'ADOPTION',
-		dateStart: null,
-		dateStart_string: null,
-		active: true,
-		latitud: null,
-		longitud:null,
-		idAdopter: "",
-		rescuerId: null,
-		rescuer: null,
-		createDate: new Date()
-		//ubication: undefined
-	}
+interface State {
+  statePet: PetId;
+}
+
+export const initialPet: State = {
+  statePet: {
+    id: "",
+    pet: {
+      name: "",
+      size: "SMALL",
+      type: "DOG",
+      sex: "FEMALE",
+      ageInMoths: 0,
+      age: 0,
+      ageType: "YEAR",
+      description: "",
+      image: defaultImg,
+      action: "ADOPTION",
+      dateStart: null,
+      dateStart_string: null,
+      active: true,
+      latitude: "",
+      longitude: "" ,
+      idAdopter: "",
+      rescuerId: "",
+      rescuer: null,
+      createDate: new Date(),
+      //ubication: undefined
+    },
+  },
 };
 
 export const ACTION = {
-	CHANGE_INPUT: 'changeInput',
+  CHANGE_INPUT: "changeInput",
 };
 
 export const petReducer = (state: State, action: Action) => {
-	switch (action.type) {
-		case ACTION.CHANGE_INPUT:
-				const updatePet = {
-				...state.pet,
-				[action.payload.field]: action.payload.value
-			} ;
-			
-				return { pet: updatePet };
+  switch (action.type) {
+    case ACTION.CHANGE_INPUT:
+      return {
+        ...state,
+        statePet: {
+          ...state.statePet,
+          pet: {
+            ...state.statePet.pet,
+            [action.payload.field]: action.payload.value,
+          },
+        },
+      };
 
-		default:
-			throw Error('error en petReducer');
-	}
+    default:
+      return state;
+  }
 };
+
 

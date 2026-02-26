@@ -5,8 +5,8 @@ export type Pet = {
 	size: string; //SMALL - MEDIUM - BIG
 	type: string; //DOG - CAT
 	sex: string; //FAMALE - MALE
-	age: number | null; 
-	ageInMoths: number | null;
+	age: number; 
+	ageInMoths: number;
 	ageType: string; //MONTH - YEAR
 	description: string;
 	image: string;
@@ -14,11 +14,11 @@ export type Pet = {
 	dateStart: Date | null;
 	dateStart_string: string| null;
 	active: boolean;
-	latitud: string| null;
-	longitud: string| null;
+	latitude: string| null;
+	longitude: string| null;
 	idAdopter: string| null;
-	rescuerId: string| null;
-	rescuer: Rescuer| null;
+	rescuerId: string;
+	rescuer: Rescuer | null;
 	createDate: Date ;
 	//ubication: undefined; // N/A
 };

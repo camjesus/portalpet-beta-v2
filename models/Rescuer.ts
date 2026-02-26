@@ -1,6 +1,6 @@
 export type Rescuer = {
-    lastName: string | null;
-    name: string | null;
-    id: string | null;
+    lastName: string;
+    name: string;
+    id: string ;
     email: string | null;
 };

@@ -43,21 +43,21 @@ export default function SwiperCard({
     opacity: interpolate(
       activeIndex.value,
       [index - 1, index, index + 1],
-      [1 - 1 / 5, 1, 1]
+      [1 - 1 / 5, 1, 1],
     ),
     transform: [
       {
         scale: interpolate(
           activeIndex.value,
           [index - 1, index, index + 1],
-          [0.95, 1, 1]
+          [0.95, 1, 1],
         ),
       },
       {
         translateY: interpolate(
           activeIndex.value,
           [index - 1, index, index + 1],
-          [-23, 0, 0]
+          [-23, 0, 0],
         ),
       },
       {
@@ -67,7 +67,7 @@ export default function SwiperCard({
         rotateZ: `${interpolate(
           translationX.value,
           [-screenWidth / 2, 0, screenWidth / 2],
-          [-15, 0, 15]
+          [-15, 0, 15],
         )}deg`,
       },
     ],
@@ -80,7 +80,7 @@ export default function SwiperCard({
       activeIndex.value = interpolate(
         Math.abs(translationX.value),
         [0, 200],
-        [index, index + 0.9]
+        [index, index + 0.9],
       );
     })
     .onEnd((event) => {
@@ -108,7 +108,7 @@ export default function SwiperCard({
         petId: petId,
         stringItem: JSON.stringify(item),
         image: encodeURI(pet.image),
-        chat: "ok",
+        isMy: "no",
       },
     });
   }

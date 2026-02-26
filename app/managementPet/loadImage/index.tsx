@@ -1,30 +1,21 @@
-import { Button, ViewCustom, IconSymbol } from "@/components/ui";
-import React, { useEffect, useReducer, useState } from "react";
-import { StyleSheet, Image } from "react-native";
+import { Button, ViewCustom, IconSymbol, HeaderCustom } from "@/components/ui";
+import React, { useReducer } from "react";
+import { StyleSheet, Image, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { scale } from "react-native-size-matters";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/FirebaseConfig";
-import * as Crypto from "expo-crypto";
 import { defaultImg } from "@/assets/images";
-import { useLocalSearchParams } from "expo-router";
-import { ACTION, initialPet, petReducer } from "@/hooks/reducers/usePet";
+import { Link, router, useLocalSearchParams } from "expo-router";
+import { ACTION, petReducer } from "@/hooks/reducers/usePet";
+import * as Crypto from "expo-crypto";
 
-const id = Crypto.randomUUID();
+export default function LoadImage() {
+  const { stringItem } = useLocalSearchParams<{ stringItem: string }>();
+  const parsedStatePet = stringItem ? JSON.parse(stringItem) : null;
+  const [state, dispatch] = useReducer(petReducer, parsedStatePet);
+  const { pet } = state.statePet;
 
-type Props = {
-  changeImage: (text: string, field: string) => void;
-};
-
-export default function LoadImage({ changeImage }: Props) {
-  const { stringItem } = useLocalSearchParams<{
-    stringItem: string;
-  }>();
-  const petObj = stringItem && JSON.parse(stringItem);
-  const [state, dispatch] = useReducer(
-    petReducer,
-    petObj ? petObj.pet : initialPet,
-  );
   function changeValue(value: any, field: string) {
     dispatch({
       type: ACTION.CHANGE_INPUT,
@@ -45,22 +36,32 @@ export default function LoadImage({ changeImage }: Props) {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ["images"],
       quality: 1,
-      //aspect: [2, 4],
-      //allowsEditing: true,
     });
 
     if (result.canceled) return null;
 
     const uri = result.assets[0].uri;
-    const response = await fetch(uri);
-    const blob = await response.blob();
+    //const response = await fetch(uri);
+    //const blob = await response.blob();
+    //const id = Crypto.randomUUID();
+    //const storageRef = ref(storage, `petImages/${id}`);
+    //await uploadBytes(storageRef, blob);
+    //const url = await getDownloadURL(storageRef);
 
-    const storageRef = ref(storage, `petImages/${id}`);
-    await uploadBytes(storageRef, blob);
-    const url = await getDownloadURL(storageRef);
+    if (uri) {
+      changeValue(uri, "image");
+    }
+  };
 
-    if (url) {
-      changeImage(url, "image");
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      changeValue(result.assets[0].uri, "image");
     }
   };
 
@@ -75,43 +76,65 @@ export default function LoadImage({ changeImage }: Props) {
   function goToMap() {
     //router.push("/map");
   }
-
+  function next() {
+    router.push({
+      pathname: "/managementPet/loadLocation",
+      params: { stringItem: JSON.stringify(state) },
+    });
+    console.log(JSON.stringify(state));
+  }
   return (
     <>
       <ViewCustom>
-        <Image
-          source={
-            state.pet.image === defaultImg
-              ? defaultImg
-              : { uri: state.pet.image }
+        <HeaderCustom
+          title="Nueva mascota"
+          childrenLeft={
+            <Link href={"/(tabs)/myPets"}>
+              <IconSymbol size={30} name="arrow-back" color="white" />
+            </Link>
           }
+        />
+        <Image
+          source={pet.image === defaultImg ? defaultImg : { uri: pet.image }}
           style={[styles.image]}
         />
-        <Button circle={true} onPress={handlePhoto}>
-          <IconSymbol size={25} name="add-image" color={"#4B4B4B"} />
-        </Button>
-        <Button circle={true} onPress={goToMap}>
-          <IconSymbol size={25} name="add-location" color={"#4B4B4B"} />
-        </Button>
+        <View style={styles.row}>
+          <Button circle={true} onPress={handlePhoto}>
+            <IconSymbol size={25} name="add-image" color={"#4B4B4B"} />
+          </Button>
+          <Button circle={true} onPress={pickImage}>
+            <IconSymbol size={25} name="gallery" color={"#4B4B4B"} />
+          </Button>
+          <View style={{ position: "absolute", right: scale(20) }}>
+            <Button circle={true} onPress={next} disabled={pet.image === defaultImg}>
+              <IconSymbol size={25} name="arrow-next" color={pet.image === defaultImg ? "#A5A5A5" : "white"} />
+            </Button>
+          </View>
+        </View>
       </ViewCustom>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    gap: scale(40),
+    justifyContent: "flex-start",
+    paddingLeft: scale(40),
+    bottom: scale(30),
+    width: "100%",
+    alignItems: "center",
+    position: "relative",
+  },
   imageRow: {
     justifyContent: "center",
     alignItems: "center",
   },
   image: {
-    width: scale(340),
-    height: scale(300),
-    marginHorizontal: scale(10),
-    borderRadius: 10,
-    marginTop: scale(10),
+    width: "100%",
+    height: "80%",
+    justifyContent: "center",
     resizeMode: "center",
   },
 });
-function dispatch(arg0: { type: any; payload: { field: string; value: any } }) {
-  throw new Error("Function not implemented.");
-}

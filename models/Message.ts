@@ -4,7 +4,7 @@ export type MessageId = {
     id: string;
     system: boolean | false;
     bubbleUser: boolean | true;
-    message: Message | undefined;
+    message: Message;
 }
 
 
@@ -19,16 +19,16 @@ export type Message = {
     
 }
 
-export function newSystemMessageId(index:number, text: string)
+export function newSystemMessageId(index:string, text: string)
 {
     const newSystem : MessageId = {
-        id: index.toString(),
+        id: index,
         system: true,
         bubbleUser: false,
         message: {
             text: text,
             createAt: Timestamp.now(),
-            chatId: index.toString(),
+            chatId: index,
             sender: undefined
         }
     }

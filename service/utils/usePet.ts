@@ -1,30 +1,10 @@
 import { LABEL_SIZE } from "@/constants/StaticData";
 import { AgeType, Size, Pet } from "@/models";
-import { defaultImg } from "@/assets/images"
 //public
 export const loadPet = (pet:Pet) => {
   let name = loadName(pet);
   var [action, color] =  loadAction(pet.action);
-  return {name, action, color};
-}
-
-export function validatePet(pet:Pet, noName:boolean)
-{
-  var errorMessage: string = "";
-
-  if (pet.name === "" && !noName) 
-    return errorMessage = "Es necesario ingresar un nombre."
-
-  if (pet.age === null) 
-    return errorMessage = "Es necesario ingresar una edad."
-
-  if (pet.description === "") 
-    return errorMessage = "Es necesario ingresar alguna descripción."
-
-  if (pet.image === defaultImg) 
-    return errorMessage = "Es necesario ingresar alguna imagen."
-
-  return errorMessage;
+  return { name: name, action: action, color: color };
 }
 
 export function loadLabels(size: string[]) {
@@ -74,6 +54,8 @@ export function loadAction(petAction:string) {
 
 //private
 function loadName(pet:Pet) {
+  const name = pet.name === "" ? "No tiene" : pet.name;
+  
   let ageType = "";
   if (pet.age === 1) {
     if (pet.ageType === AgeType.YEAR) {
@@ -89,6 +71,6 @@ function loadName(pet:Pet) {
     }
   }
 
-  return `${pet.name}, ${pet.age} ${ageType} `;
+  return `${name}, ${pet.age} ${ageType} `;
 }
 

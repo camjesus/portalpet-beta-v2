@@ -1,10 +1,16 @@
-import { Keyboard, Pressable, StyleSheet, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  View,
+  Image,
+  ScrollView,
+  Keyboard,
+} from "react-native";
 import { Link, useLocalSearchParams, router } from "expo-router";
-import { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect, useRef } from "react";
 import { scale } from "react-native-size-matters";
-import { petReducer, initialPet, ACTION } from "@/hooks/reducers/usePet";
-import { savePetAsync } from "@/service/dataBase/usePet";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { petReducer, ACTION } from "@/hooks/reducers/usePet";
 //components
 import {
   IconSymbol,
@@ -13,13 +19,8 @@ import {
   Toast,
   ViewCustom,
   Loading,
+  InputAge,
 } from "@/components/ui";
-import Animated, {
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
 import {
   InputName,
   InputSize,
@@ -28,36 +29,33 @@ import {
   InputAction,
   InputDescription,
 } from "./components";
-import { validatePet } from "@/service/utils/usePet";
-import { defaultImg, logo } from "@/assets/images";
-import InputImage from "./components/InputImage";
+import { validatePet, savePetAsync } from "@/service/pet/petActions";
+import { Validation } from "@/models";
+import { ACCTIONS, SIZE } from "@/constants/StaticData";
 
-export default function ManagementPet() {
-  const { stringItem } = useLocalSearchParams<{
+export default function LoadData() {
+  const { stringItem, image } = useLocalSearchParams<{
     stringItem: string;
+    image: string;
   }>();
-  const petObj = stringItem && JSON.parse(stringItem);
-  const [noName, setNoName] = useState(false);
+  const parsedStatePet = stringItem ? JSON.parse(stringItem) : null;
+  const [state, dispatch] = useReducer(petReducer, parsedStatePet);
+  const [noName, setNoName] = useState(state.statePet.pet.name === "");
   const [optAcion, setAcion] = useState(0);
   const [optSize, setSize] = useState(0);
-  const [state, dispatch] = useReducer(
-    petReducer,
-    petObj ? petObj.pet : initialPet,
-  );
   const [load, setLoad] = useState(false);
   const [toast, setToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<Validation>();
+  const imageSource = image
+    ? { uri: image }
+    : { uri: state.statePet.pet.image };
+  const labelButton = state.statePet.id ? "Editar" : "Crear";
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  const [toastConfig, setToastConfig] = useState({
-    title: "Eureka!",
-    message: "La mascota se ha creado con éxito!",
-  });
-
-  var scrollY = useSharedValue(0);
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.set(event.contentOffset.y);
-    },
-  });
+  useEffect(() => {
+    setAcion(ACCTIONS.findIndex((p) => state.statePet.pet.action === p));
+    setSize(SIZE.findIndex((p) => state.statePet.pet.size === p));
+  }, [state.statePet]);
 
   function changeValue(value: any, field: string) {
     dispatch({
@@ -67,30 +65,22 @@ export default function ManagementPet() {
         value: value,
       },
     });
+    console.log("state" + JSON.stringify(state));
   }
+  console.log("state data", state);
 
   async function savePet() {
-    var errorMessage = validatePet(state.pet, noName);
+    var result = validatePet(state.statePet.pet, noName);
 
-    if (errorMessage !== "") {
-      setToastConfig({
-        title: "Validación",
-        message: errorMessage,
-      });
-      setToast(true);
-      return;
-    } else {
-      setToastConfig({
-        title: "Eureka!",
-        message: "La mascota se ha creado con éxito!",
-      });
-    }
+    setToastConfig(result);
     setToast(true);
-    setLoad(true);
-    console.log("petObj", petObj);
-    await savePetAsync(petObj && petObj.id, state.pet);
-    router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
-    setLoad(false);
+    console.log("petObj", state.statePet.pet);
+
+    if (result.sucess) {
+      await savePetAsync(state.statePet.id, state.statePet.pet);
+      router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
+      setLoad(false);
+    }
   }
 
   function changeNoName() {
@@ -102,18 +92,11 @@ export default function ManagementPet() {
     savePet();
   }
 
-  const IMAGE_HEIGHT = scale(300);
-  const imageStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      scrollY.get(),
-      [0, IMAGE_HEIGHT],
-      [IMAGE_HEIGHT, 200],
-    );
-
-    return {
-      height,
-    };
-  });
+  const handleFocus = () => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  };
 
   return (
     <ViewCustom>
@@ -128,26 +111,23 @@ export default function ManagementPet() {
       {load && <Loading />}
       {!load && (
         <View style={styles.container}>
-          <Animated.Image
-            source={
-              state.pet.image === defaultImg
-                ? defaultImg
-                : { uri: state.pet.image }
-            }
-            style={[styles.image, imageStyle]}
-          />
-
-          <InputImage changeImage={changeValue} />
+          <View>
+            <Image source={imageSource} style={[styles.image]} />
+          </View>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
-            <Animated.ScrollView
-              onScroll={scrollHandler}
-              scrollEventThrottle={10}>
+            keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 0}>
+            <ScrollView
+              ref={scrollViewRef}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{
+                paddingBottom: scale(40),
+              }}
+              showsVerticalScrollIndicator={false}>
               <View style={styles.row}>
                 <InputName
-                  name={state.pet.name}
+                  name={state.statePet.pet.name}
                   noName={noName}
                   changeName={changeValue}
                   changeNoName={changeNoName}
@@ -161,10 +141,27 @@ export default function ManagementPet() {
                 />
               </View>
               <View style={[styles.row, { gap: scale(50) }]}>
-                <InputType type={state.pet.type} changeValue={changeValue} />
-                <InputSex sex={state.pet.sex} changeValue={changeValue} />
+                <InputType
+                  type={state.statePet.pet.type}
+                  changeValue={changeValue}
+                />
+                <InputSex
+                  sex={state.statePet.pet.sex}
+                  changeValue={changeValue}
+                />
               </View>
               <View style={[styles.row, { gap: scale(5) }]}>
+                <InputAge
+                  title="Edad"
+                  age={
+                    state.statePet.pet.age !== 0
+                      ? state.statePet.pet.age?.toString()
+                      : ""
+                  }
+                  type={state.statePet.pet.ageType}
+                  changeAge={changeValue}
+                  changeAgeType={changeValue}
+                />
                 <InputSize
                   option={optSize}
                   changeValue={setSize}
@@ -174,22 +171,19 @@ export default function ManagementPet() {
               <View style={{ marginTop: scale(16) }}>
                 <InputDescription
                   optAcion={optAcion}
-                  description={state.pet.description}
+                  description={state.statePet.pet.description}
                   changeValue={changeValue}
+                  onFocus={handleFocus}
                 />
               </View>
 
               <View style={styles.submit}>
-                <Button label="Crear" onPress={submit} />
+                <Button label={labelButton} onPress={submit} />
               </View>
-            </Animated.ScrollView>
+            </ScrollView>
           </KeyboardAvoidingView>
-          {toast && (
-            <Toast
-              title={toastConfig.title}
-              message={toastConfig.message}
-              setToast={setToast}
-            />
+          {toast && toastConfig && (
+            <Toast validation={toastConfig} setToast={setToast} />
           )}
         </View>
       )}
@@ -215,11 +209,9 @@ const styles = StyleSheet.create({
     marginBottom: scale(16),
   },
   image: {
-    width: scale(340),
-    height: scale(300),
-    marginHorizontal: scale(10),
-    borderRadius: 10,
+    width: scale(90),
+    height: scale(90),
+    borderRadius: 900,
     marginTop: scale(10),
-    resizeMode: "center",
   },
 });

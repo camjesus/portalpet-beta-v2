@@ -86,10 +86,5 @@ const styles = StyleSheet.create({
   viewRowIcon: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginStart: scale(70),
-    marginEnd: scale(60),
-    marginTop: scale(-40),
-    marginBottom: scale(5),
-    gap: scale(100),
   },
 });

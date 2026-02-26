@@ -9,34 +9,17 @@ import {
   Timestamp,
   onSnapshot,
 } from "firebase/firestore";
-import { dataToMessageMap } from "../mapping/useMapping";
+import { dataToMessageIdMap } from "../mapping/useMapping";
 import { MessageId, Message, newSystemMessageId } from "@/models";
-import { getUserAsync } from "../storeData/useUser";
 import { capitalize, formatTimestampToDate } from "../utils/useUtil";
 
 //public
-export const newMessageAsync = async (
-  chatId: string,
-  text: string,
-  messages: MessageId[],
-) => {
-  const user = await getUserAsync();
-  const userId = user.id ? user.id : "";
-  const newMessage: Message = {
-    createAt: Timestamp.now(),
-    text: text,
-    chatId: chatId,
-    sender: {
-      id: userId,
-      name: user.name ? user.name : "",
-    },
-  };
-  await addDoc(collection(db, "messages"), newMessage);
-  messages = await findMessagesAsync(chatId, userId);
-  return { messages: messages };
+export const newMessageAsync = async (message: Message) => {
+  const newDoc = await addDoc(collection(db, "messages"), message);
+  return dataToMessageIdMap(newDoc.id, message);
 };
 
-export const findMessagesAsync = async (id: string, userId: string) => {
+export const findMessagesAsync = async (id: string) => {
   var messages: MessageId[] = [];
   const q = query(
     collection(db, "messages"),
@@ -47,11 +30,11 @@ export const findMessagesAsync = async (id: string, userId: string) => {
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     if (doc != null) {
-      messages.push(dataToMessageMap(doc.id, doc.data()));
+      messages.push(dataToMessageIdMap(doc.id, doc.data()));
     }
   });
 
-  messages = addSystemMessage(messages, userId);
+  messages = addSystemMessage(messages);
   return messages;
 };
 
@@ -66,11 +49,11 @@ export const listenMessages = (
   );
 
   const unsubscribe = onSnapshot(q, (snapshot) => {
-    const messages: MessageId[] = snapshot.docs.map((doc) =>
-      dataToMessageMap(doc.id, doc.data()),
+    var messages: MessageId[] = snapshot.docs.map((doc) =>
+      dataToMessageIdMap(doc.id, doc.data()),
     );
     console.log("mensajito");
-    console.log(messages);
+    messages = addSystemMessage(messages);
     callback(messages);
   });
   console.log("ENTRA?");
@@ -78,7 +61,7 @@ export const listenMessages = (
 };
 
 //private
-function addSystemMessage(messages: MessageId[], userId: string) {
+function addSystemMessage(messages: MessageId[]) {
   const dateToday = new Date();
   let newMessages: MessageId[] = [];
   let lastUser: string = "";
@@ -99,14 +82,14 @@ function addSystemMessage(messages: MessageId[], userId: string) {
 
     if (isYesterday) {
       if (!newMessages.find((m) => existMessage(m, "Ayer"))) {
-        newMessages.push(newSystemMessageId(index, "Ayer"));
+        newMessages.push(newSystemMessageId(index.toString(), "Ayer"));
       }
     }
 
     if (dateAt?.toDateString() !== dateToday.toDateString() && !isYesterday) {
       const textDate = formatDate(dateAt);
       if (!newMessages.find((m) => existMessage(m, textDate))) {
-        newMessages.push(newSystemMessageId(index, textDate));
+        newMessages.push(newSystemMessageId(index.toString(), textDate));
       }
     }
 

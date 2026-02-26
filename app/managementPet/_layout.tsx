@@ -6,6 +6,7 @@ export default function ManagementPetLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="loadImage" options={{ headerShown: false }} />
       <Stack.Screen name="loadData" options={{ headerShown: false }} />
+      <Stack.Screen name="loadLocation" options={{ headerShown: false }} />
     </Stack>
   );
 }
