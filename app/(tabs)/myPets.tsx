@@ -4,7 +4,7 @@ import { ViewCustom, HeaderCustom, Button, IconSymbol } from "@/components/ui";
 import { findMyPetsAsync } from "@/service/pet/petActions";
 import { useEffect, useState } from "react";
 import { PetId } from "@/models";
-import Card from "@/components/MyPets/Card";
+import Card from "@/components/myPets/Card";
 import { FlatList } from "react-native-gesture-handler";
 import { scale } from "react-native-size-matters";
 

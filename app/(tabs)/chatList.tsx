@@ -3,7 +3,7 @@ import { HeaderCustom, Loading, ViewCustom } from "@/components/ui";
 import { useEffect, useState } from "react";
 import { ChatId, User } from "@/models";
 import { scale } from "react-native-size-matters";
-import ChatCard from "@/components/ChatList/ChatCard";
+import ChatCard from "@/components/chatList/ChatCard";
 import { getChatsAsync } from "@/service/dataBase/useChat";
 
 export default function ChatList() {

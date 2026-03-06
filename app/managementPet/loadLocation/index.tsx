@@ -154,6 +154,10 @@ export default function LoadLocationLayout() {
           </Link>
         }
       />
+      <View style={styles.label}>
+        Tu dirección queda privada 🔒 la usamos únicamente para mostrar
+        resultados por cercanía.
+      </View>
       {!coords && <Loading />}
 
       {coords && (
@@ -221,6 +225,9 @@ const styles = StyleSheet.create({
     flex: 1,
     height: scale(400),
     borderRadius: 15,
+    backgroundColor: "white",
+  },
+  label: {
     backgroundColor: "white",
   },
 });

@@ -1,3 +1,4 @@
+import React, { useState, useReducer, useEffect, useRef } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,7 +9,6 @@ import {
   Keyboard,
 } from "react-native";
 import { Link, useLocalSearchParams, router } from "expo-router";
-import React, { useState, useReducer, useEffect, useRef } from "react";
 import { scale } from "react-native-size-matters";
 import { petReducer, ACTION } from "@/hooks/reducers/usePet";
 //components
@@ -28,7 +28,7 @@ import {
   InputSex,
   InputAction,
   InputDescription,
-} from "./components";
+} from "@/components/managementPet";
 import { validatePet, savePetAsync } from "@/service/pet/petActions";
 import { Validation } from "@/models";
 import { ACCTIONS, SIZE } from "@/constants/StaticData";

@@ -9,7 +9,7 @@ import {
   IconSymbol,
   Loading,
 } from "@/components/ui";
-import Swiper from "@/components/Search/Swiper";
+import Swiper from "@/components/search/Swiper";
 import { findPetsAsync } from "@/service/dataBase/usePet";
 import {
   cleanAllAsync,

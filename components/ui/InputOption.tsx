@@ -1,5 +1,6 @@
 import { View, StyleSheet } from "react-native";
-import { TitleCustom, CheckBox } from "@/components/ui";
+import CheckBox from "./CheckBox";
+import TitleCustom from "./TitleCustom";
 import React from "react";
 import { scale } from "react-native-size-matters";
 
