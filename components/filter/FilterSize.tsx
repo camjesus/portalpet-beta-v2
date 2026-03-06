@@ -4,7 +4,7 @@ import { LABEL_SIZE, SIZE } from "@/constants/StaticData";
 import { Size } from "@/models";
 import React, { useState } from "react";
 import { scale } from "react-native-size-matters";
-import { loadLabels } from "@/service/utils/usePet";
+import { loadLabels } from "@/services/utils/usePet";
 
 type Props = {
   size: string[];

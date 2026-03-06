@@ -10,11 +10,8 @@ import {
   Loading,
 } from "@/components/ui";
 import Swiper from "@/components/search/Swiper";
-import { findPetsAsync } from "@/service/dataBase/usePet";
-import {
-  cleanAllAsync,
-  saveActionFilterAsync,
-} from "@/service/storeData/useFilter";
+import { findPets } from "@/features/pet/services/petService";
+import { saveActionFilterAsync } from "@/services/storage/filterStorage";
 import {
   filterReducer,
   initalFilter,
@@ -46,7 +43,7 @@ export default function Prueba() {
   const getData = async () => {
     console.log("goTosearch");
     console.log(goTosearch);
-    await findPetsAsync().then((res) => {
+    await findPets().then((res) => {
       //console.log("res.myPets", res.myPets);
       console.log("busco las mascotas otra vee");
       setMyPets(res.myPets);

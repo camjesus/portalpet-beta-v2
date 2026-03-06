@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUserAsync } from "@/service/storeData/useUser";
+import { getUserAsync } from "@/services/storage/userStorage";
 import { User } from "@/models";
 import Signin from "../signin";
 import { router } from "expo-router";

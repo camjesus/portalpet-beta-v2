@@ -1,4 +1,5 @@
 import { defaultImg } from "@/assets/images";
+import { defaultRescuer } from "@/constants/StaticData";
 import { PetId } from "@/models";
 
 interface Action {
@@ -35,7 +36,7 @@ export const initialPet: State = {
       longitude: "" ,
       idAdopter: "",
       rescuerId: "",
-      rescuer: null,
+      rescuer: defaultRescuer,
       createDate: new Date(),
       //ubication: undefined
     },

@@ -1,6 +1,6 @@
 import { View, StyleSheet, Image, Text, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
-import { loadPet } from "@/service/utils/usePet";
+import { loadPet } from "@/services/utils/usePet";
 import { PetId } from "@/models";
 import { scale } from "react-native-size-matters";
 import { Link, router } from "expo-router";

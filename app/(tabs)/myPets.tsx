@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import { ViewCustom, HeaderCustom, Button, IconSymbol } from "@/components/ui";
-import { findMyPetsAsync } from "@/service/pet/petActions";
+import { findMyPets } from "@/features/pet/services/petService";
 import { useEffect, useState } from "react";
 import { PetId } from "@/models";
 import Card from "@/components/myPets/Card";
@@ -18,7 +18,7 @@ export default function MyPets() {
   );
 
   const getData = async (serach: boolean) => {
-    await findMyPetsAsync(serach).then((res) => {
+    await findMyPets(serach).then((res) => {
       setMyPets(res);
       setSearch(false);
     });

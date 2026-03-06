@@ -11,12 +11,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
 import { MessageId, ChatId, User, PetId } from "@/models";
 import { ViewCustom, HeaderCustom, IconSymbol } from "@/components/ui";
-import { resolveChat } from "@/service/dataBase/useChat";
-import { listenMessages } from "@/service/dataBase/useMessage";
-import { sendMessageAsync } from "@/service/message/messageActions";
-
-import Bubble from "./components/Bubble";
-import InputMessage from "./components/InputMessage";
+import { resolveChat } from "@/features/chat/services/chatService";
+import {
+  listenMessages,
+  sendMessage,
+} from "@/features/chat/services/messageService";
+import { Bubble, InputMessage } from "@/components/chat";
 
 export default function Chat() {
   const { chatId, petString } = useLocalSearchParams<{
@@ -28,7 +28,8 @@ export default function Chat() {
   const [user, setUser] = useState<User>();
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const title = chat?.chat.rescuer?.id === user?.id
+  const title =
+    chat?.chat.rescuer?.id === user?.id
       ? chat?.chat.user?.name
       : chat?.chat.rescuer?.name;
 
@@ -59,11 +60,11 @@ export default function Chat() {
     router.back();
   }
 
-  const sendMessage = async (message: string) => {
+  const sendMessageAsync = async (message: string) => {
     if (chat) {
       try {
         const isNewChat = chat.id === "";
-        const res = await sendMessageAsync(chat, message, user);
+        const res = await sendMessage(chat, message, user);
 
         if (isNewChat && res?.chat?.id) {
           setChat({ ...res.chat });
@@ -75,9 +76,9 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    if (!petParse && !chatId) return;
+    if (!petParse || !chatId) return;
 
-    resolveChat(chatId, petParse?.pet, petParse?.id).then((res) => {
+    resolveChat(chatId, petParse.pet, petParse.id).then((res) => {
       if (res) {
         setChat(res.chat);
         setUser(res.user);
@@ -115,7 +116,7 @@ export default function Chat() {
         </ScrollView>
 
         <View style={styles.footer}>
-          <InputMessage sendMessage={sendMessage} />
+          <InputMessage sendMessage={sendMessageAsync} />
         </View>
       </KeyboardAvoidingView>
     </ViewCustom>

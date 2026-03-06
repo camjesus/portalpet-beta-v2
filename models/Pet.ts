@@ -18,7 +18,7 @@ export type Pet = {
 	longitude: string| null;
 	idAdopter: string| null;
 	rescuerId: string;
-	rescuer: Rescuer | null;
+	rescuer: Rescuer;
 	createDate: Date ;
 	//ubication: undefined; // N/A
 };

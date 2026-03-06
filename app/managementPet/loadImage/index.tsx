@@ -3,12 +3,9 @@ import React, { useReducer } from "react";
 import { StyleSheet, Image, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { scale } from "react-native-size-matters";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/FirebaseConfig";
 import { defaultImg } from "@/assets/images";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { ACTION, petReducer } from "@/hooks/reducers/usePet";
-import * as Crypto from "expo-crypto";
 
 export default function LoadImage() {
   const { stringItem } = useLocalSearchParams<{ stringItem: string }>();
@@ -106,8 +103,15 @@ export default function LoadImage() {
             <IconSymbol size={25} name="gallery" color={"#4B4B4B"} />
           </Button>
           <View style={{ position: "absolute", right: scale(20) }}>
-            <Button circle={true} onPress={next} disabled={pet.image === defaultImg}>
-              <IconSymbol size={25} name="arrow-next" color={pet.image === defaultImg ? "#A5A5A5" : "white"} />
+            <Button
+              circle={true}
+              onPress={next}
+              disabled={pet.image === defaultImg}>
+              <IconSymbol
+                size={25}
+                name="arrow-next"
+                color={pet.image === defaultImg ? "#A5A5A5" : "white"}
+              />
             </Button>
           </View>
         </View>

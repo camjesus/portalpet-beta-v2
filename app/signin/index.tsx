@@ -17,9 +17,8 @@ import {
   getGoogleUserInfo,
   setDefaultUser,
   setDefaultUser2,
-} from "@/service/dataBase/useGoogleSignin";
+} from "@/services/dataBase/useGoogleSignin";
 import * as AuthSession from "expo-auth-session";
-
 import { logo, googleSignin } from "@/assets/images";
 import * as WebBrowser from "expo-web-browser";
 WebBrowser.maybeCompleteAuthSession();

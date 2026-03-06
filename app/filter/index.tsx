@@ -12,7 +12,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
 import { filterReducer } from "@/hooks/reducers/useFilter";
 import { FilterSex, FilterSize, FilterType } from "@/components/filter";
-import { filterActions } from "@/service/filter/filterActions";
+import { filterActions } from "@/services/filter/filterActions";
 import { Validation } from "@/models";
 
 export default function Filters() {

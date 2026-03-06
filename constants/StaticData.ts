@@ -8,3 +8,9 @@ export const PLACEHOLDER_DESCRIPTION = [
 export const SIZE = ["SMALL", "MEDIUM", "BIG"];
 export const LABEL_SIZE = ["Pequeño", "Mediano", "Grande"];
 export const MAXIMUN_AGE = 25;
+export const defaultRescuer = {
+  id: "",
+  name: "",
+  lastName: "",
+  email: "",
+};

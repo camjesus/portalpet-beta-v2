@@ -6,7 +6,7 @@ import {
   TextInputCustom,
   ViewCustom,
 } from "@/components/ui";
-import { reportPetAsync } from "@/service/dataBase/useReport";
+import { reportPetAsync } from "@/services/dataBase/useReport";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {

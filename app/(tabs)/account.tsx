@@ -7,104 +7,105 @@ import {
 } from "@/components/ui";
 import { useEffect, useState } from "react";
 import { User } from "@/models";
-import { getUserAsync, updateUserAsync } from "@/service/storeData/useUser";
+import { getUserAsync, saveUserAsync } from "@/services/storage/userStorage";
 import { scale } from "react-native-size-matters";
-import { cleanAllAsync } from "@/service/storeData/useFilter";
+import { cleanAllAsync } from "@/services/storage/userStorage";
 import { router } from "expo-router";
 
 export default function Account() {
-  const [user, setUser] = useState<User>();
-  const [labelButton, setLabelButton] = useState("Editar datos");
+  const [user, setUser] = useState<User | null>(null);
   const [edit, setEdit] = useState(false);
-  const [name, setName] = useState(user?.name);
-  const [lastname, setLastname] = useState(user?.lastname);
-  const [email, setEmail] = useState(user?.email);
 
-  const getUser = async () => {
-    await getUserAsync().then((user) => {
-      console.log("user", user);
-      setUser(user);
-      setName(user.name);
-      setLastname(user.lastname);
-      setEmail(user.email);
-    });
-  };
-  const updateUser = async () => {
-    const newUser: User = {
-      id: user ? user.id : null,
-      name: name ? name : null,
-      lastname: lastname ? lastname : null,
-      email: user ? user?.email : null,
-      image: user ? user?.image : null,
-    };
-    await updateUserAsync(newUser);
-    setEdit(false);
-    setLabelButton("Editar");
-  };
-
-  function submit() {
-    if (edit) {
-      updateUser();
-    }
-    setEdit(!edit);
-    setLabelButton("Guardar");
-  }
+  const [name, setName] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
-    if (user === undefined) {
-      getUser();
-    }
-  }, [user]);
+    loadUser();
+  }, []);
 
-  //para pruebas
-  const clear = async () => {
-    await cleanAllAsync();
+  const loadUser = async () => {
+    const storedUser = await getUserAsync();
+
+    if (!storedUser) return;
+
+    setUser(storedUser);
+    setName(storedUser.name ?? "");
+    setLastname(storedUser.lastname ?? "");
+    setEmail(storedUser.email ?? "");
   };
 
-  function clearAll() {
-    clear();
-    router.push("/signin");
-  }
+  const updateUser = async () => {
+    if (!user) return;
+
+    const newUser: User = {
+      ...user,
+      name,
+      lastname,
+    };
+
+    await saveUserAsync(newUser);
+
+    setUser(newUser);
+    setEdit(false);
+  };
+
+  const submit = async () => {
+    if (edit) {
+      await updateUser();
+    } else {
+      setEdit(true);
+    }
+  };
+
+  const clearAll = async () => {
+    await cleanAllAsync();
+    router.replace("/signin");
+  };
 
   return (
     <ViewCustom>
       <HeaderCustom title="Mis datos" />
+
       <View style={styles.container}>
         <View style={styles.row}>
-          <Text style={styles.field}>Nombre </Text>
+          <Text style={styles.field}>Nombre</Text>
           <TextInputCustom
             options={{
-              value: name ? name : "",
-              onChangeText: (t) => setName(t),
-              placeholder: name ? name : "",
+              value: name,
+              onChangeText: setName,
             }}
             editable={edit}
           />
         </View>
+
         <View style={styles.row}>
-          <Text style={styles.field}>Apellido </Text>
+          <Text style={styles.field}>Apellido</Text>
           <TextInputCustom
             options={{
-              value: lastname ? lastname : "",
-              onChangeText: (t) => setLastname(t),
-              placeholder: lastname ? lastname : "",
+              value: lastname,
+              onChangeText: setLastname,
             }}
             editable={edit}
           />
         </View>
+
         <View style={styles.row}>
-          <Text style={styles.field}>Email </Text>
+          <Text style={styles.field}>Email</Text>
           <TextInputCustom
             options={{
-              value: email ? email : "",
-              onChangeText: (t) => setEmail(t),
-              placeholder: email ? email : "",
+              value: email,
             }}
             editable={false}
           />
         </View>
+
         <View style={styles.submit}>
-          <Button label={labelButton} onPress={submit} />
+          <Button
+            label={edit ? "Guardar datos" : "Editar datos"}
+            onPress={submit}
+          />
+
           <Button label="Cerrar sesión" onPress={clearAll} />
         </View>
       </View>

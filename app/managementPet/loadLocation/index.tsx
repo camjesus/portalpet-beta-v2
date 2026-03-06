@@ -1,14 +1,5 @@
-import React, { useEffect, useReducer, useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Image,
-  ActivityIndicator,
-  Alert,
-  Keyboard,
-} from "react-native";
-import * as Location from "expo-location";
+import React, { useReducer } from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
 import {
   Button,
   HeaderCustom,
@@ -18,124 +9,31 @@ import {
 } from "@/components/ui";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
-import { API_KEY_LOCATIONIQ } from "@/secret-google";
 import MapView, { Marker } from "react-native-maps";
 import { ACTION, petReducer } from "@/hooks/reducers/usePet";
+import { useLocation } from "@/hooks/useLocation";
 
 export default function LoadLocationLayout() {
   const { stringItem } = useLocalSearchParams<{ stringItem: string }>();
   const parsedStatePet = stringItem ? JSON.parse(stringItem) : null;
   const [state, dispatch] = useReducer(petReducer, parsedStatePet);
-  const { pet } = state.statePet;
-  const [loading, setLoading] = useState(true);
-  const [address, setAddress] = useState("");
-  const [coords, setCoords] = useState<{ lat: number; lng: number }>();
+
+  const { coords, setCoords, address, setAddress, search, loading } =
+    useLocation();
+
   function changeValue(value: any, field: string) {
-    dispatch({
-      type: ACTION.CHANGE_INPUT,
-      payload: {
-        field: field,
-        value: value,
-      },
-    });
+    dispatch({ type: ACTION.CHANGE_INPUT, payload: { field, value } });
   }
-  // 📍 Obtener ubicación actual
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
 
-      if (status !== "granted") {
-        Alert.alert("Permiso denegado");
-        setLoading(false);
-        return;
-      }
-      console.log("status", JSON.stringify(status));
-
-      try {
-        const enabled = await Location.hasServicesEnabledAsync();
-
-        if (!enabled) {
-          Alert.alert("Activa los servicios de ubicación del dispositivo");
-          setLoading(false);
-          return;
-        }
-        const location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
-        });
-        console.log("location", JSON.stringify(location));
-
-        const { latitude, longitude } = location.coords;
-        console.log("latitude", JSON.stringify(latitude));
-        console.log("longitude", JSON.stringify(longitude));
-
-        setCoords({ lat: latitude, lng: longitude });
-        reverseGeocode(latitude, longitude);
-      } catch (error) {
-        console.log("No se pudo obtener ubicación:", error);
-
-        const fallback = {
-          lat: -34.6037,
-          lng: -58.3816,
-        };
-
-        setCoords(fallback);
-        reverseGeocode(fallback.lat, fallback.lng);
-      }
-      setLoading(false);
-    })();
-  }, []);
-
-  // 🔁 Reverse geocoding con OSM
-  const reverseGeocode = async (lat: number, lng: number) => {
-    try {
-      const response = await fetch(
-        `https://us1.locationiq.com/v1/reverse?key=${API_KEY_LOCATIONIQ}&lat=${lat}&lon=${lng}&format=json`,
-      );
-      console.log(`x`);
-      const data = await response.json();
-      setAddress(data.display_name || "");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // 🔎 Buscar dirección
-  const searchAddress = async () => {
-    if (!address) return;
-
-    Keyboard.dismiss();
-
-    try {
-      const response = await fetch(
-        `https://us1.locationiq.com/v1/search?key=${API_KEY_LOCATIONIQ}&q=${encodeURIComponent(
-          address,
-        )}&format=json`,
-      );
-
-      const data = await response.json();
-
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat);
-        const lng = parseFloat(data[0].lon);
-
-        setCoords({ lat, lng });
-        setAddress(data[0].display_name);
-      } else {
-        Alert.alert("Dirección no encontrada");
-      }
-    } catch (error) {
-      Alert.alert("Error buscando dirección");
-    }
-  };
-
-  function saveCoords() {
+  const saveCoords = () => {
     if (!coords) return;
-    changeValue(coords?.lat.toString(), "latitude");
-    changeValue(coords?.lng.toString(), "longitude");
-    console.log("state", JSON.stringify(state));
-    next();
-  }
-
+    changeValue(coords.lat.toString(), "latitude");
+    changeValue(coords.lng.toString(), "longitude");
+    router.push({
+      pathname: "/managementPet/loadData",
+      params: { stringItem: JSON.stringify(state) },
+    });
+  };
   function next() {
     router.push({
       pathname: "/managementPet/loadData",
@@ -154,10 +52,6 @@ export default function LoadLocationLayout() {
           </Link>
         }
       />
-      <View style={styles.label}>
-        Tu dirección queda privada 🔒 la usamos únicamente para mostrar
-        resultados por cercanía.
-      </View>
       {!coords && <Loading />}
 
       {coords && (
@@ -168,11 +62,14 @@ export default function LoadLocationLayout() {
               value={address}
               onChangeText={setAddress}
               placeholder="Buscar dirección..."
-              onSubmitEditing={searchAddress}
+              onSubmitEditing={() => search(address)}
             />
-            <Button label={"Buscar"} onPress={searchAddress} />
+            <Button label="Buscar" onPress={() => search(address)} />
           </View>
-
+          <Text style={styles.infoText}>
+            Tu dirección queda privada 🔒 la usamos únicamente para mostrar
+            resultados por cercanía.
+          </Text>
           <MapView
             style={styles.map}
             region={{
@@ -184,7 +81,6 @@ export default function LoadLocationLayout() {
             onPress={(e) => {
               const { latitude, longitude } = e.nativeEvent.coordinate;
               setCoords({ lat: latitude, lng: longitude });
-              reverseGeocode(latitude, longitude);
             }}>
             <Marker
               coordinate={{ latitude: coords.lat, longitude: coords.lng }}
@@ -192,7 +88,6 @@ export default function LoadLocationLayout() {
               onDragEnd={(e) => {
                 const { latitude, longitude } = e.nativeEvent.coordinate;
                 setCoords({ lat: latitude, lng: longitude });
-                reverseGeocode(latitude, longitude);
               }}
             />
           </MapView>
@@ -229,5 +124,16 @@ const styles = StyleSheet.create({
   },
   label: {
     backgroundColor: "white",
+  },
+  infoText: {
+    backgroundColor: "white",
+    color: "black",
+    fontSize: scale(12),
+    marginHorizontal: scale(2),
+    marginVertical: scale(5),
+    padding: scale(10),
+    borderRadius: 10,
+    borderColor: "#ffb13d",
+    borderWidth: 5,
   },
 });

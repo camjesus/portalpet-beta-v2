@@ -29,7 +29,7 @@ import {
   InputAction,
   InputDescription,
 } from "@/components/managementPet";
-import { validatePet, savePetAsync } from "@/service/pet/petActions";
+import { validatePet, savePetAsync } from "@/features/pet/services/petService";
 import { Validation } from "@/models";
 import { ACCTIONS, SIZE } from "@/constants/StaticData";
 

@@ -1,11 +1,11 @@
 import { View, StyleSheet, Image, Text, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
-import { loadAction } from "@/service/utils/usePet";
+import { loadAction } from "@/services/utils/usePet";
 import { scale } from "react-native-size-matters";
 import { router } from "expo-router";
 import { ChatId } from "@/models";
 import IconSymbol from "../ui/IconSymbol";
-import { formatURL } from "@/service/utils/useUtil";
+import { formatURL } from "@/services/utils/useUtil";
 
 type Props = {
   item: ChatId;

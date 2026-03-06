@@ -4,49 +4,44 @@ import { useEffect, useState } from "react";
 import { ChatId, User } from "@/models";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/chatList/ChatCard";
-import { getChatsAsync } from "@/service/dataBase/useChat";
+import { getChatsAsync } from "@/features/chat/services/chatService";
 
 export default function ChatList() {
   const [chats, setChats] = useState<ChatId[]>([]);
-  const [user, setUser] = useState<User>();
-
-  const [goTosearch, setSearch] = useState<boolean>(true);
+  const [user, setUser] = useState<User | null>(null);
   const [load, setLoad] = useState(false);
 
-  const getData = async () => {
-    await getChatsAsync().then((res) => {
+  const loadChats = async () => {
+    try {
+      setLoad(true);
+
+      const res = await getChatsAsync();
+
       setChats(res.chats);
       setUser(res.user);
-      setSearch(false);
+    } finally {
       setLoad(false);
-    });
+    }
   };
 
   useEffect(() => {
-    if (goTosearch) {
-      setLoad(true);
-      getData();
-    }
-  }, [goTosearch]);
+    loadChats();
+  }, []);
 
   return (
     <ViewCustom>
       <HeaderCustom title="Chats" />
+
       {load && <Loading />}
-      <View>
-        {chats && (
-          <FlatList
-            data={chats}
-            renderItem={({ item }) => (
-              <ChatCard userId={user?.id} item={item} key={item?.id} />
-            )}
-            keyExtractor={(item) => item.id}
-            showsHorizontalScrollIndicator={true}
-            numColumns={1}
-            contentContainerStyle={styles.flatList}
-          />
+
+      <FlatList
+        data={chats}
+        renderItem={({ item }) => (
+          <ChatCard userId={user?.id ?? ""} item={item} />
         )}
-      </View>
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.flatList}
+      />
     </ViewCustom>
   );
 }
