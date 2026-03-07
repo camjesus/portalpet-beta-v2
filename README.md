@@ -22,11 +22,40 @@ Portal Pet es una aplicación móvil **independiente**, desarrollada de forma in
 | React Native + Expo ~54 | Framework principal |
 | Expo Router ~6 | Navegación basada en archivos |
 | Firebase | Base de datos, autenticación y storage |
+| Claude (Anthropic) | Pair programming, generación de código y resolución de problemas técnicos |
 | expo-auth-session | Google OAuth |
 | expo-location | Geolocalización |
 | expo-image-picker | Selección de imágenes |
 | react-native-maps | Mapas |
 | Zustand | Estado global |
+
+---
+
+## 👩‍💻 Para recruiters
+
+> Proyecto personal desarrollado de forma independiente, desde el diseño hasta el deploy.
+
+### 🤖 Herramientas de desarrollo asistido por IA
+
+- **Claude (Anthropic)** — Utilizado como asistente de desarrollo a lo largo del proyecto: generación de código, pair programming y resolución de problemas técnicos complejos. Su uso fue intencional y transparente, complementando la toma de decisiones arquitectónicas y el criterio técnico propio.
+
+### 🏗 Decisiones técnicas y arquitectura
+
+- **Expo Router con file-based routing** — organización de pantallas como rutas, similar a Next.js, facilitando escalabilidad y navegación declarativa
+- **Feature-based architecture** — la lógica está separada por dominio (`features/chat`, `features/pet`, `features/filter`) con sus propios servicios, repositorios y mappers, desacoplando la UI de la lógica de negocio
+- **Firebase Firestore + Storage** — base de datos en tiempo real para el chat y storage para imágenes de mascotas, sin necesidad de backend propio
+- **TypeScript end-to-end** — modelos tipados en `models/` usados en toda la app, reduciendo errores en runtime
+- **Zustand para estado global** — elegido sobre Redux por su simplicidad y menor boilerplate manteniendo el mismo poder
+
+### 🧩 Desafíos resueltos
+
+- **Google OAuth en dispositivo físico Android** — Chrome Custom Tabs en Android moderno bloquea custom URI schemes por seguridad. Se resolvió configurando el `AndroidManifest.xml` con el meta-data correcto para deshabilitar Custom Tabs, registrando el intent-filter del scheme invertido del Client ID y usando `makeRedirectUri` con el native scheme correcto
+- **Deep linking con Expo Router** — el redirect de OAuth necesita que Expo Router maneje URIs externas. Se implementó `+native-intent.tsx` para interceptar y redirigir correctamente, y `oauthredirect.tsx` para completar la sesión del browser
+- **Chat en tiempo real con listeners** — se implementó un sistema de suscripción con `onSnapshot` de Firestore que actualiza los mensajes en tiempo real y hace scroll automático al último mensaje
+
+### 📸 Screenshots
+
+> _Próximamente — podés ver el proyecto en funcionamiento contactándome directamente_
 
 ---
 
@@ -97,30 +126,6 @@ npx expo run:android
 ```
 
 > **Nota:** Esta app requiere `npx expo run:android` (no Expo Go) para que funcionen el OAuth y los módulos nativos correctamente.
-
----
-
-## 👩‍💻 Para recruiters
-
-> Proyecto personal desarrollado de forma independiente, desde el diseño hasta el deploy.
-
-### 🏗 Decisiones técnicas y arquitectura
-
-- **Expo Router con file-based routing** — organización de pantallas como rutas, similar a Next.js, facilitando escalabilidad y navegación declarativa
-- **Feature-based architecture** — la lógica está separada por dominio (`features/chat`, `features/pet`, `features/filter`) con sus propios servicios, repositorios y mappers, desacoplando la UI de la lógica de negocio
-- **Firebase Firestore + Storage** — base de datos en tiempo real para el chat y storage para imágenes de mascotas, sin necesidad de backend propio
-- **TypeScript end-to-end** — modelos tipados en `models/` usados en toda la app, reduciendo errores en runtime
-- **Zustand para estado global** — elegido sobre Redux por su simplicidad y menor boilerplate manteniendo el mismo poder
-
-### 🧩 Desafíos resueltos
-
-- **Google OAuth en dispositivo físico Android** — Chrome Custom Tabs en Android moderno bloquea custom URI schemes por seguridad. Se resolvió configurando el `AndroidManifest.xml` con el meta-data correcto para deshabilitar Custom Tabs, registrando el intent-filter del scheme invertido del Client ID y usando `makeRedirectUri` con el native scheme correcto
-- **Deep linking con Expo Router** — el redirect de OAuth necesita que Expo Router maneje URIs externas. Se implementó `+native-intent.tsx` para interceptar y redirigir correctamente, y `oauthredirect.tsx` para completar la sesión del browser
-- **Chat en tiempo real con listeners** — se implementó un sistema de suscripción con `onSnapshot` de Firestore que actualiza los mensajes en tiempo real y hace scroll automático al último mensaje
-
-### 📸 Screenshots
-
-> _Próximamente — podés ver el proyecto en funcionamiento contactándome directamente_
 
 ---
 
