@@ -44,6 +44,7 @@ const TextInputCustom: FC<Props> = ({
             multiline ? styles.box : styles.input,
             editable === false && styles.disable,
           ]}
+          placeholderTextColor={"#A5A5A5"}
           {...options}
         />
       </SafeAreaView>

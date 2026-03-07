@@ -31,6 +31,18 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="portalpet"/>
       </intent-filter>
+       <intent-filter>
+    <action android:name="android.intent.action.VIEW"/>
+    <category android:name="android.intent.category.DEFAULT"/>
+    <category android:name="android.intent.category.BROWSABLE"/>
+<data android:scheme="com.googleusercontent.apps.411434491747-fbq5ev70cei4pcaav346qbuivf9dle5e"/>
+  </intent-filter>
+  <intent-filter>
+  <action android:name="android.intent.action.VIEW"/>
+  <category android:name="android.intent.category.DEFAULT"/>
+  <category android:name="android.intent.category.BROWSABLE"/>
+  <data android:scheme="com.camjesus.portalpetbetav2" />
+</intent-filter>
     </activity>
   </application>
 </manifest>

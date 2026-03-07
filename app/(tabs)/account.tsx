@@ -132,5 +132,6 @@ const styles = StyleSheet.create({
   submit: {
     marginTop: scale(20),
     marginBottom: scale(16),
+    gap: scale(10),
   },
 });

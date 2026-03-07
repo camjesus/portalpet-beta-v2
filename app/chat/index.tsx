@@ -27,7 +27,7 @@ export default function Chat() {
   const [chat, setChat] = useState<ChatId>();
   const [user, setUser] = useState<User>();
   const scrollViewRef = useRef<ScrollView>(null);
-
+  console.log("chat" + chat);
   const title =
     chat?.chat.rescuer?.id === user?.id
       ? chat?.chat.user?.name
@@ -76,9 +76,9 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    if (!petParse || !chatId) return;
+    if (!petParse && !chatId) return;
 
-    resolveChat(chatId, petParse.pet, petParse.id).then((res) => {
+    resolveChat(chatId, petParse?.pet, petParse?.id).then((res) => {
       if (res) {
         setChat(res.chat);
         setUser(res.user);

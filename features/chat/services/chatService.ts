@@ -6,11 +6,11 @@ import {
   getChatDocAsync,
 } from "../repository/chatRepository";
 import { findMessages } from "./messageService";
-import { getUserAsync } from "@/services/storage/userStorage";
+import { getCurrentUser } from "@/services/storage/userStorage";
 import { ChatInfo, ChatId, Pet, MessageId } from "@/models";
 
 export const getChatsAsync = async () => {
-  const user = await getUserAsync();
+  const user = await getCurrentUser();
 
   if (!user?.id) {
     return { chats: [], user };
@@ -25,7 +25,7 @@ export const getChatsAsync = async () => {
 };
 
 export const getChatById = async (id: string) => {
-  const user = await getUserAsync();
+  const user = await getCurrentUser();
 
   if (!user?.id) {
     throw new Error("User not authenticated");
@@ -47,8 +47,8 @@ export async function resolveChat(
   pet: Pet | undefined,
   petId: string | undefined,
 ) {
-  const user = await getUserAsync();
-
+  const user = await getCurrentUser();
+    console.log("user" + user)
   if (!user?.id) {
     throw new Error("User not authenticated");
   }

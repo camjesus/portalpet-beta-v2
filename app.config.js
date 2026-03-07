@@ -3,7 +3,7 @@ export default ({ config }) => ({
 
   name: "Portal Pet",
   slug: "portalpet-beta-v2",
-  scheme: "portalpet",
+  scheme: ["portalpet", "com.camjesus.portalpetbetav2"],
 
   extra: {
     //API_URL: process.env.API_URL,
@@ -16,7 +16,7 @@ export default ({ config }) => ({
   expo: {
     name: "portalpet-beta-v2",
     slug: "portalpet-beta-v2",
-    scheme: "portalpet",
+    scheme: ["portalpet", "com.camjesus.portalpetbetav2"],
     sdkVersion: "54.0.0",
     android: {
       ...config.android,

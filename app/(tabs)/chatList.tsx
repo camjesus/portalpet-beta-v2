@@ -1,10 +1,11 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { HeaderCustom, Loading, ViewCustom } from "@/components/ui";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ChatId, User } from "@/models";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/chatList/ChatCard";
 import { getChatsAsync } from "@/features/chat/services/chatService";
+import { useFocusEffect } from "expo-router";
 
 export default function ChatList() {
   const [chats, setChats] = useState<ChatId[]>([]);
@@ -24,9 +25,11 @@ export default function ChatList() {
     }
   };
 
-  useEffect(() => {
-    loadChats();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      loadChats();
+    }, []),
+  );
 
   return (
     <ViewCustom>

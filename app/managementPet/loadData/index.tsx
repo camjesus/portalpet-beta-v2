@@ -71,15 +71,17 @@ export default function LoadData() {
 
   async function savePet() {
     var result = validatePet(state.statePet.pet, noName);
-
     setToastConfig(result);
     setToast(true);
-    console.log("petObj", state.statePet.pet);
 
     if (result.sucess) {
-      await savePetAsync(state.statePet.id, state.statePet.pet);
-      router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
-      setLoad(false);
+      setTimeout(async () => {
+        setToast(false);
+        setLoad(true);
+        await savePetAsync(state.statePet.id, state.statePet.pet);
+        router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
+        setLoad(false);
+      }, 1500);
     }
   }
 
@@ -206,6 +208,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   submit: {
+    marginTop: scale(10),
     marginBottom: scale(16),
   },
   image: {
