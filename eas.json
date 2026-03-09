@@ -10,11 +10,12 @@
     "preview": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleDebug"
+        "gradleCommand": ":app:assembleRelease"
       },
       "env": {
-        "ENV": "development"
-      }    },
+        "ENV": "production"
+      }
+    },
     "production": {
       "android": {
         "buildType": "apk"
@@ -22,5 +23,6 @@
       "env": {
         "ENV": "production"
       }
-    }    }
+    }
   }
+}
