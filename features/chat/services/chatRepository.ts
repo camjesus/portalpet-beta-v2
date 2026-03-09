@@ -8,6 +8,7 @@ import {
   addDoc,
   doc,
   getDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 import { Chat, ChatId } from "@/models";
@@ -42,47 +43,7 @@ export const findChatAsync = async (
   });
 
   return chat;
-};
-
-export const getChatsByUserAsync = async (userId: string) => {
-  const chats: ChatId[] = [];
-
-  const q = query(
-    collection(db, "chats"),
-    where("user.id", "==", userId),
-    orderBy("createDate", "asc"),
-  );
-
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((doc) => {
-    if (doc) {
-      chats.push(mapChatFromFirestore(doc.id, doc.data()));
-    }
-  });
-
-  return chats;
-};
-
-export const getChatsByRescuerAsync = async (userId: string) => {
-  const chats: ChatId[] = [];
-
-  const q = query(
-    collection(db, "chats"),
-    where("rescuer.id", "==", userId),
-    orderBy("createDate", "asc"),
-  );
-
-  const querySnapshot = await getDocs(q);
-
-  querySnapshot.forEach((doc) => {
-    if (doc) {
-      chats.push(mapChatFromFirestore(doc.id, doc.data()));
-    }
-  });
-
-  return chats;
-};
+}
 
 export const getChatDocAsync = async (id: string) => {
   const chatRef = doc(db, "chats", id);

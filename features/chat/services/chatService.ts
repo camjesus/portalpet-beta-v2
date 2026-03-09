@@ -1,27 +1,62 @@
 import {
   addChatAsync,
   findChatAsync,
-  getChatsByUserAsync,
-  getChatsByRescuerAsync,
   getChatDocAsync,
-} from "../repository/chatRepository";
+} from "./chatRepository";
 import { findMessages } from "./messageService";
 import { getCurrentUser } from "@/services/storage/userStorage";
 import { ChatInfo, ChatId, Pet, MessageId } from "@/models";
+import { onSnapshot, orderBy, query, where } from "firebase/firestore";
+import { collection } from "firebase/firestore/lite";
+import { mapChatFromFirestore } from "../mappers/chatMapper";
+import { db } from "@/FirebaseConfig";
 
-export const getChatsAsync = async () => {
+export const getChatsAsync = async (
+  onUpdate: (chats: ChatId[]) => void
+) => {
   const user = await getCurrentUser();
 
   if (!user?.id) {
-    return { chats: [], user };
+    return { chats: [], user, unsub: () => {} };
   }
 
-  const myQuestions = await getChatsByUserAsync(user.id);
-  const questionsAboutMyPets = await getChatsByRescuerAsync(user.id);
+  let userChats: ChatId[] = [];
+  let rescuerChats: ChatId[] = [];
 
-  const chats = [...myQuestions, ...questionsAboutMyPets];
+  const merge = () => {
+    onUpdate([...userChats, ...rescuerChats]);
+  };
 
-  return { chats, user };
+  const qUser = query(
+    collection(db, "chats"),
+    where("user.id", "==", user.id),
+    orderBy("createDate", "asc")
+  );
+
+  const qRescuer = query(
+    collection(db, "chats"),
+    where("rescuer.id", "==", user.id),
+    orderBy("createDate", "asc")
+  );
+
+  const unsubUser = onSnapshot(qUser, (snapshot) => {
+    userChats = snapshot.docs.map((doc) => mapChatFromFirestore(doc.id, doc.data()));
+    merge();
+  });
+
+  const unsubRescuer = onSnapshot(qRescuer, (snapshot) => {
+    rescuerChats = snapshot.docs.map((doc) => mapChatFromFirestore(doc.id, doc.data()));
+    merge();
+  });
+
+  return {  
+    chats: [...userChats, ...rescuerChats],
+    user,
+    unsub: () => {
+      unsubUser();
+      unsubRescuer();
+    },
+  };
 };
 
 export const getChatById = async (id: string) => {

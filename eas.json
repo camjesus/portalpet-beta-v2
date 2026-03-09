@@ -9,10 +9,12 @@
       }
     },
     "production": {
+      "android": {
+        "buildType": "apk"
+      },
       "env": {
         "ENV": "production"
       }
     }
   }
 }
-

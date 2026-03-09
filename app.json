@@ -8,6 +8,10 @@
     "scheme": "portalpet",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "androidStatusBar": {
+      "backgroundColor": "#DCAD5F",
+      "translucent": false
+    },
     "ios": {
       "bundleIdentifier": "com.camjesus.portalpetbetav2"
     },
@@ -18,6 +22,9 @@
         "backgroundColor": "#A5A5A5"
       },
       "package": "com.camjesus.portalpetbetav2",
+      "googleMaps": {
+        "apiKey": "AIzaSyCeP-6EBcNwzMAu9Yg1dmUFsWM55A2MkrA"
+      },
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -29,16 +36,6 @@
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/dev/images/icon.png"
-    },
-    "expo": {
-      "googleMaps": {
-        "apiKey": "AIzaSyCeP-6EBcNwzMAu9Yg1dmUFsWM55A2MkrA"
-      },
-      "scheme": "portalpet",
-      "androidStatusBar": {
-        "backgroundColor": "#DCAD5F",
-        "translucent": false
-      }
     },
     "plugins": [
       "expo-router",
@@ -54,7 +51,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tuπs fotos para subir esa bella mascota?",
+          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
           "cameraPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?"
         }
       ],

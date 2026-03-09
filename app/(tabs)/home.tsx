@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import { StyleSheet, View, Pressable } from "react-native";
+import { StyleSheet, View, Pressable, BackHandler } from "react-native";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { scale } from "react-native-size-matters";
 import {
@@ -20,6 +20,10 @@ import {
 import { LABELS_ACCTION } from "@/constants/StaticData";
 import { PetId } from "@/models";
 
+export const unstable_settings = {
+  initialRouteName: "(tabs)",
+};
+
 export default function Prueba() {
   const [myPets, setMyPets] = useState<PetId[]>([]);
   const [load, setLoad] = useState(false);
@@ -34,18 +38,28 @@ export default function Prueba() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log("entro a hone");
+    navigation.setOptions({
+      gestureEnabled: false,
+      headerBackVisible: false,
+    });
+
+    // Bloquear el botón físico de back en Android
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => true, // retornar true bloquea el back
+    );
+
+    return () => backHandler.remove();
+  }, [navigation]);
+
+  useEffect(() => {
     return () => {
-      navigation.setOptions({ tabBarStyle: undefined }); // Restaurar Tabs al salir
+      navigation.setOptions({ tabBarStyle: undefined });
     };
   }, [navigation]);
 
   const getData = async () => {
-    console.log("goTosearch");
-    console.log(goTosearch);
     await findPets().then((res) => {
-      //console.log("res.myPets", res.myPets);
-      console.log("busco las mascotas otra vee");
       setMyPets(res.myPets);
       setAction(res.action);
       setSearch(false);

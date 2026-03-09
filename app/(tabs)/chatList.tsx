@@ -5,31 +5,24 @@ import { ChatId, User } from "@/models";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/chatList/ChatCard";
 import { getChatsAsync } from "@/features/chat/services/chatService";
-import { useFocusEffect } from "expo-router";
 
 export default function ChatList() {
   const [chats, setChats] = useState<ChatId[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [load, setLoad] = useState(false);
 
-  const loadChats = async () => {
-    try {
-      setLoad(true);
+  useEffect(() => {
+    let unsub: (() => void) | undefined;
 
-      const res = await getChatsAsync();
+    getChatsAsync((chats) => {
+      setChats(chats); // se llama cada vez que hay cambios
+    }).then((res) => {
+      setUser(res?.user);
+      unsub = res?.unsub;
+    });
 
-      setChats(res.chats);
-      setUser(res.user);
-    } finally {
-      setLoad(false);
-    }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      loadChats();
-    }, []),
-  );
+    return () => unsub?.();
+  }, []);
 
   return (
     <ViewCustom>
