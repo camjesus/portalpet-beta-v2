@@ -2,12 +2,11 @@ import {
   addChatAsync,
   findChatAsync,
   getChatDocAsync,
-} from "./chatRepository";
+} from "../repository/chatRepository";
 import { findMessages } from "./messageService";
 import { getCurrentUser } from "@/services/storage/userStorage";
 import { ChatInfo, ChatId, Pet, MessageId } from "@/models";
-import { onSnapshot, orderBy, query, where } from "firebase/firestore";
-import { collection } from "firebase/firestore/lite";
+import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { mapChatFromFirestore } from "../mappers/chatMapper";
 import { db } from "@/FirebaseConfig";
 

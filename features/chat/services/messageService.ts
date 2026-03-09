@@ -6,7 +6,7 @@ import {
 import { mapMessageFromFirestore } from "../mappers/messageMapper";
 import { ChatId, Message, MessageId, User } from "@/models";
 import { addSystemMessage } from "../utils/messageUtils";
-import { addChatAsync } from "./chatRepository";
+import { addChatAsync } from "../repository/chatRepository";
 import { Timestamp } from "firebase/firestore";
 
 export const sendMessage = async (

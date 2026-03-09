@@ -1,7 +1,3 @@
-//ROUTES: Inprogres
-//<Stack.Screen name="home" options={{ headerShown: false }} />
-//<Stack.Screen name="map" options={{ headerShown: false }} />
-
 import {
   DarkTheme,
   DefaultTheme,
@@ -15,17 +11,24 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { base } from "@/assets/fonts";
-import { Linking } from "react-native";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { NotificationProvider } from "@/context/NotificationContext";
+import { useAuthStore } from "@/store/authStore";
+import { useGlobalChatListener } from "@/hooks/useGlobalChatListener";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+function RootLayoutContent() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: base,
   });
+  const userId = useAuthStore((s) => s.user?.id);
+  const activeChatId = useAuthStore((s) => s.activeChatId);
+
+  useGlobalChatListener({ userId, activeChatId });
 
   useEffect(() => {
     if (loaded) {
@@ -53,6 +56,18 @@ export default function RootLayout() {
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
+    </GestureHandlerRootView>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <NotificationProvider>
+          <RootLayoutContent />
+        </NotificationProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

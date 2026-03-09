@@ -9,6 +9,7 @@ import { GOOGLE_ANDROID_ID, GOOGLE_WEB_ID } from "@/secret-google";
 import { getGoogleUserInfo } from "@/services/dataBase/useGoogleSignin";
 import { logo, googleSignin } from "@/assets/images";
 import ViewCustom from "@/components/ui/ViewCustom";
+import { useAuthStore } from "@/store/authStore";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -18,7 +19,7 @@ const redirectUri = AuthSession.makeRedirectUri({
 
 export default function Signin() {
   const [loading, setLoading] = useState(false);
-
+  const setUser = useAuthStore((s) => s.setUser);
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: GOOGLE_ANDROID_ID,
     webClientId: GOOGLE_WEB_ID,
@@ -35,7 +36,10 @@ export default function Signin() {
 
   const handleUserInfo = async (token: string) => {
     const user = await getGoogleUserInfo(token);
-    if (user) router.replace("/(tabs)");
+    if (user) {
+      setUser(user);
+      router.replace("/(tabs)");
+    }
   };
 
   const handleLogin = async () => {
