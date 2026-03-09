@@ -16,6 +16,14 @@
         {
           "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
           "client_type": 3
+        },
+        {
+          "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "411434491747-h12mqb3f6nbiql9tlmnelo4j5rg47h96.apps.googleusercontent.com",
+          "client_type": 2
         }
       ],
       "api_key": [
@@ -28,6 +36,14 @@
           "other_platform_oauth_client": [
             {
               "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "411434491747-diaknq784hthoc1gh2ch1otu2gm0nq4v.apps.googleusercontent.com",
+              "client_type": 2
+            },
+            {
+              "client_id": "411434491747-h12mqb3f6nbiql9tlmnelo4j5rg47h96.apps.googleusercontent.com",
               "client_type": 3
             },
             {

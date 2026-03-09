@@ -36,7 +36,6 @@ google-sevices.json
 
 # andoid
 andoid/app/google-sevices.json
-android/app/src/main/res/
 
 # typescript
 *.tsbuildinfo
