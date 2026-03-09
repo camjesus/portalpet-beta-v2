@@ -13,7 +13,9 @@
         "gradleCommand": ":app:assembleRelease"
       },
       "env": {
-        "ENV": "production"
+        "ENV": "production",
+        "GOOGLE_ANDROID_ID": "@GOOGLE_ANDROID_ID",
+        "GOOGLE_WEB_ID": "@GOOGLE_WEB_ID"
       }
     },
     "production": {
