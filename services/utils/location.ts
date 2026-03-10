@@ -1,6 +1,7 @@
 import * as Location from "expo-location";
 import { Alert } from "react-native";
-import { API_KEY_LOCATIONIQ } from "@/secret-google";
+
+const API_KEY_LOCATIONIQ = process.env.API_KEY_LOCATIONIQ!;
 
 export async function getCurrentLocation() {
   const { status } = await Location.requestForegroundPermissionsAsync();
@@ -32,7 +33,7 @@ export async function getCurrentLocation() {
 export async function reverseGeocode(lat: number, lng: number) {
   try {
     const response = await fetch(
-      `https://us1.locationiq.com/v1/reverse?key=${API_KEY_LOCATIONIQ}&lat=${lat}&lon=${lng}&format=json`
+      `https://us1.locationiq.com/v1/reverse?key=${API_KEY_LOCATIONIQ}&lat=${lat}&lon=${lng}&format=json`,
     );
     const data = await response.json();
     return data.display_name || "";
@@ -48,8 +49,8 @@ export async function searchAddress(address: string) {
   try {
     const response = await fetch(
       `https://us1.locationiq.com/v1/search?key=${API_KEY_LOCATIONIQ}&q=${encodeURIComponent(
-        address
-      )}&format=json`
+        address,
+      )}&format=json`,
     );
     const data = await response.json();
     if (data && data.length > 0) {

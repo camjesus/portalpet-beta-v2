@@ -15,7 +15,8 @@
       "env": {
         "ENV": "production",
         "GOOGLE_ANDROID_ID": "@GOOGLE_ANDROID_ID",
-        "GOOGLE_WEB_ID": "@GOOGLE_WEB_ID"
+        "GOOGLE_WEB_ID": "@GOOGLE_WEB_ID",
+        "API_KEY_LOCATIONIQ": "@API_KEY_LOCATIONIQ"
       }
     },
     "production": {
