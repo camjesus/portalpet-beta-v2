@@ -1,7 +1,7 @@
 import * as Location from "expo-location";
 import { Alert } from "react-native";
-
-const API_KEY_LOCATIONIQ = process.env.API_KEY_LOCATIONIQ!;
+import {API_KEY_LOCATIONIQ } from "@/secret-google"
+//const API_KEY_LOCATIONIQ = process.env.API_KEY_LOCATIONIQ!;
 
 export async function getCurrentLocation() {
   const { status } = await Location.requestForegroundPermissionsAsync();

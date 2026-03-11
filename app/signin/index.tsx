@@ -9,7 +9,7 @@ import { getGoogleUserInfo } from "@/services/dataBase/useGoogleSignin";
 import { logo, googleSignin } from "@/assets/images";
 import ViewCustom from "@/components/ui/ViewCustom";
 import { useAuthStore } from "@/store/authStore";
-
+import { GOOGLE_ANDROID_ID, GOOGLE_WEB_ID } from "@/secret-google";
 WebBrowser.maybeCompleteAuthSession();
 
 const redirectUri = AuthSession.makeRedirectUri({
@@ -17,8 +17,8 @@ const redirectUri = AuthSession.makeRedirectUri({
 });
 
 export default function Signin() {
-  const GOOGLE_ANDROID_ID = process.env.GOOGLE_ANDROID_ID!;
-  const GOOGLE_WEB_ID = process.env.GOOGLE_WEB_ID!;
+  //const GOOGLE_ANDROID_ID = process.env.GOOGLE_ANDROID_ID!;
+  //const GOOGLE_WEB_ID = process.env.GOOGLE_WEB_ID!;
   const [loading, setLoading] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
   const [request, response, promptAsync] = Google.useAuthRequest({
