@@ -3,40 +3,15 @@ import { Filter } from "@/models";
 import { saveFilter } from "../services/filterService";
 
 type Dispatch = React.Dispatch<any>;
+type ActionType = typeof ACTION[keyof typeof ACTION];
 
-export const changeFilter = (
+export const changeFilterField = (
   dispatch: Dispatch,
+  type: ActionType,
   field: string,
   value: any
 ) => {
-  dispatch({
-    type: ACTION.CHANGE_FILTER,
-    payload: { field, value },
-  });
-};
-
-export const changeFrom = (
-  dispatch: Dispatch,
-  field: string,
-  value: any,
-  filter: Filter
-) => {
-  dispatch({
-    type: ACTION.CHANGE_FROM,
-    payload: { field, value },
-  });
-};
-
-export const changeUntil = (
-  dispatch: Dispatch,
-  field: string,
-  value: any,
-  filter: Filter
-) => {
-  dispatch({
-    type: ACTION.CHANGE_UNTIL,
-    payload: { field, value },
-  });
+  dispatch({ type, payload: { field, value } });
 };
 
 export const saveFilterAsync = async (filter: Filter) => {

@@ -17,6 +17,7 @@ import { FIELD_VALIDATION, OK_VALIDATION } from "@/constants/Validations";
 import { loadAgeInMonths, loadInitPet } from "../utils/petHelper";
 import { saveMyPets } from "@/services/storage/petStorage";
 import { getAction, getFilters } from "@/features/filter/services/filterStorageService";
+import { haversineKm } from "@/services/utils/geo";
 
 export const savePet = async (pet: Pet) => {
   //const image = await resolvePetImage(pet.image);
@@ -75,11 +76,27 @@ export const findPets = async () => {
     userId: user?.id ?? "",
   });
 
-  const pets: PetId[] = [];
+const hasLocation =
+  filter.latitude != null && filter.latitude !== 0 &&
+  filter.longitude != null && filter.longitude !== 0 &&
+  filter.radiusKm;
+  
+  const docs = hasLocation
+    ? snapshot.docs.filter((doc) => {
+        const data = doc.data();
+        if (!data.latitude || !data.longitude) return false;
+        return haversineKm(
+          filter.latitude,
+          filter.longitude,
+          data.latitude,
+          data.longitude
+        ) <= filter.radiusKm;
+      })
+    : snapshot.docs;
 
-  snapshot.forEach((doc) => {
-    pets.push(mapPetFromFirestore(doc.id, doc.data()));
-  });
+  const pets: PetId[] = docs.map((doc) =>
+    mapPetFromFirestore(doc.id, doc.data())
+  );
 
   return {
     user,

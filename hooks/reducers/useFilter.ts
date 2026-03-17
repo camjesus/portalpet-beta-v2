@@ -27,8 +27,9 @@ export const initalFilter: State = {
       ageType: AgeType.MONTH,
     },
     action: 0,
-    latitud: null,
-    longitud: null,
+    latitude: 0,
+    longitude: 0,
+    radiusKm: 10,
   },
 };
 
@@ -37,6 +38,7 @@ export const ACTION = {
   CHANGE_OBJECT: "changeObject",
   CHANGE_FROM: "changeFrom",
   CHANGE_UNTIL: "changeUntil",
+  CHANGE_LOCATION: "changeLocation",
 };
 
 export const filterReducer = (state: State, action: Action) => {
@@ -69,6 +71,14 @@ export const filterReducer = (state: State, action: Action) => {
             ...state.filter.until,
             [action.payload.field]: action.payload.value,
           },
+        },
+      };
+    case ACTION.CHANGE_LOCATION:
+      return {
+        filter: {
+          ...state.filter,
+          latitud: action.payload.value.lat,
+          longitud: action.payload.value.lng,
         },
       };
     case ACTION.CHANGE_OBJECT:

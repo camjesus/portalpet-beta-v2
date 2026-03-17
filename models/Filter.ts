@@ -11,6 +11,7 @@ export type Filter = {
 		ageType: string;
 	}
 	action: number; //ADOPTION - WANTED - FOUND
-	latitud: string| null;
-	longitud: string| null;
+	latitude: number;
+	longitude: number;
+	radiusKm: number;
 }

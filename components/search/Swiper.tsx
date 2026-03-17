@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import SwiperCard from "./SwiperCard";
 import { PetId } from "@/models";
-import { useSharedValue } from "react-native-reanimated";
+import { useSharedValue, withSpring } from "react-native-reanimated";
 
 type Props = {
   pets: PetId[];
@@ -10,6 +10,8 @@ type Props = {
 
 export default function Swiper({ pets }: Props) {
   const activeIndex = useSharedValue(0);
+  const translationsX = useSharedValue<Record<number, number>>({});
+  const returningIndex = useSharedValue(-1);
 
   return (
     <View style={styles.container}>
@@ -21,7 +23,10 @@ export default function Swiper({ pets }: Props) {
             index={index}
             activeIndex={activeIndex}
             item={item}
-            petId={item.id}></SwiperCard>
+            translationsX={translationsX}
+            petId={item.id}
+            returningIndex={returningIndex}
+          />
         );
       })}
     </View>

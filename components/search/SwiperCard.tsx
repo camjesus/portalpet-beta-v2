@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image, Text, Dimensions } from "react-native";
-import React, { act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loadPet } from "@/services/utils/usePet";
 import { Pet, PetId } from "@/models";
 import { scale } from "react-native-size-matters";
@@ -10,10 +10,10 @@ import Animated, {
   SharedValue,
   interpolate,
   useAnimatedStyle,
-  useSharedValue,
+  useDerivedValue,
   withSpring,
 } from "react-native-reanimated";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 
 type Props = {
   petId: string;
@@ -21,6 +21,8 @@ type Props = {
   numOfCards: number;
   index: number;
   activeIndex: SharedValue<number>;
+  translationsX: SharedValue<Record<number, number>>;
+  returningIndex: SharedValue<number>;
 };
 
 const screenWidth = Dimensions.get("screen").width;
@@ -32,13 +34,18 @@ export default function SwiperCard({
   numOfCards,
   index,
   activeIndex,
+  translationsX,
+  returningIndex,
 }: Props) {
   const { pet } = item;
   const [data, setData] = useState({ name: "", action: "", color: "" });
-  const translationX = useSharedValue(0);
 
-  //console.log("PETimage", encodeURI(pet.image));
-
+  const translationX = useDerivedValue(() => {
+    if (returningIndex.value === index) {
+      return withSpring(0);
+    }
+    return translationsX.value[index] ?? 0;
+  });
   const animatedCard = useAnimatedStyle(() => ({
     opacity: interpolate(
       activeIndex.value,
@@ -75,24 +82,48 @@ export default function SwiperCard({
 
   const gesture = Gesture.Pan()
     .onChange((event) => {
-      translationX.value = event.translationX;
-
+      translationsX.value = {
+        ...translationsX.value,
+        [index]: event.translationX,
+      };
       activeIndex.value = interpolate(
-        Math.abs(translationX.value),
+        Math.abs(event.translationX),
         [0, 200],
         [index, index + 0.9],
       );
     })
     .onEnd((event) => {
       if (Math.abs(event.velocityX) > 400) {
-        translationX.value = withSpring(Math.sign(event.velocityX) * 600, {
-          velocity: event.velocityX,
-        });
-        activeIndex.value = withSpring(index + 1);
-
-        event.velocityX > 0;
+        if (event.velocityX > 0) {
+          translationsX.value = {
+            ...translationsX.value,
+            [index]: 0,
+            [index - 1]: 0,
+          };
+          activeIndex.value = withSpring(Math.max(0, index - 1));
+        } else {
+          translationsX.value = {
+            ...translationsX.value,
+            [index]: Math.sign(event.velocityX) * 600,
+          };
+          activeIndex.value = withSpring(index + 1);
+        }
       } else {
-        translationX.value = withSpring(0);
+        translationsX.value = { ...translationsX.value, [index]: 0 };
+      }
+      if (event.velocityX > 0) {
+        translationsX.value = {
+          ...translationsX.value,
+          [index - 1]: -600,
+        };
+        requestAnimationFrame(() => {
+          translationsX.value = {
+            ...translationsX.value,
+            [index - 1]: withSpring(0, { velocity: -event.velocityX }),
+          };
+        });
+
+        activeIndex.value = withSpring(Math.max(0, index - 1));
       }
     });
 
@@ -170,7 +201,6 @@ const styles = StyleSheet.create({
     height: screenHeight - scale(240),
     borderRadius: 25,
     justifyContent: "flex-end",
-
     position: "absolute",
     elevation: 10,
     backgroundColor: "white",

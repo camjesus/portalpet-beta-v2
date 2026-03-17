@@ -11,9 +11,15 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
 import { filterReducer } from "@/hooks/reducers/useFilter";
-import { FilterSex, FilterSize, FilterType } from "@/components/filter";
+import {
+  FilterRadius,
+  FilterSex,
+  FilterSize,
+  FilterType,
+} from "@/components/filter";
 import { filterActions } from "@/services/filter/filterActions";
 import { Validation } from "@/models";
+import { getCurrentLocation } from "@/services/utils/location";
 
 export default function Filters() {
   const { stateFilter } = useLocalSearchParams<{
@@ -34,17 +40,28 @@ export default function Filters() {
     firstLoad.current = false;
   }, [state]);
 
+  useEffect(() => {
+    (async () => {
+      const loc = await getCurrentLocation();
+      if (loc) {
+        filterActions.changeFilter(dispatch, "latitude", loc.lat);
+        filterActions.changeFilter(dispatch, "longitude", loc.lng);
+      }
+    })();
+  }, []);
+
   function changeValue(value: any, field: string) {
     filterActions.changeFilter(dispatch, field, value);
   }
 
   function changeFrom(value: any, field: string) {
-    filterActions.changeFrom(dispatch, field, value, state.filter);
+    filterActions.changeFrom(dispatch, field, value);
   }
 
   function changeUntil(value: any, field: string) {
-    filterActions.changeUntil(dispatch, field, value, state.filter);
+    filterActions.changeUntil(dispatch, field, value);
   }
+  
 
   async function saveAsync() {
     var error = filterActions.validateFilter(state.filter);
@@ -95,6 +112,12 @@ export default function Filters() {
             type={state.filter.until.ageType}
             changeAge={changeUntil}
             changeAgeType={changeUntil}
+          />
+        </View>
+        <View style={[styles.row, { width: "100%" }]}>
+          <FilterRadius
+            radius={state.filter.radiusKm ?? 10}
+            changeValue={changeValue}
           />
         </View>
         <View style={styles.submit}>

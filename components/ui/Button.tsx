@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    borderWidth: 3,
+    marginTop: scale(8),
+    backgroundColor: "#ffb13d",
     borderColor: "white",
     flexDirection: "row",
     padding: scale(10),
@@ -50,7 +51,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   default: {
-    borderRadius: 10,
+    paddingHorizontal: scale(24),
+    paddingVertical: scale(10),
+    borderRadius: 20,
   },
   circleStyle: {
     borderRadius: 50,
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
   label: {
     marginHorizontal: 5,
     textAlign: "center",
-    color: "#4B4B4B",
+    color: "#151718",
     fontWeight: "bold",
   },
 });

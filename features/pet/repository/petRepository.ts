@@ -13,7 +13,6 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { mapPetFromFirestore } from "../mappers/petMapper";
-
 export const createPetDoc = async (pet: any) => {
   return await addDoc(collection(db, "pets"), pet);
 };

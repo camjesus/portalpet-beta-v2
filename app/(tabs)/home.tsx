@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import { StyleSheet, View, Pressable, BackHandler } from "react-native";
+import { StyleSheet, View, Pressable, BackHandler, Text } from "react-native";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { scale } from "react-native-size-matters";
 import {
@@ -8,6 +8,7 @@ import {
   PanelButtons,
   IconSymbol,
   Loading,
+  Button,
 } from "@/components/ui";
 import Swiper from "@/components/search/Swiper";
 import { findPets } from "@/features/pet/services/petService";
@@ -116,9 +117,19 @@ export default function Prueba() {
             labels={LABELS_ACCTION}
           />
         )}
-        {!load && myPets && (
+        {!load && myPets.length > 0 && (
           <View style={styles.containerSwiper}>
             <Swiper pets={myPets} />
+          </View>
+        )}
+        {!load && myPets.length === 0 && (
+          <View style={styles.emptyContainer}>
+            <IconSymbol name="paw" size={60} color="#A5A5A5" />
+            <Text style={styles.emptyTitle}>Sin resultados</Text>
+            <Text style={styles.emptyText}>
+              No encontramos mascotas con los filtros seleccionados
+            </Text>
+            <Button label="Modificar filtros" onPress={goToFilter} />
           </View>
         )}
       </View>
@@ -135,5 +146,34 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(20),
     marginTop: scale(25),
     alignContent: "center",
+  },
+  emptyContainer: {
+    alignItems: "center",
+    marginTop: scale(60),
+    gap: scale(12),
+    paddingHorizontal: scale(30),
+  },
+  emptyTitle: {
+    color: "white",
+    fontSize: scale(20),
+    fontWeight: "bold",
+  },
+  emptyText: {
+    color: "#A5A5A5",
+    fontSize: scale(13),
+    textAlign: "center",
+    lineHeight: scale(20),
+  },
+  emptyButton: {
+    marginTop: scale(8),
+    backgroundColor: "#ffb13d",
+    paddingHorizontal: scale(24),
+    paddingVertical: scale(10),
+    borderRadius: 20,
+  },
+  emptyButtonText: {
+    color: "#151718",
+    fontWeight: "bold",
+    fontSize: scale(13),
   },
 });
