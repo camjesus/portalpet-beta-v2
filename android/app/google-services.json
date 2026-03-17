@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "411434491747",
+    "firebase_url": "https://webportapetbeta-default-rtdb.firebaseio.com",
     "project_id": "webportapetbeta",
     "storage_bucket": "webportapetbeta.appspot.com"
   },
@@ -14,16 +15,20 @@
       },
       "oauth_client": [
         {
-          "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "411434491747-r1enhu4so6ahmsnfrbjbe91l7lj2k8tk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.camjesus.portalpetbetav2",
+            "certificate_hash": "81cd1df07df72952dab3754d7e506e522d449788"
+          }
         },
         {
-          "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "411434491747-h12mqb3f6nbiql9tlmnelo4j5rg47h96.apps.googleusercontent.com",
-          "client_type": 2
+          "client_id": "411434491747-fbq5ev70cei4pcaav346qbuivf9dle5e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.camjesus.portalpetbetav2",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d54787676baa6f38cabf625"
+          }
         }
       ],
       "api_key": [
@@ -35,15 +40,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "411434491747-dar4klnegijqeaogg64eb5bsb0e7pb55.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "411434491747-diaknq784hthoc1gh2ch1otu2gm0nq4v.apps.googleusercontent.com",
-              "client_type": 2
-            },
-            {
-              "client_id": "411434491747-h12mqb3f6nbiql9tlmnelo4j5rg47h96.apps.googleusercontent.com",
+              "client_id": "411434491747-m8qsjh1g8mvfmllkb3fnf5mdqektmvk7.apps.googleusercontent.com",
               "client_type": 3
             },
             {

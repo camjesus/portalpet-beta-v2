@@ -25,10 +25,6 @@ function RootLayoutContent() {
   const [loaded] = useFonts({
     SpaceMono: base,
   });
-  const userId = useAuthStore((s) => s.user?.id);
-  const activeChatId = useAuthStore((s) => s.activeChatId);
-
-  useGlobalChatListener({ userId, activeChatId });
 
   useEffect(() => {
     if (loaded) {

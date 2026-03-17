@@ -1,5 +1,3 @@
-// hooks/useGlobalChatListener.ts
-
 import { useEffect, useRef } from "react";
 import {
   collection,
@@ -9,7 +7,7 @@ import {
   orderBy,
   limit,
   Timestamp,
-} from "firebase/firestore"; // ← siempre "firebase/firestore", nunca "/lite"
+} from "firebase/firestore"; 
 import { db } from "@/FirebaseConfig";
 import { useNotification } from "@/context/NotificationContext";
 
@@ -28,20 +26,18 @@ export function useGlobalChatListener({
 
   useEffect(() => {
     if (!userId) return;
-
     const unsubscribers: (() => void)[] = [];
 
-    // Igual que tu getChatsAsync: dos queries separadas
     const qUser = query(
       collection(db, "chats"),
       where("user.id", "==", userId),
-      orderBy("createDate", "asc")
+      orderBy("createDate", "asc"),
     );
 
     const qRescuer = query(
       collection(db, "chats"),
       where("rescuer.id", "==", userId),
-      orderBy("createDate", "asc")
+      orderBy("createDate", "asc"),
     );
 
     [qUser, qRescuer].forEach((chatQuery) => {
@@ -49,51 +45,54 @@ export function useGlobalChatListener({
         chatsSnapshot.docs.forEach((chatDoc) => {
           const chatId = chatDoc.id;
 
-          // Escuchar último mensaje de cada chat
           const messagesQuery = query(
-            collection(db, "chats", chatId, "messages"),
+            collection(db, "messages"),
+            where("chatId", "==", chatId),
             orderBy("createAt", "desc"),
-            limit(1)
+            limit(1),
           );
 
-          const unsubMessages = onSnapshot(messagesQuery, (messagesSnapshot) => {
-            // Primera carga: marcar como visto sin notificar
-            if (!initializedChats.current.has(chatId)) {
-              initializedChats.current.add(chatId);
-              messagesSnapshot.docs.forEach((doc) =>
-                seenMessageIds.current.add(doc.id)
-              );
-              return;
-            }
-
-            messagesSnapshot.docChanges().forEach((change) => {
-              if (change.type !== "added") return;
-
-              const messageId = change.doc.id;
-              const message = change.doc.data();
-
-              if (
-                seenMessageIds.current.has(messageId) ||
-                message.sender?.id === userId ||
-                chatId === activeChatId
-              ) {
-                seenMessageIds.current.add(messageId);
+          const unsubMessages = onSnapshot(
+            messagesQuery,
+            (messagesSnapshot) => {
+              if (!initializedChats.current.has(chatId)) {
+                initializedChats.current.add(chatId);
+                messagesSnapshot.docs.forEach((doc) => {
+                  seenMessageIds.current.add(doc.id);
+                });
                 return;
               }
+              messagesSnapshot.docChanges().forEach((change) => {
+                if (change.type !== "added") return;
 
-              seenMessageIds.current.add(messageId);
+                const messageId = change.doc.id;
+                const message = change.doc.data();
 
-              const createdAt: Timestamp | undefined = message.createAt;
-              const time = createdAt ? formatTime(createdAt.toDate()) : undefined;
+                if (
+                  seenMessageIds.current.has(messageId) ||
+                  message.sender?.id === userId ||
+                  chatId === activeChatId
+                ) {
+                  seenMessageIds.current.add(messageId);
+                  return;
+                }
 
-              showNotification({
-                senderName: message.sender?.name ?? "Nuevo mensaje",
-                message: message.text ?? "Te enviaron un mensaje",
-                chatId,
-                time,
+                seenMessageIds.current.add(messageId);
+
+                const createdAt: Timestamp | undefined = message.createAt;
+                const time = createdAt
+                  ? formatTime(createdAt.toDate())
+                  : undefined;
+
+                showNotification({
+                  senderName: message.sender?.name ?? "Nuevo mensaje",
+                  message: message.text ?? "Te enviaron un mensaje",
+                  chatId,
+                  time,
+                });
               });
-            });
-          });
+            },
+          );
 
           unsubscribers.push(unsubMessages);
         });

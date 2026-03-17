@@ -1,9 +1,16 @@
 import { Tabs, usePathname } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { IconSymbol } from "@/components/ui";
+import { useAuthStore } from "@/store/authStore";
+import { useGlobalChatListener } from "@/hooks/useGlobalChatListener";
 
 export default function TabLayout() {
   const pathname = usePathname();
+  const userId = useAuthStore((s) => s.user?.id);
+  const activeChatId = useAuthStore((s) => s.activeChatId);
+
+  useGlobalChatListener({ userId, activeChatId });
+
   return (
     <Tabs
       screenOptions={{

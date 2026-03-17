@@ -13,7 +13,10 @@
       "translucent": false
     },
     "ios": {
-      "bundleIdentifier": "com.camjesus.portalpetbetav2"
+      "bundleIdentifier": "com.camjesus.portalpetbetav2",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCvts-s40UYU1XDwuB2dQ7snApslO0-rck"
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -22,12 +25,12 @@
         "backgroundColor": "#A5A5A5"
       },
       "package": "com.camjesus.portalpetbetav2",
-      "googleMaps": {
-        "apiKey": "AIzaSyCeP-6EBcNwzMAu9Yg1dmUFsWM55A2MkrA"
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCvts-s40UYU1XDwuB2dQ7snApslO0-rck"
+        }
       },
       "permissions": [
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO"
       ]

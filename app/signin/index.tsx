@@ -22,8 +22,8 @@ export default function Signin() {
   const [loading, setLoading] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: GOOGLE_ANDROID_ID,
     webClientId: GOOGLE_WEB_ID,
+    androidClientId: GOOGLE_ANDROID_ID,
     scopes: ["profile", "email"],
     usePKCE: true,
     redirectUri,

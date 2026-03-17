@@ -1,7 +1,11 @@
 import * as Location from "expo-location";
 import { Alert } from "react-native";
-import {API_KEY_LOCATIONIQ } from "@/secret-google"
-//const API_KEY_LOCATIONIQ = process.env.API_KEY_LOCATIONIQ!;
+
+const NOMINATIM_URL = "https://nominatim.openstreetmap.org";
+const HEADERS = {
+  "Accept-Language": "es",
+  "User-Agent": "PortalPet/1.0 (com.camjesus.portalpetbetav2)",
+};
 
 export async function getCurrentLocation() {
   const { status } = await Location.requestForegroundPermissionsAsync();
@@ -26,14 +30,15 @@ export async function getCurrentLocation() {
     };
   } catch (error) {
     console.log("No se pudo obtener ubicación:", error);
-    return { lat: -34.6037, lng: -58.3816 }; // fallback
+    return { lat: -34.6037, lng: -58.3816 };
   }
 }
 
 export async function reverseGeocode(lat: number, lng: number) {
   try {
     const response = await fetch(
-      `https://us1.locationiq.com/v1/reverse?key=${API_KEY_LOCATIONIQ}&lat=${lat}&lon=${lng}&format=json`,
+      `${NOMINATIM_URL}/reverse?lat=${lat}&lon=${lng}&format=json`,
+      { headers: HEADERS }
     );
     const data = await response.json();
     return data.display_name || "";
@@ -48,9 +53,8 @@ export async function searchAddress(address: string) {
 
   try {
     const response = await fetch(
-      `https://us1.locationiq.com/v1/search?key=${API_KEY_LOCATIONIQ}&q=${encodeURIComponent(
-        address,
-      )}&format=json`,
+      `${NOMINATIM_URL}/search?q=${encodeURIComponent(address)}&countrycodes=ar&limit=1&format=json`,
+      { headers: HEADERS }
     );
     const data = await response.json();
     if (data && data.length > 0) {
@@ -64,5 +68,19 @@ export async function searchAddress(address: string) {
   } catch (error) {
     console.log("Error buscando dirección", error);
     return null;
+  }
+}
+
+export async function autocompleteAddress(text: string) {
+  if (text.length < 3) return [];
+  try {
+    const response = await fetch(
+      `${NOMINATIM_URL}/search?q=${encodeURIComponent(text)}&countrycodes=ar&limit=5&format=json`,
+      { headers: HEADERS }
+    );
+    const data = await response.json();
+    return data || [];
+  } catch {
+    return [];
   }
 }

@@ -14,8 +14,8 @@ export type Pet = {
 	dateStart: Date | null;
 	dateStart_string: string| null;
 	active: boolean;
-	latitude: string| null;
-	longitude: string| null;
+	latitude: number| null;
+	longitude: number| null;
 	idAdopter: string| null;
 	rescuerId: string;
 	rescuer: Rescuer;

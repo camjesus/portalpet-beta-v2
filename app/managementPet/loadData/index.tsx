@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
 import { Link, useLocalSearchParams, router } from "expo-router";
 import { scale } from "react-native-size-matters";
@@ -40,7 +41,9 @@ export default function LoadData() {
   }>();
   const parsedStatePet = stringItem ? JSON.parse(stringItem) : null;
   const [state, dispatch] = useReducer(petReducer, parsedStatePet);
-  const [noName, setNoName] = useState(state.statePet.pet.name === "");
+  const [noName, setNoName] = useState(
+    state.statePet.id ? state.statePet.pet.name === "" : false,
+  );
   const [optAcion, setAcion] = useState(0);
   const [optSize, setSize] = useState(0);
   const [load, setLoad] = useState(false);
@@ -113,9 +116,15 @@ export default function LoadData() {
       {load && <Loading />}
       {!load && (
         <View style={styles.container}>
-          <View>
-            <Image source={imageSource} style={[styles.image]} />
-          </View>
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "/managementPet/loadImage",
+                params: { stringItem: JSON.stringify(state) },
+              })
+            }>
+            <Image source={imageSource} style={styles.image} />
+          </TouchableOpacity>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -170,7 +179,7 @@ export default function LoadData() {
                   changeOption={changeValue}
                 />
               </View>
-              <View style={{ marginTop: scale(16) }}>
+              <View style={{ marginTop: scale(16), width: "100%" }}>
                 <InputDescription
                   optAcion={optAcion}
                   description={state.statePet.pet.description}
@@ -200,16 +209,19 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    marginHorizontal: "auto",
     marginTop: scale(16),
+    justifyContent: "center",
+    width: "100%",
   },
   container: {
     flex: 1,
     alignItems: "center",
+    width: "100%",
   },
   submit: {
     marginTop: scale(10),
     marginBottom: scale(16),
+    alignItems: "center",
   },
   image: {
     width: scale(90),

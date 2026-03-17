@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { getCurrentLocation, reverseGeocode, searchAddress } from "@/services/utils/location";
 
-export function useLocation() {
-  const [coords, setCoords] = useState<{ lat: number; lng: number }>();
+export function useLocation(initialCoords?: { lat: number; lng: number } | null) {
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    initialCoords ?? null
+  );
   const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(!initialCoords);
 
   useEffect(() => {
+    if (initialCoords) return;
     (async () => {
       const loc = await getCurrentLocation();
       if (loc) {

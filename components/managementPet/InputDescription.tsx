@@ -37,17 +37,3 @@ export default function InputDescription({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  text: {
-    textAlign: "center",
-    paddingHorizontal: scale(10),
-    paddingVertical: scale(2),
-    backgroundColor: "#ffb13d",
-    marginHorizontal: "auto",
-    marginTop: scale(7),
-    borderRadius: 2,
-    color: "white",
-    fontWeight: "bold",
-  },
-});

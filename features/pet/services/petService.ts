@@ -19,9 +19,9 @@ import { saveMyPets } from "@/services/storage/petStorage";
 import { getAction, getFilters } from "@/features/filter/services/filterStorageService";
 
 export const savePet = async (pet: Pet) => {
-  const image = await resolvePetImage(pet.image);
+  //const image = await resolvePetImage(pet.image);
 
-  if (image) pet.image = image;
+  //if (image) pet.image = image;
 
   await createPetDoc(pet);
 };
@@ -29,9 +29,9 @@ export const savePet = async (pet: Pet) => {
 export const updatePet = async (petId: string, pet: Pet) => {
   const image = await resolvePetImage(pet.image);
 
-  if (image) pet.image = image;
+  //if (image) pet.image = image;
 
-  const { createDate, rescuer, image: _, rescuerId, ...rest } = pet;
+  const { createDate, rescuer, rescuerId, ...rest } = pet;
 
   await updatePetDoc(petId, rest);
 };

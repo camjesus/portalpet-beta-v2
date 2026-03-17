@@ -39,6 +39,7 @@ const TextInputCustom: FC<Props> = ({
           ref={inputRef}
           editable={editable}
           multiline={multiline}
+          scrollEnabled={multiline}
           style={[
             styles.default,
             multiline ? styles.box : styles.input,

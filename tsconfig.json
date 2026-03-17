@@ -17,6 +17,8 @@
     "hooks/usePetReducer.js",
     "app/managementPet/index.jsx",
     "app/managementPet/index.jsx",
-    "app/filter/components/Test.jsx"
+    "app/filter/components/Test.jsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
   ]
 }
