@@ -6,7 +6,6 @@ import {
   View,
   Image,
   ScrollView,
-  Keyboard,
   TouchableOpacity,
 } from "react-native";
 import { Link, useLocalSearchParams, router } from "expo-router";

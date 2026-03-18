@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
     alignContent: "center",
     borderColor: "#DCAD5F",
     borderWidth: scale(2),
+    left: scale(20),
+    right: scale(20),
   },
   message: {
     color: "#4B4B4B",

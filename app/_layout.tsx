@@ -15,8 +15,6 @@ import { base } from "@/assets/fonts";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NotificationProvider } from "@/context/NotificationContext";
-import { useAuthStore } from "@/store/authStore";
-import { useGlobalChatListener } from "@/hooks/useGlobalChatListener";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,6 +45,10 @@ function RootLayoutContent() {
           <Stack.Screen name="report" options={{ headerShown: false }} />
           <Stack.Screen name="chat" options={{ headerShown: false }} />
           <Stack.Screen name="signin" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="adoptionProfile"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>

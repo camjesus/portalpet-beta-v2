@@ -9,3 +9,5 @@ export * from "./Rescuer";
 export * from "./User";
 export * from "./ChatInfo";
 export * from "./Coords"
+export * from "./AdoptionProfile"
+export * from "./AdoptionRequests"

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import {
   Text,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { scale } from "react-native-size-matters";
-import { useEffect, useRef } from "react";
+
 type Props = {
   options: TextInputProps;
   editable?: boolean | true;
@@ -16,43 +16,41 @@ type Props = {
   label?: string;
 };
 
-const TextInputCustom: FC<Props> = ({
-  options,
-  editable,
-  multiline,
-  label,
-}) => {
-  const inputRef = useRef<TextInput>(null);
+const TextInputCustom = forwardRef<TextInput, Props>(
+  ({ options, editable, multiline, label }, ref) => {
+    const inputRef = useRef<TextInput>(null);
+    const resolvedRef = (ref as React.RefObject<TextInput>) || inputRef;
 
-  useEffect(() => {
-    const sub = Keyboard.addListener("keyboardDidHide", () => {
-      inputRef.current?.blur();
-    });
+    useEffect(() => {
+      const sub = Keyboard.addListener("keyboardDidHide", () => {
+        resolvedRef.current?.blur();
+      });
+      return () => sub.remove();
+    }, []);
 
-    return () => sub.remove();
-  }, []);
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        {label && <Text style={styles.label}>{label}</Text>}
-        <TextInput
-          ref={inputRef}
-          editable={editable}
-          multiline={multiline}
-          scrollEnabled={multiline}
-          style={[
-            styles.default,
-            multiline ? styles.box : styles.input,
-            editable === false && styles.disable,
-          ]}
-          placeholderTextColor={"#A5A5A5"}
-          {...options}
-        />
-      </SafeAreaView>
-    </SafeAreaProvider>
-  );
-};
-
+    return (
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          {label && <Text style={styles.label}>{label}</Text>}
+          <TextInput
+            ref={resolvedRef}
+            editable={editable}
+            multiline={multiline}
+            scrollEnabled={multiline}
+            style={[
+              styles.default,
+              multiline ? styles.box : styles.input,
+              editable === false && styles.disable,
+            ]}
+            placeholderTextColor={"#A5A5A5"}
+            {...options}
+          />
+        </SafeAreaView>
+      </SafeAreaProvider>
+    );
+  },
+);
+TextInputCustom.displayName = "TextInputCustom";
 export default TextInputCustom;
 
 const styles = StyleSheet.create({
@@ -72,6 +70,9 @@ const styles = StyleSheet.create({
   },
   box: {
     height: scale(80),
+    width: "100%",
+    minHeight: 80,
+    maxHeight: 120,
   },
   label: {
     textAlign: "left",

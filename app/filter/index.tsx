@@ -61,7 +61,6 @@ export default function Filters() {
   function changeUntil(value: any, field: string) {
     filterActions.changeUntil(dispatch, field, value);
   }
-  
 
   async function saveAsync() {
     var error = filterActions.validateFilter(state.filter);
@@ -114,7 +113,7 @@ export default function Filters() {
             changeAgeType={changeUntil}
           />
         </View>
-        <View style={[styles.row, { width: "100%" }]}>
+        <View style={styles.row}>
           <FilterRadius
             radius={state.filter.radiusKm ?? 10}
             changeValue={changeValue}

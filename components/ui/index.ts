@@ -12,4 +12,4 @@ export { default as Toast } from "./Toast";
 export { default as ViewCustom } from "./ViewCustom";
 export { default as InputOption } from "./InputOption";
 export { default as HeaderCustom } from "./HeaderCustom";
-
+export { default as ToggleButton } from "./ToggleButton";

@@ -1,7 +1,7 @@
 import { Validation } from "@/models";
 
 export const AGE_VALIDATION: Validation = {
-  type: "Validatión",
+  type: "Validación",
   msg: "Verificar los valores del rango de edad.",
   sucess: false,
 };
