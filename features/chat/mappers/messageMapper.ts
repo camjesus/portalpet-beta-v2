@@ -18,5 +18,6 @@ export function mapMessage(data: any): Message {
       id: data.sender.id,
       name: data.sender.name,
     },
+    type: data.type
   };
 }

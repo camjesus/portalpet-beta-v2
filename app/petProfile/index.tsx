@@ -1,18 +1,19 @@
-import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
-import { Link, router, useLocalSearchParams } from "expo-router";
-import { scale } from "react-native-size-matters";
 import {
-  HeaderAnimated,
-  IconSymbol,
-  Button,
-  ViewCustom,
-} from "@/components/ui";
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Dimensions,
+  Pressable,
+  ScrollView,
+} from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { scale } from "react-native-size-matters";
+import { IconSymbol, ViewCustom } from "@/components/ui";
 import React from "react";
-import InfoAnimated from "./components/InfoAnimated";
 
 const isBigger = Dimensions.get("screen").height > 830;
-const SCREEN_HEIGHT = ((Dimensions.get("screen").height * 0.6) / 3) * 0.2;
-//console.log("dimension", Dimensions.get("screen").height);
+
 export default function PetProfile() {
   const { petId, stringItem, image, isMy } = useLocalSearchParams<{
     petId: string;
@@ -21,7 +22,6 @@ export default function PetProfile() {
     isMy: string;
   }>();
   const item = JSON.parse(stringItem);
-
   const { pet } = item;
 
   function goToBack() {
@@ -31,175 +31,147 @@ export default function PetProfile() {
   function goToReport() {
     router.push({ pathname: "/report", params: { petId: petId } });
   }
+
   return (
     <ViewCustom>
-      <View>
-        <View>
-          <HeaderAnimated
-            childrenTitle={
-              <>
-                <View style={styles.titleRow}>
-                  <Text style={styles.title}>Ficha</Text>
-                  <IconSymbol
-                    style={{ marginStart: scale(10) }}
-                    size={30}
-                    name="clipboard"
-                    color="#4B4B4B"
-                  />
-                </View>
-                <View style={styles.imageRow}>
-                  {pet.image && (
-                    <>
-                      <Image
-                        style={styles.image}
-                        source={{
-                          uri: image,
-                        }}
-                      />
+      {/* Header estático */}
+      <View style={styles.header}>
+        <Pressable style={styles.buttonLeft} onPress={goToBack}>
+          <IconSymbol size={35} name="arrow-back" color="white" />
+        </Pressable>
 
-                      <View style={styles.sexIcon}>
-                        <IconSymbol
-                          name={pet?.sex === "MALE" ? "male" : "female"}
-                          size={45}
-                          color="white"
-                        />
-                      </View>
-                    </>
-                  )}
-                </View>
-              </>
-            }
-            onPressLeft={goToBack}
-            onPressRight={goToReport}
-            childrenRight={
-              isMy && <IconSymbol size={35} name="bullhorn" color="white" />
-            }
-            childrenLeft={
-              <IconSymbol size={35} name="arrow-back" color="white" />
-            }
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>Ficha</Text>
+          <IconSymbol
+            style={{ marginStart: scale(10) }}
+            size={30}
+            name="clipboard"
+            color="#4B4B4B"
           />
         </View>
 
-        <InfoAnimated
-          children={
+        <View style={styles.imageRow}>
+          {pet.image && (
             <>
-              <View style={styles.container}>
-                <View style={styles.row}>
-                  <Text style={styles.field}>Nombre: </Text>
-                  <Text style={styles.value}>{pet.name}</Text>
-                  <View style={styles.pawSize}>
-                    <IconSymbol
-                      name="paw"
-                      size={25}
-                      color={pet?.size === "SMALL" ? "#ffb13d" : "#A5A5A5"}
-                    />
-                    <IconSymbol
-                      name="paw"
-                      size={35}
-                      color={pet?.size === "MEDIUM" ? "#ffb13d" : "#A5A5A5"}
-                    />
-                    <IconSymbol
-                      name="paw"
-                      size={45}
-                      color={pet?.size === "BIG" ? "#ffb13d" : "#A5A5A5"}
-                    />
-                  </View>
-                </View>
-                <Text style={styles.field}>Descripción: </Text>
-                <Text style={styles.value}>{pet.description}</Text>
+              <Image style={styles.image} source={{ uri: image }} />
+              <View style={styles.sexIcon}>
+                <IconSymbol
+                  name={pet?.sex === "MALE" ? "male" : "female"}
+                  size={45}
+                  color="white"
+                />
               </View>
             </>
-          }
-        />
-      </View>
-      {isMy && (
-        <View style={styles.float}>
-          <Button circle={true}>
-            <Link
-              href={{
-                pathname: "/chat",
-                params: {
-                  petString: JSON.stringify(item),
-                },
-              }}>
-              <IconSymbol size={30} name="chat" color="white" />
-            </Link>
-          </Button>
+          )}
         </View>
+
+        {isMy === "no" && (
+          <Pressable style={styles.buttonRight} onPress={goToReport}>
+            <IconSymbol size={35} name="bullhorn" color="white" />
+          </Pressable>
+        )}
+      </View>
+
+      {/* Info estática */}
+      <ScrollView contentContainerStyle={styles.infoContainer}>
+        <View style={styles.container}>
+          <View style={styles.row}>
+            <Text style={styles.field}>Nombre: </Text>
+            <Text style={styles.value}>{pet.name}</Text>
+            <View style={styles.pawSize}>
+              <IconSymbol
+                name="paw"
+                size={25}
+                color={pet?.size === "SMALL" ? "#ffb13d" : "#A5A5A5"}
+              />
+              <IconSymbol
+                name="paw"
+                size={35}
+                color={pet?.size === "MEDIUM" ? "#ffb13d" : "#A5A5A5"}
+              />
+              <IconSymbol
+                name="paw"
+                size={45}
+                color={pet?.size === "BIG" ? "#ffb13d" : "#A5A5A5"}
+              />
+            </View>
+          </View>
+          <Text style={styles.field}>Descripción: </Text>
+          <Text style={styles.value}>{pet.description}</Text>
+        </View>
+      </ScrollView>
+
+      {isMy === "no" && (
+        <Pressable
+          style={({ pressed }) => [
+            styles.contactCard,
+            pressed && styles.contactCardPressed,
+          ]}
+          onPress={() =>
+            router.push({
+              pathname: "/chat",
+              params: { petString: JSON.stringify(item) },
+            })
+          }>
+          <IconSymbol name="chat" size={22} color="#ffb13d" />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.contactCardTitle}>Ponete en contacto</Text>
+            <Text style={styles.contactCardSubtitle}>
+              Escribile al rescatista
+            </Text>
+          </View>
+          <IconSymbol name="arrow-next" size={20} color="#A5A5A5" />
+        </Pressable>
       )}
     </ViewCustom>
   );
 }
 
 const styles = StyleSheet.create({
-  containerHeader: {
-    top: scale(-10),
-    backgroundColor: "#A5A5A5",
-    borderEndEndRadius: 10,
-    borderEndStartRadius: 5,
-    borderStartEndRadius: 10,
-    borderStartStartRadius: 5,
-    elevation: 10,
-    height: scale(35),
-    marginHorizontal: scale(20),
-    borderWidth: 1,
-    borderColor: "#828282",
+  header: {
+    backgroundColor: "#ffb13d",
+    borderBottomLeftRadius: scale(30),
+    borderBottomRightRadius: scale(30),
+    paddingBottom: scale(20),
+    alignItems: "center",
   },
-  row: {
+  buttonLeft: {
+    left: 0,
+    width: scale(30),
+    marginStart: scale(30),
+    position: "absolute",
+    paddingTop: scale(60),
+  },
+  buttonRight: {
+    right: 0,
+    width: scale(30),
+    marginEnd: scale(30),
+    position: "absolute",
+    paddingTop: scale(60),
+  },
+  titleRow: {
+    paddingBottom: scale(15),
+    alignItems: "center",
     flexDirection: "row",
+    justifyContent: "center",
+    paddingTop: scale(60),
   },
   title: {
     color: "#4B4B4B",
     fontSize: scale(25),
     fontWeight: "bold",
   },
-  field: {
-    color: "#4B4B4B",
-    fontSize: scale(16),
-    fontWeight: "bold",
-  },
-  value: {
-    color: "#4B4B4B",
-    fontSize: scale(15),
-  },
-  container: {
-    top: isBigger ? scale(-50) : scale(20) - SCREEN_HEIGHT,
-    backgroundColor: "white",
-    marginHorizontal: scale(10),
-    paddingHorizontal: scale(20),
-    paddingTop: scale(20),
-    paddingBottom: scale(20),
-    gap: scale(5),
-    borderRadius: 5,
-  },
-  titleRow: {
-    paddingBottom: scale(15),
-    alignItems: "center",
-    flexDirection: "row",
-    alignContent: "center",
-    justifyContent: "center",
-    paddingTop: scale(60),
-  },
   imageRow: {
     alignItems: "center",
-    alignContent: "center",
     justifyContent: "center",
   },
   image: {
     width: scale(300),
-    height: isBigger ? scale(400) : scale(390) - SCREEN_HEIGHT,
+    height: isBigger ? scale(300) : scale(250),
     borderRadius: 10,
     borderWidth: 3,
     borderColor: "white",
     elevation: 10,
-  },
-  pawSize: {
-    position: "absolute",
-    right: scale(5),
-    flexDirection: "row",
-    alignItems: "baseline",
-    alignContent: "center",
-    justifyContent: "space-between",
   },
   sexIcon: {
     flexDirection: "row",
@@ -213,10 +185,64 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "white",
   },
-  float: {
-    margin: 16,
-    right: 0,
-    bottom: 0,
+  infoContainer: {
+    paddingBottom: scale(100),
+  },
+  container: {
+    backgroundColor: "white",
+    marginHorizontal: scale(10),
+    marginTop: scale(20),
+    paddingHorizontal: scale(20),
+    paddingTop: scale(20),
+    paddingBottom: scale(20),
+    gap: scale(5),
+    borderRadius: 5,
+  },
+  row: {
+    flexDirection: "row",
+  },
+  field: {
+    color: "#4B4B4B",
+    fontSize: scale(16),
+    fontWeight: "bold",
+  },
+  value: {
+    color: "#4B4B4B",
+    fontSize: scale(15),
+  },
+  pawSize: {
     position: "absolute",
+    right: scale(5),
+    flexDirection: "row",
+    alignItems: "baseline",
+  },
+  contactCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#1E1E1E",
+    marginHorizontal: scale(20),
+    marginBottom: scale(20),
+    padding: scale(16),
+    borderRadius: 12,
+    gap: scale(12),
+    borderWidth: 1,
+    borderColor: "#ffb13d",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  contactCardPressed: {
+    backgroundColor: "#2A2A2A",
+  },
+  contactCardTitle: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: scale(14),
+  },
+  contactCardSubtitle: {
+    color: "#A5A5A5",
+    fontSize: scale(11),
+    marginTop: scale(2),
   },
 });

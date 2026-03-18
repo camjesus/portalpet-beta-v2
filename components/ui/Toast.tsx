@@ -41,7 +41,7 @@ export default function Toast({ validation, setToast }: Props) {
         { top: "50%", transform: [{ translateY: -height / 2 }], opacity },
       ]}>
       <Text style={{ fontSize: 25 }}>💬</Text>
-      <View style={{ marginLeft: scale(12) }}>
+      <View style={{ marginLeft: scale(12), flexShrink: 1 }}>
         <Text style={styles.title}>{validation.type}</Text>
         <Text style={styles.message}>{validation.msg}</Text>
       </View>

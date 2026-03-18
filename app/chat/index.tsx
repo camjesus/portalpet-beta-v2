@@ -9,14 +9,29 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
-import { MessageId, ChatId, User, PetId } from "@/models";
-import { ViewCustom, HeaderCustom, IconSymbol } from "@/components/ui";
+import { MessageId, ChatId, User, PetId, Validation } from "@/models";
+import { ViewCustom, HeaderCustom, IconSymbol, Toast } from "@/components/ui";
 import { resolveChat } from "@/features/chat/services/chatService";
 import {
   listenMessages,
+  sendAdoptionAcceptedMessage,
+  sendAdoptionMessage,
+  sendAdoptionRejectedMessage,
   sendMessage,
 } from "@/features/chat/services/messageService";
 import { Bubble, InputMessage } from "@/components/chat";
+import { AdoptionModal } from "@/components/chat";
+import { getAdoptionProfile } from "@/features/adoption/services/adoptionService";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+import { sendAdoptionRequest } from "@/features/adoption/services/adoptionService";
+import { AdoptionRequestModal } from "@/components/chat";
+import {
+  getAdoptionRequestByPet,
+  updateAdoptionRequestStatus,
+} from "@/features/adoption/services/adoptionService";
+import { AdoptionProfile } from "@/models";
+import { FIELD_VALIDATION } from "@/constants/Validations";
 
 export default function Chat() {
   const { chatId, petString } = useLocalSearchParams<{
@@ -32,7 +47,54 @@ export default function Chat() {
     chat?.chat.rescuer?.id === user?.id
       ? chat?.chat.user?.name
       : chat?.chat.rescuer?.name;
+  const isNotMine = chat?.chat.user?.id === user?.id;
+  const [showModal, setShowModal] = useState(false);
+  const pendingAdoption = useRef(false);
+  const [hasPendingRequest, setHasPendingRequest] = useState(false);
 
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [adoptionProfile, setAdoptionProfile] =
+    useState<AdoptionProfile | null>(null);
+  const [adoptionRequestId, setAdoptionRequestId] = useState<string | null>(
+    null,
+  );
+  const [toast, setToast] = useState(false);
+  const [toastConfig, setToastConfig] = useState<Validation>();
+
+  const isMine = chat?.chat.rescuer?.id === user?.id;
+  useFocusEffect(
+    useCallback(() => {
+      if (!pendingAdoption.current) return;
+      pendingAdoption.current = false;
+      triggerAdoptionRequest();
+    }, [user, chat]),
+  );
+  const triggerAdoptionRequest = async () => {
+    if (!user?.id || !chat) return;
+    const profile = await getAdoptionProfile(user.id);
+    if (!profile) {
+      pendingAdoption.current = true;
+      router.push("/adoptionProfile");
+      return;
+    }
+
+    const petId = chat.chat.pet.id;
+    const rescuerId = chat.chat.rescuer.id;
+    const result = await sendAdoptionRequest(user.id, petId, rescuerId);
+
+    if (result === "already_sent") {
+      setToastConfig(
+        FIELD_VALIDATION("Ya enviaste una solicitud para esta mascota"),
+      );
+      setToast(true);
+    } else {
+      await sendAdoptionMessage(chat, user);
+    }
+  };
+  const handleAdoptionRequest = async () => {
+    setShowModal(false);
+    await triggerAdoptionRequest();
+  };
   const petParse = useMemo(() => {
     return petString ? (JSON.parse(petString) as PetId) : undefined;
   }, [petString]);
@@ -86,6 +148,39 @@ export default function Chat() {
     });
   }, [chatId, petParse]);
 
+  useEffect(() => {
+    if (!chat?.chat.pet.id || !isMine) return;
+    getAdoptionRequestByPet(chat.chat.pet.id).then((request) => {
+      setHasPendingRequest(!!request);
+    });
+  }, [chat, isMine]);
+
+  const handleOpenRequest = async () => {
+    if (!chat?.chat.pet.id) return;
+    const request = await getAdoptionRequestByPet(chat.chat.pet.id);
+    if (!request) return;
+    setAdoptionRequestId(request.id);
+    const profile = await getAdoptionProfile(request.userId);
+    setAdoptionProfile(profile);
+    setShowRequestModal(true);
+  };
+
+  const handleAccept = async () => {
+    if (!adoptionRequestId || !chat) return;
+    await updateAdoptionRequestStatus(adoptionRequestId, "accepted");
+    await sendAdoptionAcceptedMessage(chat, user);
+    setShowRequestModal(false);
+    setHasPendingRequest(false);
+  };
+
+  const handleReject = async () => {
+    if (!adoptionRequestId || !chat) return;
+    await updateAdoptionRequestStatus(adoptionRequestId, "rejected");
+    await sendAdoptionRejectedMessage(chat, user);
+    setShowRequestModal(false);
+    setHasPendingRequest(false);
+  };
+
   return (
     <ViewCustom>
       <HeaderCustom
@@ -95,9 +190,20 @@ export default function Chat() {
             <IconSymbol size={30} name="arrow-back" color="white" />
           </Pressable>
         }
+        childrenRight={
+          isMine && hasPendingRequest ? (
+            <Pressable onPress={handleOpenRequest}>
+              <IconSymbol size={30} name="clipboard" color="white" />
+            </Pressable>
+          ) : isNotMine ? (
+            <Pressable onPress={() => setShowModal(true)}>
+              <IconSymbol size={30} name="paw" color="white" />
+            </Pressable>
+          ) : undefined
+        }
       />
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: "transparent" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         <ScrollView
@@ -118,19 +224,31 @@ export default function Chat() {
         <View style={styles.footer}>
           <InputMessage sendMessage={sendMessageAsync} />
         </View>
+        {toast && toastConfig && (
+          <Toast validation={toastConfig} setToast={setToast} />
+        )}
       </KeyboardAvoidingView>
+      <AdoptionModal
+        visible={showModal}
+        onCancel={() => setShowModal(false)}
+        onConfirm={handleAdoptionRequest}
+      />
+      <AdoptionRequestModal
+        visible={showRequestModal}
+        profile={adoptionProfile}
+        onClose={() => setShowRequestModal(false)}
+        onAccept={handleAccept}
+        onReject={handleReject}
+      />
     </ViewCustom>
   );
 }
 
 const styles = StyleSheet.create({
-  footer: {
-    margin: scale(2),
-    right: 0,
-    bottom: 0,
-  },
+  footer: {},
   flatList: {
     marginHorizontal: scale(10),
+    backgroundColor: "transparent",
   },
   leftIcon: {
     alignSelf: "flex-start",

@@ -17,24 +17,22 @@ export default function InputMessage({ sendMessage }: Props) {
   }
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.input}>
-          <TextInputCustom
-            options={{
-              maxLength: 200,
-              value: message,
-              onChangeText: (t) => setMessage(t),
-              placeholder: "Mensaje",
-              numberOfLines: message.length < 100 ? 1 : 2,
-            }}
-          />
-        </View>
-        <Pressable style={styles.button} onPress={submit}>
-          <IconSymbol size={25} name="send" color="black" />
-        </Pressable>
+    <View style={styles.container}>
+      <View style={styles.input}>
+        <TextInputCustom
+          options={{
+            maxLength: 200,
+            value: message,
+            onChangeText: (t) => setMessage(t),
+            placeholder: "Mensaje",
+            numberOfLines: message.length < 100 ? 1 : 2,
+          }}
+        />
       </View>
-    </SafeAreaView>
+      <Pressable style={styles.button} onPress={submit}>
+        <IconSymbol size={25} name="send" color="black" />
+      </Pressable>
+    </View>
   );
 }
 
@@ -44,6 +42,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     bottom: 0,
     alignItems: "center",
+    marginTop: 10,
   },
   input: {
     width: scale(300),

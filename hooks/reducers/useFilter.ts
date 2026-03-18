@@ -13,11 +13,11 @@ export interface State {
   filter: Filter;
 }
 
-export const initalFilter: State = {
+export const initialFilter: State = {
   filter: {
-    size: ["SMALL", "MEDIUM", "BIG"],
-    type: ["DOG", "CAT"],
-    sex: ["FEMALE", "MALE"],
+    size: [],
+    type: [],
+    sex: [],
     from: {
       age: 1,
       ageType: AgeType.MONTH,

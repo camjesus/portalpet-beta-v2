@@ -30,6 +30,11 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   "folder-search": "folder-search",
   send: "send",
   gallery: "image-multiple",
+  close: "close",
+  check: "check",
+  help: "help",
+  heart: "heart",
+  "heart-outline": "heart-outline",
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

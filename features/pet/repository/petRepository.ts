@@ -49,6 +49,9 @@ export const getMyPets = async (): Promise<PetId[]> => {
 };
 
 export const queryPets = async (filters: any) => {
+    if (!filters.sex?.length || !filters.size?.length || !filters.type?.length) {
+    return { docs: [], forEach: () => {} };
+  }
   const q = query(
     collection(db, "pets"),
     where("active", "==", true),

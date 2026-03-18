@@ -31,7 +31,7 @@ export default function MyPets() {
   return (
     <View style={{ height: "100%" }}>
       <ViewCustom>
-        <HeaderCustom title="Mis mascotas" />
+        <HeaderCustom title="Publicaciones" />
         {myPets && (
           <FlatList
             data={myPets}

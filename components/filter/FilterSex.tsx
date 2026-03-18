@@ -11,20 +11,18 @@ export default function FilterSex({ sex, changeValue }: Props) {
   const isFemale = sex.indexOf(Sex.FEMALE) > -1;
   const isMale = sex.indexOf(Sex.MALE) > -1;
 
-  console.log("sex", sex);
   function validateValue(opt: string) {
-    if (isFemale && opt === "optOne" && isMale) {
-      sex = sex.filter((pe) => pe !== Sex.FEMALE);
-    } else if (opt === "optOne" && isMale) {
-      sex.push(Sex.FEMALE);
+    let newSex = [...sex];
+    const sexType = opt === "optOne" ? Sex.FEMALE : Sex.MALE;
+    const isSelected = newSex.indexOf(sexType) > -1;
+
+    if (isSelected && newSex.length > 1) {
+      newSex = newSex.filter((s) => s !== sexType);
+    } else if (!isSelected) {
+      newSex.push(sexType);
     }
 
-    if (isMale && opt === "optTwo" && isFemale) {
-      sex = sex.filter((pe) => pe !== Sex.MALE);
-    } else if (opt === "optTwo" && isFemale) {
-      sex.push(Sex.MALE);
-    }
-    changeValue(sex, "sex");
+    changeValue(newSex, "sex");
   }
 
   return (

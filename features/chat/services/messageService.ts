@@ -62,3 +62,57 @@ export const listenMessages = (
     callback(messages);
   });
 };
+
+export const sendAdoptionMessage = async (
+  chat: ChatId,
+  user: User | undefined
+) => {
+  if (!chat.id) {
+    const newChat = await addChatAsync(chat.chat);
+    chat.id = newChat.id;
+  }
+
+  const message: Message = {
+    createAt: Timestamp.now(),
+    text: "Solicitud de adopción enviada",
+    chatId: chat.id,
+    type: "adoption_request",
+    sender: {
+      id: user?.id ?? "",
+      name: user?.name ?? "",
+    },
+  };
+
+  const doc = await createMessage(message);
+  return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };
+};
+
+export const sendAdoptionAcceptedMessage = async (
+  chat: ChatId,
+  user: User | undefined
+) => {
+  const message: Message = {
+    createAt: Timestamp.now(),
+    text: "Solicitud de adopción aceptada",
+    chatId: chat.id,
+    type: "adoption_accepted",
+    sender: { id: user?.id ?? "", name: user?.name ?? "" },
+  };
+  const doc = await createMessage(message);
+  return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };
+};
+
+export const sendAdoptionRejectedMessage = async (
+  chat: ChatId,
+  user: User | undefined
+) => {
+  const message: Message = {
+    createAt: Timestamp.now(),
+    text: "Solicitud de adopción rechazada",
+    chatId: chat.id,
+    type: "adoption_rejected",
+    sender: { id: user?.id ?? "", name: user?.name ?? "" },
+  };
+  const doc = await createMessage(message);
+  return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };
+};

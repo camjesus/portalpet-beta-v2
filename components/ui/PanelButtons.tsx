@@ -26,8 +26,7 @@ export default function PanelButtons({
             option === 0 ? styles.active : styles.desactive,
             children && styles.static,
           ]}
-          onPress={() => changeOption(0)}
-        >
+          onPress={() => changeOption(0)}>
           {labels && (
             <Text style={[styles.label, , option == 0 && styles.activeLabel]}>
               {labels[0]}
@@ -46,8 +45,7 @@ export default function PanelButtons({
             option === 1 ? styles.active : styles.desactive,
             children && styles.static,
           ]}
-          onPress={() => changeOption(1)}
-        >
+          onPress={() => changeOption(1)}>
           {labels && (
             <Text style={[styles.label, , option == 1 && styles.activeLabel]}>
               {labels[1]}
@@ -66,8 +64,7 @@ export default function PanelButtons({
             option == 2 ? styles.active : styles.desactive,
             children && styles.static,
           ]}
-          onPress={() => changeOption(2)}
-        >
+          onPress={() => changeOption(2)}>
           {labels && (
             <Text style={[styles.label, option == 2 && styles.activeLabel]}>
               {labels[2]}

@@ -12,18 +12,17 @@ export default function FilterType({ type, changeValue }: Props) {
   const isCat = type.indexOf(Type.CAT) > -1;
 
   function validateValue(opt: string) {
-    if (isDog && opt === "optOne" && isCat) {
-      type = type.filter((pe) => pe !== Type.DOG);
-    } else if (opt === "optOne" && isCat) {
-      type.push(Type.DOG);
+    let newType = [...type];
+    const petType = opt === "optOne" ? Type.DOG : Type.CAT;
+    const isSelected = newType.indexOf(petType) > -1;
+
+    if (isSelected && newType.length > 1) {
+      newType = newType.filter((p) => p !== petType);
+    } else if (!isSelected) {
+      newType.push(petType);
     }
 
-    if (isCat && opt === "optTwo" && isDog) {
-      type = type.filter((pe) => pe !== Type.CAT);
-    } else if (opt === "optTwo" && isDog) {
-      type.push(Type.CAT);
-    }
-    changeValue(type, "type");
+    changeValue(newType, "type");
   }
 
   return (

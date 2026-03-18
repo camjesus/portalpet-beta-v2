@@ -1,5 +1,12 @@
 import { useEffect, useReducer, useState } from "react";
-import { StyleSheet, View, Pressable, BackHandler, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  BackHandler,
+  Text,
+  FlatList,
+} from "react-native";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { scale } from "react-native-size-matters";
 import {
@@ -10,16 +17,16 @@ import {
   Loading,
   Button,
 } from "@/components/ui";
-import Swiper from "@/components/search/Swiper";
 import { findPets } from "@/features/pet/services/petService";
 import { saveActionFilterAsync } from "@/services/storage/filterStorage";
 import {
   filterReducer,
-  initalFilter,
+  initialFilter,
   ACTION,
 } from "@/hooks/reducers/useFilter";
 import { LABELS_ACCTION } from "@/constants/StaticData";
 import { PetId } from "@/models";
+import { PetCard } from "@/components/search/PetCard";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -28,7 +35,7 @@ export const unstable_settings = {
 export default function Prueba() {
   const [myPets, setMyPets] = useState<PetId[]>([]);
   const [load, setLoad] = useState(false);
-  const [state, dispatch] = useReducer(filterReducer, initalFilter);
+  const [state, dispatch] = useReducer(filterReducer, initialFilter);
   const [optAction, setAction] = useState(0);
   const { search } = useLocalSearchParams<{
     search: string;
@@ -117,22 +124,30 @@ export default function Prueba() {
             labels={LABELS_ACCTION}
           />
         )}
-        {!load && myPets.length > 0 && (
-          <View style={styles.containerSwiper}>
-            <Swiper pets={myPets} />
-          </View>
-        )}
-        {!load && myPets.length === 0 && (
-          <View style={styles.emptyContainer}>
-            <IconSymbol name="paw" size={60} color="#A5A5A5" />
-            <Text style={styles.emptyTitle}>Sin resultados</Text>
-            <Text style={styles.emptyText}>
-              No encontramos mascotas con los filtros seleccionados
-            </Text>
-            <Button label="Modificar filtros" onPress={goToFilter} />
-          </View>
-        )}
       </View>
+      {!load && myPets.length > 0 && (
+        <FlatList
+          data={myPets}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{
+            paddingHorizontal: scale(16),
+            paddingTop: scale(12),
+            paddingBottom: scale(40),
+          }}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => <PetCard item={item} />}
+        />
+      )}
+      {!load && myPets.length === 0 && (
+        <View style={styles.emptyContainer}>
+          <IconSymbol name="paw" size={60} color="#A5A5A5" />
+          <Text style={styles.emptyTitle}>Sin resultados</Text>
+          <Text style={styles.emptyText}>
+            No encontramos mascotas con los filtros seleccionados
+          </Text>
+          <Button label="Modificar filtros" onPress={goToFilter} />
+        </View>
+      )}
     </ViewCustom>
   );
 }
@@ -175,5 +190,11 @@ const styles = StyleSheet.create({
     color: "#151718",
     fontWeight: "bold",
     fontSize: scale(13),
+  },
+  list: {
+    paddingHorizontal: scale(16),
+    paddingTop: scale(12),
+    paddingBottom: scale(40),
+    gap: scale(12),
   },
 });

@@ -9,7 +9,12 @@ import { getGoogleUserInfo } from "@/services/dataBase/useGoogleSignin";
 import { logo, googleSignin } from "@/assets/images";
 import ViewCustom from "@/components/ui/ViewCustom";
 import { useAuthStore } from "@/store/authStore";
-import { GOOGLE_ANDROID_ID, GOOGLE_WEB_ID } from "@/secret-google";
+import {
+  GOOGLE_ANDROID_ID,
+  GOOGLE_WEB_ID,
+  GOOGLE_EXPO_ID,
+  GOOGLE_ANDROID_FISICO_ID,
+} from "@/secret-google";
 WebBrowser.maybeCompleteAuthSession();
 
 const redirectUri = AuthSession.makeRedirectUri({

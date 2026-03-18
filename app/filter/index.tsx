@@ -10,7 +10,7 @@ import {
 } from "@/components/ui";
 import { router, useLocalSearchParams } from "expo-router";
 import { scale } from "react-native-size-matters";
-import { filterReducer } from "@/hooks/reducers/useFilter";
+import { filterReducer, initialFilter } from "@/hooks/reducers/useFilter";
 import {
   FilterRadius,
   FilterSex,
@@ -25,7 +25,10 @@ export default function Filters() {
   const { stateFilter } = useLocalSearchParams<{
     stateFilter: string;
   }>();
-  const [state, dispatch] = useReducer(filterReducer, JSON.parse(stateFilter));
+  const [state, dispatch] = useReducer(
+    filterReducer,
+    stateFilter ? JSON.parse(stateFilter) : initialFilter,
+  );
   const [search, setSearch] = useState("no");
   const firstLoad = useRef(true);
   const [toast, setToast] = useState(false);

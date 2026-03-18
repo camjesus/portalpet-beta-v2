@@ -4,6 +4,10 @@ import {
   saveAdoptionProfileDoc,
   updateAdoptionProfileDoc,
   getAdoptionProfileByUser,
+  getAdoptionRequestByPetAndUser,
+  saveAdoptionRequestDoc,
+  updateAdoptionRequestDoc,
+  getAdoptionRequestByPetId
 } from "../repository/AdoptionRepository";
 
 export function validateAdoptionProfile(profile: Partial<AdoptionProfile>): Validation | null {
@@ -29,4 +33,38 @@ export async function saveAdoptionProfile(profile: AdoptionProfile) {
 
 export async function getAdoptionProfile(userId: string) {
   return await getAdoptionProfileByUser(userId);
+}
+
+export async function sendAdoptionRequest(
+  userId: string,
+  petId: string,
+  rescuerId: string,
+): Promise<"sent" | "already_sent"> {
+  const existing = await getAdoptionRequestByPetAndUser(petId, userId);
+  if (existing && existing.status === "pending") return "already_sent";
+
+  const profile = await getAdoptionProfileByUser(userId);
+  if (!profile) throw new Error("No profile");
+
+  await saveAdoptionRequestDoc({
+    userId,
+    petId,
+    rescuerId,
+    adoptionProfileId: profile.id,
+    status: "pending",
+    createdAt: new Date(),
+  });
+
+  return "sent";
+}
+
+export async function getAdoptionRequestByPet(petId: string) {
+  return await getAdoptionRequestByPetId(petId);
+}
+
+export async function updateAdoptionRequestStatus(
+  docId: string,
+  status: "accepted" | "rejected"
+) {
+  return await updateAdoptionRequestDoc(docId, { status });
 }
