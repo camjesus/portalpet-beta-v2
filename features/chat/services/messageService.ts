@@ -6,7 +6,7 @@ import {
 import { mapMessageFromFirestore } from "../mappers/messageMapper";
 import { ChatId, Message, MessageId, User } from "@/models";
 import { addSystemMessage } from "../utils/messageUtils";
-import { addChatAsync } from "../repository/chatRepository";
+import { addChatAsync, markChatAsUnread } from "../repository/chatRepository";
 import { Timestamp } from "firebase/firestore";
 
 export const sendMessage = async (
@@ -31,7 +31,9 @@ export const sendMessage = async (
   };
 
   const doc = await createMessage(message);
-
+ const isRescuer = user?.id === chat.chat.rescuer.id;
+  await markChatAsUnread(chat.id, !isRescuer);
+  
   return {
     chat,
     lastMessage: mapMessageFromFirestore(doc.id, message),

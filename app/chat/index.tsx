@@ -80,7 +80,12 @@ export default function Chat() {
 
     const petId = chat.chat.pet.id;
     const rescuerId = chat.chat.rescuer.id;
-    const result = await sendAdoptionRequest(user.id, petId, rescuerId);
+    const result = await sendAdoptionRequest(
+      user.id,
+      petId,
+      rescuerId,
+      chat.id,
+    );
 
     if (result === "already_sent") {
       setToastConfig(
@@ -167,7 +172,11 @@ export default function Chat() {
 
   const handleAccept = async () => {
     if (!adoptionRequestId || !chat) return;
-    await updateAdoptionRequestStatus(adoptionRequestId, "accepted");
+    await updateAdoptionRequestStatus(
+      adoptionRequestId,
+      "accepted",
+      chat.id ?? "",
+    );
     await sendAdoptionAcceptedMessage(chat, user);
     setShowRequestModal(false);
     setHasPendingRequest(false);
@@ -175,7 +184,11 @@ export default function Chat() {
 
   const handleReject = async () => {
     if (!adoptionRequestId || !chat) return;
-    await updateAdoptionRequestStatus(adoptionRequestId, "rejected");
+    await updateAdoptionRequestStatus(
+      adoptionRequestId,
+      "rejected",
+      chat.id ?? "",
+    );
     await sendAdoptionRejectedMessage(chat, user);
     setShowRequestModal(false);
     setHasPendingRequest(false);

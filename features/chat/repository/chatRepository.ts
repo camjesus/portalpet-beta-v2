@@ -9,6 +9,7 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 
 import { Chat, ChatId } from "@/models";
@@ -51,3 +52,20 @@ export const getChatDocAsync = async (id: string) => {
 
   return mapChatFromFirestore(chatDoc.id, chatDoc.data());
 };
+
+export async function markChatAsRead(chatId: string, isRescuer: boolean) {
+  const field = isRescuer ? "hasUnreadRescuer" : "hasUnreadUser";
+  return await updateDoc(doc(db, "chats", chatId), { [field]: false });
+}
+
+export async function markChatAsUnread(chatId: string, isRescuer: boolean) {
+  const field = isRescuer ? "hasUnreadRescuer" : "hasUnreadUser";
+  return await updateDoc(doc(db, "chats", chatId), { [field]: true });
+}
+
+export async function updateChatAdoptionStatus(
+  chatId: string,
+  status: "none" | "pending" | "accepted" | "rejected"
+) {
+  return await updateDoc(doc(db, "chats", chatId), { adoptionStatus: status });
+}

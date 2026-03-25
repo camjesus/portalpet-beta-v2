@@ -35,13 +35,16 @@ export async function getAdoptionProfile(userId: string) {
   return await getAdoptionProfileByUser(userId);
 }
 
+import { updateChatAdoptionStatus } from "@/features/chat/repository/chatRepository";
+
 export async function sendAdoptionRequest(
   userId: string,
   petId: string,
   rescuerId: string,
+  chatId: string,
 ): Promise<"sent" | "already_sent"> {
   const existing = await getAdoptionRequestByPetAndUser(petId, userId);
-  if (existing && existing.status === "pending") return "already_sent";
+  if (existing) return "already_sent";
 
   const profile = await getAdoptionProfileByUser(userId);
   if (!profile) throw new Error("No profile");
@@ -55,6 +58,8 @@ export async function sendAdoptionRequest(
     createdAt: new Date(),
   });
 
+  await updateChatAdoptionStatus(chatId, "pending");
+
   return "sent";
 }
 
@@ -64,7 +69,9 @@ export async function getAdoptionRequestByPet(petId: string) {
 
 export async function updateAdoptionRequestStatus(
   docId: string,
-  status: "accepted" | "rejected"
+  status: "accepted" | "rejected",
+  chatId: string,
 ) {
-  return await updateAdoptionRequestDoc(docId, { status });
+  await updateAdoptionRequestDoc(docId, { status });
+  await updateChatAdoptionStatus(chatId, status);
 }

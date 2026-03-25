@@ -1,15 +1,27 @@
 import { PetId } from "@/models";
-import { loadPet } from "@/services/utils/usePet";
+import { loadAction, loadPet } from "@/services/utils/usePet";
 import { router } from "expo-router";
 import { Pressable, View, Image, Text, StyleSheet } from "react-native";
 import { IconSymbol } from "../ui";
 import { scale } from "react-native-size-matters";
-import { useState } from "react";
+import { toggleLike, isLiked } from "@/services/storage/likesStorage";
+import { useEffect, useState } from "react";
 
 export function PetCard({ item }: { item: PetId }) {
   const { pet } = item;
   const { name } = loadPet(pet);
   const [liked, setLiked] = useState(false);
+  const actionData = loadAction(pet.action);
+  const actionColor = Array.isArray(actionData) ? actionData[1] : "#ffb13d";
+
+  useEffect(() => {
+    isLiked(item.id).then(setLiked);
+  }, [item.id]);
+
+  const handleLike = async () => {
+    const newLiked = await toggleLike(item.id);
+    setLiked(newLiked);
+  };
 
   return (
     <Pressable
@@ -24,11 +36,15 @@ export function PetCard({ item }: { item: PetId }) {
           },
         })
       }>
-      <View style={styles.card}>
+      <View style={[styles.card, { borderLeftColor: actionColor }]}>
         <Image source={{ uri: pet.image }} style={styles.image} />
         <View style={styles.viewDesc}>
           <View style={styles.viewRow}>
-            <IconSymbol name="paw" size={22} color="#ffb13d" />
+            <IconSymbol
+              name={pet.type === "DOG" ? "dog" : "cat"}
+              size={22}
+              color="#ffb13d"
+            />
             <Text style={styles.textName}>{name}</Text>
           </View>
           <View style={styles.viewRow}>
@@ -63,7 +79,7 @@ export function PetCard({ item }: { item: PetId }) {
           style={styles.likeButton}
           onPress={(e) => {
             e.stopPropagation();
-            setLiked(!liked);
+            handleLike();
           }}>
           <IconSymbol
             name={liked ? "heart" : "heart-outline"}

@@ -17,7 +17,6 @@ export default function Card({ item }: Props) {
     let data = loadPet(item.pet);
     //console.log("efect" + name, action, color);
     setData(data);
-    
   }, []);
   console.log();
   function goToPetProfile() {
@@ -75,6 +74,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginRight: scale(10),
     marginBottom: scale(15),
+    backgroundColor: "white",
   },
   image: {
     width: scale(145),
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: scale(8),
   },
   textName: {
-    color: "white",
+    color: "black",
     textAlign: "center",
     fontSize: scale(15),
     marginHorizontal: scale(10),

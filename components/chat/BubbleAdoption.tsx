@@ -12,6 +12,10 @@ const config = {
     title: "Solicitud de adopción",
     subtitle: (isMyMessage: boolean) =>
       isMyMessage ? "Enviaste una solicitud" : "Quiere adoptar tu mascota",
+    description: (isMyMessage: boolean) =>
+      isMyMessage
+        ? "Esperá a que el rescatista tome una decisión"
+        : "Revisá el perfil del solicitante en el icono de ficha",
     badgeText: "Pendiente",
     badgeColor: "#DCAD5F",
     icon: "help",
@@ -21,6 +25,10 @@ const config = {
     title: "Adopción aceptada",
     subtitle: (isMyMessage: boolean) =>
       isMyMessage ? "Aceptaste la solicitud" : "Tu solicitud fue aceptada 🎉",
+    description: (isMyMessage: boolean) =>
+      isMyMessage
+        ? "Coordiná con el adoptante para la entrega"
+        : "Coordiná con el rescatista para retirar la mascota",
     badgeText: "Aceptada",
     badgeColor: "#4CAF50",
     icon: "check",
@@ -30,6 +38,10 @@ const config = {
     title: "Adopción rechazada",
     subtitle: (isMyMessage: boolean) =>
       isMyMessage ? "Rechazaste la solicitud" : "Tu solicitud fue rechazada",
+    description: (isMyMessage: boolean) =>
+      isMyMessage
+        ? "Podés seguir buscando un hogar para tu mascota"
+        : "Podés seguir buscando otras mascotas",
     badgeText: "Rechazada",
     badgeColor: "#E57373",
     icon: "close",
@@ -45,6 +57,7 @@ export default function BubbleAdoption({ isMyMessage, type }: Props) {
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{c.title}</Text>
         <Text style={styles.subtitle}>{c.subtitle(isMyMessage)}</Text>
+        <Text style={styles.subtitle}>{c.description(isMyMessage)}</Text>
       </View>
       <View style={[styles.badge, { backgroundColor: c.badgeColor }]}>
         <Text style={styles.badgeText}>{c.badgeText}</Text>

@@ -8,6 +8,7 @@ type Props = {
   childrenLeft?: React.ReactNode;
   onPressRight?: () => void;
   onPressLeft?: () => void;
+  small?: boolean;
 };
 
 export default function HeaderCustom({
@@ -16,13 +17,16 @@ export default function HeaderCustom({
   childrenLeft,
   onPressRight,
   onPressLeft,
+  small,
 }: Props) {
   return (
     <View style={styles.container}>
       <Pressable style={styles.buttonLeft} onPress={onPressLeft}>
         {childrenLeft}
       </Pressable>
-      {title !== undefined && <Text style={styles.titleS}>{title}</Text>}
+      {title !== undefined && (
+        <Text style={[styles.titleS, small && styles.titleSmall]}>{title}</Text>
+      )}
       <Pressable style={styles.buttonRight} onPress={onPressRight}>
         {childrenRight}
       </Pressable>
@@ -66,5 +70,9 @@ const styles = StyleSheet.create({
     width: scale(30),
     marginEnd: scale(30),
     marginTop: scale(20),
+  },
+  titleSmall: {
+    fontSize: scale(18),
+    marginTop: scale(10),
   },
 });

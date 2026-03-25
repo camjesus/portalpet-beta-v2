@@ -20,4 +20,7 @@ export type Chat = {
         name: string;
     };
     required: boolean;
+    hasUnreadRescuer: boolean;
+    hasUnreadUser: boolean; 
+    adoptionStatus: "none" | "pending" | "accepted" | "rejected";
 };

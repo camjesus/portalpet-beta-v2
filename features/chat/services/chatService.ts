@@ -116,6 +116,9 @@ export async function resolveChat(
         action: pet.action,
       },
       required: false,
+      hasUnreadRescuer: false,
+      hasUnreadUser: false,
+      adoptionStatus: "none"
     },
   };
 

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { TitleCustom, IconSymbol } from "@/components/ui";
 import { LABEL_SIZE, SIZE } from "@/constants/StaticData";
 import { Size } from "@/models";
-import React, { useState } from "react";
+import React from "react";
 import { scale } from "react-native-size-matters";
 import { loadLabels } from "@/services/utils/usePet";
 
@@ -11,90 +11,68 @@ type Props = {
   changeValue: (opt: any, field: string) => void;
 };
 
+const SIZES = [
+  { key: Size.SMALL, iconSize: 20 },
+  { key: Size.MEDIUM, iconSize: 23 },
+  { key: Size.BIG, iconSize: 26 },
+];
+
 export default function FilterSize({ size, changeValue }: Props) {
-  const opt0 = size.indexOf(Size.SMALL) > -1;
-  const opt1 = size.indexOf(Size.MEDIUM) > -1;
-  const opt2 = size.indexOf(Size.BIG) > -1;
-  const [labels, setLabel] = useState(loadLabels(size));
+  const labels = loadLabels(size);
 
   function changeSize(opt: number) {
-    var exist = size.indexOf(SIZE[opt]) > -1;
-    if (exist && size.length > 1) {
-      size = size.filter((s) => s !== SIZE[opt]);
-      setLabel(labels.filter((s) => s !== LABEL_SIZE[opt]));
-    } else if (!exist) {
-      size.push(SIZE[opt]);
+    let newSize = [...size];
+    const isSelected = newSize.includes(SIZE[opt]);
+
+    if (isSelected && newSize.length > 1) {
+      newSize = newSize.filter((s) => s !== SIZE[opt]);
+    } else if (!isSelected) {
+      newSize.push(SIZE[opt]);
     }
-    setLabel(loadLabels(size));
-    changeValue(size, "size");
+
+    changeValue(newSize, "size");
   }
 
   return (
     <TitleCustom title="Tamaño">
-      <View style={[styles.containerButton]}>
-        <View style={styles.box}>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#DCAD5F" : "white",
-              },
-              styles.button,
-              opt0 ? styles.active : styles.desactive,
-            ]}
-            onPress={() => changeSize(0)}>
-            <IconSymbol
-              key={"opt0"}
-              size={20}
-              name="paw"
-              color={opt0 ? "#4B4B4B" : "#A5A5A5"}
-            />
-          </Pressable>
-        </View>
-        <View style={styles.box}>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#DCAD5F" : "white",
-              },
-              styles.button,
-              opt1 ? styles.active : styles.desactive,
-            ]}
-            onPress={() => changeSize(1)}>
-            <IconSymbol
-              key={"opt1"}
-              size={23}
-              name="paw"
-              color={opt1 ? "#4B4B4B" : "#A5A5A5"}
-            />
-          </Pressable>
-        </View>
-        <View style={styles.box}>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#DCAD5F" : "white",
-              },
-              styles.button,
-              opt2 ? styles.active : styles.desactive,
-            ]}
-            onPress={() => changeSize(2)}>
-            <IconSymbol
-              key={"opt2"}
-              size={26}
-              name="paw"
-              color={opt2 ? "#4B4B4B" : "#A5A5A5"}
-            />
-          </Pressable>
-        </View>
+      <View style={styles.containerButton}>
+        {SIZES.map((s, index) => {
+          const isActive = size.includes(s.key);
+          return (
+            <View key={s.key} style={styles.box}>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.button,
+                  isActive ? styles.active : styles.desactive,
+                  pressed && { backgroundColor: "#DCAD5F" },
+                ]}
+                onPress={() => changeSize(index)}>
+                <IconSymbol
+                  size={s.iconSize}
+                  name="paw"
+                  color={isActive ? "#4B4B4B" : "#A5A5A5"}
+                />
+              </Pressable>
+            </View>
+          );
+        })}
       </View>
       <View style={{ height: scale(40), width: scale(200) }}>
-        {labels && <Text style={styles.text}>{labels.join(" -")}</Text>}
+        {labels.length > 0 && (
+          <Text style={[styles.text, labels.length === 0 && styles.textEmpty]}>
+            {labels.length > 0 ? labels.join(" - ") : "Seleccioná un tamaño"}
+          </Text>
+        )}
       </View>
     </TitleCustom>
   );
 }
 
 const styles = StyleSheet.create({
+  textEmpty: {
+    backgroundColor: "transparent",
+    color: "#A5A5A5",
+  },
   text: {
     textAlign: "center",
     paddingHorizontal: scale(10),
@@ -109,7 +87,6 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: "row",
     justifyContent: "center",
-    borderColor: "#ffb13d",
     borderRadius: 5,
   },
   button: {
@@ -127,15 +104,6 @@ const styles = StyleSheet.create({
   },
   desactive: {
     backgroundColor: "white",
-  },
-  label: {
-    marginHorizontal: scale(5),
-    textAlign: "center",
-    color: "#A5A5A5",
-    fontWeight: "bold",
-  },
-  activeLabel: {
-    color: "#4B4B4B",
   },
   box: {
     borderColor: "#ffb13d",
