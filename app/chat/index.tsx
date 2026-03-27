@@ -32,6 +32,7 @@ import {
 } from "@/features/adoption/services/adoptionService";
 import { AdoptionProfile } from "@/models";
 import { FIELD_VALIDATION } from "@/constants/Validations";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Chat() {
   const { chatId, petString } = useLocalSearchParams<{
@@ -60,6 +61,8 @@ export default function Chat() {
   );
   const [toast, setToast] = useState(false);
   const [toastConfig, setToastConfig] = useState<Validation>();
+  const unsubscribeRef = useRef<(() => void) | null>(null);
+  const setActiveChatId = useAuthStore((s) => s.setActiveChatId);
 
   const isMine = chat?.chat.rescuer?.id === user?.id;
   useFocusEffect(
@@ -108,19 +111,33 @@ export default function Chat() {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, []);
 
-  useEffect(() => {
-    if (chat?.id) {
-      const unsubscribe = listenMessages(chat.id, (msgs) => {
-        setMessages(msgs);
-        requestAnimationFrame(() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
-        });
-      });
+  useFocusEffect(
+    useCallback(() => {
+      if (chat?.id) setActiveChatId(chat.id);
 
       return () => {
-        unsubscribe();
+        setActiveChatId(null);
       };
-    }
+    }, [chat?.id]),
+  );
+
+  useEffect(() => {
+    if (!chat?.id) return;
+
+    unsubscribeRef.current?.();
+    unsubscribeRef.current = null;
+
+    unsubscribeRef.current = listenMessages(chat.id, (msgs) => {
+      setMessages(msgs);
+      requestAnimationFrame(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      });
+    });
+
+    return () => {
+      unsubscribeRef.current?.();
+      unsubscribeRef.current = null;
+    };
   }, [chat?.id]);
 
   function goToBack() {
@@ -206,11 +223,19 @@ export default function Chat() {
         childrenRight={
           isMine && hasPendingRequest ? (
             <Pressable onPress={handleOpenRequest}>
-              <IconSymbol size={30} name="clipboard" color="white" />
+              <IconSymbol
+                size={30}
+                name="clipboard-clock-outline"
+                color="white"
+              />
             </Pressable>
           ) : isNotMine ? (
             <Pressable onPress={() => setShowModal(true)}>
-              <IconSymbol size={30} name="paw" color="white" />
+              <IconSymbol
+                size={30}
+                name="clipboard-arrow-up-outline"
+                color="white"
+              />
             </Pressable>
           ) : undefined
         }
@@ -219,12 +244,7 @@ export default function Chat() {
         style={{ flex: 1, backgroundColor: "transparent" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
-        <ScrollView
-          ref={scrollViewRef}
-          onContentSizeChange={() =>
-            scrollViewRef.current?.scrollToEnd({ animated: true })
-          }
-          style={styles.flatList}>
+        <ScrollView ref={scrollViewRef} style={styles.flatList}>
           {messages.map((item) => (
             <Bubble
               key={item.id}

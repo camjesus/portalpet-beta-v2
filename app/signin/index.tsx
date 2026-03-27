@@ -7,7 +7,6 @@ import { router } from "expo-router";
 import { scale } from "react-native-size-matters";
 import { getGoogleUserInfo } from "@/services/dataBase/useGoogleSignin";
 import { logo, googleSignin } from "@/assets/images";
-import ViewCustom from "@/components/ui/ViewCustom";
 import { useAuthStore } from "@/store/authStore";
 import {
   GOOGLE_ANDROID_ID,
@@ -15,6 +14,8 @@ import {
   GOOGLE_EXPO_ID,
   GOOGLE_ANDROID_FISICO_ID,
 } from "@/secret-google";
+import { GoogleButton } from "@/components/ui";
+
 WebBrowser.maybeCompleteAuthSession();
 
 const redirectUri = AuthSession.makeRedirectUri({
@@ -22,8 +23,6 @@ const redirectUri = AuthSession.makeRedirectUri({
 });
 
 export default function Signin() {
-  //const GOOGLE_ANDROID_ID = process.env.GOOGLE_ANDROID_ID!;
-  //const GOOGLE_WEB_ID = process.env.GOOGLE_WEB_ID!;
   const [loading, setLoading] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -58,53 +57,100 @@ export default function Signin() {
   };
 
   return (
-    <ViewCustom>
+    <View style={styles.container}>
+      <View style={styles.halo} />
+
       <View style={styles.back}>
-        <Image style={styles.logoImage} source={logo} />
-        <Text style={styles.text}>Bienvenido a </Text>
-        <Text style={styles.title}>Portal pet</Text>
+        <View style={styles.logoContainer}>
+          <Image style={styles.logoImage} source={logo} />
+        </View>
+
+        <Text style={styles.subtitle}>Bienvenido a</Text>
+        <Text style={styles.title}>Portal Pet</Text>
       </View>
 
-      <Pressable
-        style={styles.press}
-        onPress={handleLogin}
-        disabled={!request || loading}>
-        <Image style={styles.image} source={googleSignin} />
-      </Pressable>
-    </ViewCustom>
+      <GoogleButton onPress={handleLogin} />
+
+      <Text style={styles.terms}>Al continuar aceptás los términos de uso</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  image: {
-    width: scale(225),
-    height: scale(47),
-    margin: 10,
-  },
-  logoImage: {
-    width: scale(70),
-    height: scale(70),
-    margin: 15,
-  },
-  press: {
-    margin: 10,
-    justifyContent: "center",
+  container: {
+    flex: 1,
+    backgroundColor: "#151718",
     alignItems: "center",
+    justifyContent: "center",
+  },
+  halo: {
+    position: "absolute",
+    top: "25%",
+    alignSelf: "center",
+    width: scale(200),
+    height: scale(200),
+    borderRadius: scale(100),
+    backgroundColor: "rgba(255, 177, 61, 0.10)",
   },
   back: {
-    margin: 10,
-    justifyContent: "center",
     alignItems: "center",
-    marginTop: scale(120),
-    marginBottom: scale(40),
+    marginBottom: scale(52),
+  },
+  logoContainer: {
+    width: scale(90),
+    height: scale(90),
+    borderRadius: scale(22),
+    backgroundColor: "rgba(255, 177, 61, 0.2)",
+    borderWidth: 1.5,
+    borderColor: "rgba(255, 177, 61, 0.42)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: scale(24),
+    shadowColor: "#ffb13d",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+  },
+  logoImage: {
+    width: scale(58),
+    height: scale(58),
+    borderRadius: scale(12),
+  },
+  subtitle: {
+    color: "rgba(255, 255, 255, 0.45)",
+    fontSize: scale(12),
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    marginBottom: scale(4),
   },
   title: {
     color: "#ffb13d",
-    fontSize: scale(25),
-    fontWeight: "bold",
+    fontSize: scale(30),
+    fontWeight: "700",
+    letterSpacing: -0.5,
   },
-  text: {
-    color: "white",
-    fontSize: scale(20),
+  tagline: {
+    color: "rgba(255, 255, 255, 0.20)",
+    fontSize: scale(12),
+    marginTop: scale(8),
+    letterSpacing: 0.5,
+  },
+  press: {
+    borderRadius: scale(12),
+    overflow: "hidden",
+  },
+  pressActive: {
+    opacity: 0.8,
+    transform: [{ scale: 0.97 }],
+  },
+  image: {
+    width: scale(220),
+    height: scale(46),
+  },
+  terms: {
+    color: "rgba(255, 255, 255, 0.47)",
+    fontSize: scale(10),
+    marginTop: scale(16),
+    letterSpacing: 0.3,
   },
 });

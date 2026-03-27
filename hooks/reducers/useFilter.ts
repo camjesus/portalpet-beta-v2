@@ -15,16 +15,16 @@ export interface State {
 
 export const initialFilter: State = {
   filter: {
-    size: [],
-    type: [],
-    sex: [],
+  size: ["SMALL", "MEDIUM", "BIG"],
+    type: ["DOG", "CAT"],
+    sex: ["FEMALE", "MALE"],
     from: {
       age: 1,
       ageType: AgeType.MONTH,
     },
     until: {
       age: 12,
-      ageType: AgeType.MONTH,
+      ageType: AgeType.YEAR,
     },
     action: 0,
     latitude: 0,

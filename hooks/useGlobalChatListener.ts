@@ -23,6 +23,7 @@ export function useGlobalChatListener({
   const { showNotification } = useNotification();
   const seenMessageIds = useRef<Set<string>>(new Set());
   const initializedChats = useRef<Set<string>>(new Set());
+  const activeChatIdRef = useRef(activeChatId);
 
   useEffect(() => {
     if (!userId) return;
@@ -71,7 +72,7 @@ export function useGlobalChatListener({
                 if (
                   seenMessageIds.current.has(messageId) ||
                   message.sender?.id === userId ||
-                  chatId === activeChatId
+                  chatId === activeChatIdRef.current
                 ) {
                   seenMessageIds.current.add(messageId);
                   return;
@@ -106,7 +107,11 @@ export function useGlobalChatListener({
       seenMessageIds.current.clear();
       initializedChats.current.clear();
     };
-  }, [userId, activeChatId]);
+  }, [userId]);
+
+    useEffect(() => {
+    activeChatIdRef.current = activeChatId;
+  }, [activeChatId]);
 }
 
 function formatTime(date: Date): string {

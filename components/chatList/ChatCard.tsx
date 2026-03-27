@@ -55,7 +55,9 @@ export default function Card({ item, userId }: Props) {
         <View style={styles.viewDesc}>
           <View style={styles.viewRow}>
             <IconSymbol name="paw" size={20} color="#ffb13d" />
-            <Text style={styles.textName}>{item?.chat.pet?.name}</Text>
+            <Text style={styles.textName}>
+              {item?.chat.pet?.name === "" ? "No tiene" : item?.chat.pet?.name}
+            </Text>
           </View>
           <View style={styles.viewRow}>
             <IconSymbol name="account" size={20} color="#A5A5A5" />

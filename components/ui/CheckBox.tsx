@@ -17,8 +17,7 @@ export default function CheckBox({ label, active, onPress, children }: Props) {
           borderColor: "#ffb13d",
           borderWidth: 3,
           borderRadius: 50,
-        }}
-      >
+        }}>
         <Pressable
           style={({ pressed }) => [
             {
@@ -27,8 +26,7 @@ export default function CheckBox({ label, active, onPress, children }: Props) {
             styles.box,
             active && styles.active,
           ]}
-          onPress={() => onPress(!active)}
-        >
+          onPress={() => onPress(!active)}>
           {children}
         </Pressable>
       </View>

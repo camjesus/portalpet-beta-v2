@@ -20,9 +20,9 @@ import { getAction, getFilters } from "@/features/filter/services/filterStorageS
 import { haversineKm } from "@/services/utils/geo";
 
 export const savePet = async (pet: Pet) => {
-  //const image = await resolvePetImage(pet.image);
+  const image = await resolvePetImage(pet.image);
 
-  //if (image) pet.image = image;
+  if (image) pet.image = image;
 
   await createPetDoc(pet);
 };

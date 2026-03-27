@@ -13,3 +13,4 @@ export { default as ViewCustom } from "./ViewCustom";
 export { default as InputOption } from "./InputOption";
 export { default as HeaderCustom } from "./HeaderCustom";
 export { default as ToggleButton } from "./ToggleButton";
+export { default as GoogleButton } from "./GoogleButton";
