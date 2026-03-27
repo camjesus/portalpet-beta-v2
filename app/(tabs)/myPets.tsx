@@ -1,60 +1,36 @@
-import { StyleSheet, View, Text } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { Link } from "expo-router";
 import { ViewCustom, HeaderCustom, Button, IconSymbol } from "@/components/ui";
-import { findMyPets } from "@/features/pet/services/petService";
-import { useEffect, useState } from "react";
-import { PetId } from "@/models";
-import Card from "@/components/myPets/Card";
 import { FlatList } from "react-native-gesture-handler";
 import { scale } from "react-native-size-matters";
+import Card from "@/components/myPets/Card";
+import { useMyPets } from "@/features/pet/hooks/useMyPets";
+import { EmptyState } from "@/components/myPets/EmptyState";
 
 export default function MyPets() {
-  const [myPets, setMyPets] = useState<PetId[]>([]);
-  const { search } = useLocalSearchParams<{
-    search: string;
-  }>();
-  const [goTosearch, setSearch] = useState<boolean>(
-    search === "yes" || search === undefined ? true : false,
-  );
-
-  const getData = async (serach: boolean) => {
-    await findMyPets(serach).then((res) => {
-      setMyPets(res);
-      setSearch(false);
-    });
-  };
-
-  useEffect(() => {
-    getData(goTosearch);
-  }, []);
+  const { myPets } = useMyPets();
 
   return (
     <View style={{ height: "100%" }}>
       <ViewCustom>
         <HeaderCustom title="Publicaciones" />
-        {myPets && (
+        {myPets.length > 0 ? (
           <FlatList
             data={myPets}
-            renderItem={({ item }) => <Card key={item.id} item={item} />}
+            renderItem={({ item }) => <Card item={item} />}
             keyExtractor={(item) => item.id}
-            showsHorizontalScrollIndicator={true}
             numColumns={2}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.flatList}
           />
-        )}
-        {!myPets && (
-          <View>
-            <Text style={styles.message}>Subite unas mascoteiras!</Text>
-          </View>
+        ) : (
+          <EmptyState />
         )}
       </ViewCustom>
 
       <View style={styles.float}>
         <Button circle={true}>
-          <Link
-            href={{
-              pathname: "/managementPet",
-            }}>
+          <Link href={{ pathname: "/managementPet" }}>
             <IconSymbol size={30} name="add" color="black" />
           </Link>
         </Button>
@@ -76,11 +52,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     position: "absolute",
-  },
-  message: {
-    marginTop: 400,
-    textAlign: "center",
-    color: "white",
-    fontSize: 26,
   },
 });

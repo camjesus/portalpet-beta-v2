@@ -1,35 +1,15 @@
-import { FlatList, StyleSheet, View } from "react-native";
-import { HeaderCustom, Loading, ViewCustom } from "@/components/ui";
-import { useCallback, useEffect, useState } from "react";
-import { ChatId, User } from "@/models";
+import { FlatList, StyleSheet } from "react-native";
+import { HeaderCustom, ViewCustom } from "@/components/ui";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/chatList/ChatCard";
-import { getChatsAsync } from "@/features/chat/services/chatService";
+import { useChatList } from "@/features/chat/hooks/useChatList";
 
 export default function ChatList() {
-  const [chats, setChats] = useState<ChatId[]>([]);
-  const [user, setUser] = useState<User | null>(null);
-  const [load, setLoad] = useState(false);
-
-  useEffect(() => {
-    let unsub: (() => void) | undefined;
-
-    getChatsAsync((chats) => {
-      setChats(chats); // se llama cada vez que hay cambios
-    }).then((res) => {
-      setUser(res?.user);
-      unsub = res?.unsub;
-    });
-
-    return () => unsub?.();
-  }, []);
+  const { chats, user } = useChatList();
 
   return (
     <ViewCustom>
       <HeaderCustom title="Chats" />
-
-      {load && <Loading />}
-
       <FlatList
         data={chats}
         renderItem={({ item }) => (

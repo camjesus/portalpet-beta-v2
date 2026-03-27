@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
 import { getUserAsync } from "@/services/storage/userStorage";
 import { User } from "@/models";
-import Signin from "../signin";
 import { router } from "expo-router";
 
-export default function Search() {
-  const [user, setUser] = useState<User | null>(null);
-
-  const getUser = async () => {
-    await getUserAsync().then((user) => {
-      setUser(user);
-    });
-  };
+export default function Index() {
+  const [user, setUser] = useState<User | null | undefined>(undefined);
 
   useEffect(() => {
-    console.log("Search user ");
-    console.log(user);
+    getUserAsync().then((storedUser) => {
+      setUser(storedUser ?? null);
+    });
+  }, []);
 
-    if (user === null) {
-      getUser();
+  useEffect(() => {
+    if (user === undefined) return; // todavía cargando
+
+    if (user) {
+      router.replace("/(tabs)/home");
     } else {
-      router.push("/(tabs)/home");
+      router.replace("/signin");
     }
   }, [user]);
 
-  return <>{!user && <Signin />}</>;
+  return null;
 }
