@@ -41,3 +41,4 @@ andoid/app/google-sevices.json
 *.tsbuildinfo
 
 app-example
+.claude/worktrees/

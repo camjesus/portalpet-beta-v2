@@ -1,82 +1,25 @@
-import { useEffect, useReducer, useRef, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
-import {
-  ViewCustom,
-  Toast,
-  InputAge,
-  Button,
-  HeaderCustom,
-  IconSymbol,
-} from "@/components/ui";
+import { useRef, useState } from "react";
+import { Pressable } from "react-native";
+import { ViewCustom, Toast, HeaderCustom, IconSymbol } from "@/components/ui";
 import { router, useLocalSearchParams } from "expo-router";
-import { scale } from "react-native-size-matters";
-import { filterReducer, initialFilter } from "@/hooks/reducers/useFilter";
-import {
-  FilterRadius,
-  FilterSex,
-  FilterSize,
-  FilterType,
-} from "@/components/filter";
-import { filterActions } from "@/services/filter/filterActions";
-import { Validation } from "@/models";
-import { getCurrentLocation } from "@/services/utils/location";
+import { useFilters } from "@/features/filter/hooks/useFilters";
+import { useToast } from "@/hooks/useToast";
+import { FilterForm } from "@/components/filter/FilterForm";
 
 export default function Filters() {
-  const { stateFilter } = useLocalSearchParams<{
-    stateFilter: string;
-  }>();
-  const [state, dispatch] = useReducer(
-    filterReducer,
-    stateFilter ? JSON.parse(stateFilter) : initialFilter,
-  );
-  const [search, setSearch] = useState("no");
+  const { stateFilter } = useLocalSearchParams<{ stateFilter: string }>();
+  const { state, changeValue, changeFrom, changeUntil, saveAsync } =
+    useFilters(stateFilter);
+  const { visible, config, showToast, setVisible } = useToast();
   const firstLoad = useRef(true);
-  const [toast, setToast] = useState(false);
+  const [search] = useState("no");
 
-  const [toastConfig, setToastConfig] = useState<Validation>();
-
-  useEffect(() => {
-    console.log(firstLoad.current);
-    if (!firstLoad) {
-      setSearch("yes");
-    }
-    firstLoad.current = false;
-  }, [state]);
-
-  useEffect(() => {
-    (async () => {
-      const loc = await getCurrentLocation();
-      if (loc) {
-        filterActions.changeFilter(dispatch, "latitude", loc.lat);
-        filterActions.changeFilter(dispatch, "longitude", loc.lng);
-      }
-    })();
-  }, []);
-
-  function changeValue(value: any, field: string) {
-    filterActions.changeFilter(dispatch, field, value);
-  }
-
-  function changeFrom(value: any, field: string) {
-    filterActions.changeFrom(dispatch, field, value);
-  }
-
-  function changeUntil(value: any, field: string) {
-    filterActions.changeUntil(dispatch, field, value);
-  }
-
-  async function saveAsync() {
-    var error = filterActions.validateFilter(state.filter);
-    if (!error) {
-      await filterActions.saveAsync(state.filter).then(() => {
-        router.push({
-          pathname: "/(tabs)/home",
-          params: { search: search },
-        });
-      });
+  async function handleSave() {
+    const { error } = await saveAsync();
+    if (error) {
+      showToast(error);
     } else {
-      setToastConfig(error);
-      setToast(true);
+      router.push({ pathname: "/(tabs)/home", params: { search } });
     }
   }
 
@@ -85,76 +28,19 @@ export default function Filters() {
       <HeaderCustom
         title="Filtros"
         childrenLeft={
-          <Pressable onPress={saveAsync}>
+          <Pressable onPress={handleSave}>
             <IconSymbol size={30} name="arrow-back" color="white" />
           </Pressable>
         }
       />
-      <View style={styles.container}>
-        <View style={[styles.row, { gap: scale(50) }]}>
-          <FilterType type={state.filter.type} changeValue={changeValue} />
-          <FilterSex sex={state.filter.sex} changeValue={changeValue} />
-        </View>
-        <View style={[styles.row, { gap: scale(5) }]}>
-          <FilterSize size={state.filter.size} changeValue={changeValue} />
-        </View>
-        <View style={[styles.row, { gap: scale(5) }]}>
-          <InputAge
-            title="Desde"
-            age={state.filter.from.age ? state.filter.from.age.toString() : ""}
-            type={state.filter.from.ageType}
-            changeAge={changeFrom}
-            changeAgeType={changeFrom}
-          />
-          <InputAge
-            title="Hasta"
-            age={
-              state.filter.until.age ? state.filter.until.age.toString() : ""
-            }
-            type={state.filter.until.ageType}
-            changeAge={changeUntil}
-            changeAgeType={changeUntil}
-          />
-        </View>
-        <View style={styles.row}>
-          <FilterRadius
-            radius={state.filter.radiusKm ?? 10}
-            changeValue={changeValue}
-          />
-        </View>
-        <View style={styles.submit}>
-          <Button label="Guardar" onPress={saveAsync} />
-        </View>
-
-        {toast && toastConfig && (
-          <Toast validation={toastConfig} setToast={setToast} />
-        )}
-      </View>
+      <FilterForm
+        filter={state.filter}
+        changeValue={changeValue}
+        changeFrom={changeFrom}
+        changeUntil={changeUntil}
+        onSave={handleSave}
+      />
+      {visible && config && <Toast validation={config} setToast={setVisible} />}
     </ViewCustom>
   );
 }
-
-const styles = StyleSheet.create({
-  submit: {
-    marginBottom: scale(16),
-  },
-  titleContainer: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  row: {
-    flexDirection: "row",
-    marginHorizontal: "auto",
-    marginTop: scale(16),
-  },
-  container: {
-    flex: 1,
-    marginTop: scale(16),
-    gap: scale(20),
-    alignItems: "center",
-  },
-  age: {
-    marginHorizontal: scale(20),
-    marginTop: scale(16),
-  },
-});

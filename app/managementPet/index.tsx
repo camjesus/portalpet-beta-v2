@@ -13,18 +13,17 @@ export default function ManagementPet() {
   useEffect(() => {
     if (stringItem) {
       router.push({
-        pathname: "managementPet/loadData",
+        pathname: "/managementPet/loadData",
         params: {
           stringItem: JSON.stringify(state),
           image: encodeURI(state.statePet.pet.image),
         },
       });
-    } else {
+    } else
       router.push({
-        pathname: "managementPet/loadImage",
+        pathname: "/managementPet/loadImage",
         params: { stringItem: JSON.stringify(state) },
       });
-    }
   }, []);
 
   return null;

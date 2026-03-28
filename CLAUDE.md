@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Portal Pet is a React Native mobile application built with Expo SDK 54 for pet adoption, finding lost pets, and reporting found pets. The app connects pet rescuers with potential adopters through a swipe-based interface.
+Portal Pet is a React Native mobile application built with Expo SDK 54 for pet adoption, finding lost pets, and reporting found pets. The app connects pet rescuers with potential adopters.
 
 ## Development Commands
 
@@ -28,80 +28,102 @@ eas build --profile preview --platform android
 eas build --profile production
 ```
 
+No testing framework is configured. The `components/__tests__/` directory exists but is empty.
+
 ## Architecture Overview
 
 ### Routing Structure
-- Uses Expo Router (v6) with file-based routing
-- Main navigation in `app/_layout.tsx` defines all top-level routes
-- Tab navigation in `app/(tabs)/_layout.tsx` with 5 main tabs: home (search), myPets, chatList, account
-- Modal-style routes: signin, managementPet, petProfile, filter, report, chat
 
-### State Management
-- **Local state**: React hooks (useState, useReducer) for component-level state
-- **Persistent storage**: AsyncStorage via `service/storeData/` for user and filter preferences
-- **Reducers**: Custom reducers in `hooks/reducers/` (useFilter, usePet) for complex state logic
+Uses Expo Router v6 with file-based routing and typed routes (`typedRoutes: true`). New Architecture is enabled (`newArchEnabled: true`).
+
+**Tab navigation** (`app/(tabs)/_layout.tsx`) — 6 tabs:
+- `home` — Pet search as a scrollable list, uses `useHome.ts` with filter reducer
+- `myPets` — User's published pets, uses `useMyPets.ts`
+- `chatList` — Messaging list, uses `useChatList.ts`
+- `saved` — Liked/saved pets, uses `useSaved.ts`
+- `account` — User profile, uses `useAccount.ts`
+- `index` — Disabled (blank, redirect tab)
+
+**Stack routes** (modal-style, defined in `app/_layout.tsx`):
+`signin`, `managementPet`, `petProfile`, `filter`, `report`, `chat`, `adoptionProfile`, `oauthredirect`
+
+`managementPet` is a multi-step nested stack: `loadData` → `loadImage` → `loadLocation`, each with its own `_layout.tsx` + `index.tsx`.
 
 ### Data Layer Architecture
 
-**Service Layer** (`service/`):
-- `service/dataBase/`: Firebase Firestore operations (usePet, useChat, useMessage, useReport, useFilter)
-- `service/storeData/`: AsyncStorage operations for local persistence (useUser, useFilter)
-- `service/utils/`: Utility functions for data manipulation
-- `service/mapping/`: Data transformation functions (e.g., Firestore documents to app models)
+**Two coexisting layers** — the codebase is mid-migration from a legacy service layer to a feature-based architecture:
 
-**Models** (`models/`):
-- TypeScript types/interfaces: Pet, User, Chat, Message, Report, Filter, Rescuer, Enums
-- Pet model includes action types: ADOPTION, WANTED, FOUND
+**Feature-based (new pattern)** — `features/<feature>/`:
+```
+repository/    ← Firestore/AsyncStorage raw operations
+services/      ← Business logic, orchestration
+mappers/       ← Firestore documents → app models
+factories/     ← Object construction helpers
+hooks/         ← React hooks wrapping services (consumed by screens)
+utils/         ← Feature-specific helpers
+```
+Features: `chat`, `pet`, `filter`, `adoption`, `location`, `account`
+
+**Legacy layer (being replaced)** — `services/`:
+- `services/dataBase/` — Old Firestore hooks (useGoogleSignin, useReport still here)
+- `services/storage/` — AsyncStorage: `userStorage.ts`, `petStorage.ts`, `filterStorage.ts`, `likesStorage.ts`
+- `services/utils/` — `geo.ts` (haversine distance), `cloudinary.ts` (image upload), `location.ts`
+- `services/mapping/useMapping.ts`
+
+When adding new data operations, follow the feature-based pattern in `features/`.
+
+### State Management
+
+- **Global store**: Zustand (`store/authStore.ts`) — user auth state and chat state
+- **Reducers**: `hooks/reducers/useFilter.ts` and `hooks/reducers/usePet.ts` for complex form state
+- **AsyncStorage**: Filters, user preferences, likes — accessed via `services/storage/`
+- **Local state**: `useState`/`useEffect` for component-level state
+
+### Models
+
+All types in `models/`, re-exported from `models/index.ts`. Key types:
+
+- `Pet` / `PetId` — `PetId = { id: string, pet: Pet }`. Pet has `action: ADOPTION | WANTED | FOUND`, `ageType: MONTH | YEAR`, `size: SMALL | MEDIUM | BIG`, `sex: FEMALE | MALE`
+- `Filter` — arrays for `size[]`, `type[]`, `sex[]`; nested `from`/`until` age ranges; `latitude`, `longitude`, `radiusKm`
+- `Chat` / `ChatId`, `Message`, `User`, `Rescuer`, `AdoptionProfile`, `AdoptionRequests`, `Report`
+- Enums centralized in `Enums.ts`
 
 ### Firebase Integration
-- Configuration in `FirebaseConfig.js`
-- Firestore collections: `pets`, `chats`, `messages`, `reports`
-- Firebase Storage for pet images (uploaded to `petImages/` path)
-- Google Sign-In via `expo-auth-session` (service/dataBase/useGoogleSignin.ts)
 
-### Key Features & Flow
+- Config in `FirebaseConfig.js`
+- Firestore collections: `pets`, `chats`, `messages`, `reports`, `adoptionProfiles`, `adoptionRequests`
+- Image upload: Cloudinary (`services/utils/cloudinary.ts`) and/or Firebase Storage (`petImages/` path)
+- Real-time listeners via Firestore `onSnapshot` in repository layer (see `features/chat/repository/`)
+- Pet queries use composite `where` clauses — Firestore composite indexes required
+- Age filtering has special YEAR vs MONTH logic (see `features/pet/services/petService.ts`)
 
-**Pet Management**:
-- Create/edit pets via `managementPet` route with form components in `app/managementPet/components/`
-- Image upload using `expo-image-picker` → Firebase Storage
-- Pet filtering by type, size, sex, age with `filter` route
-- Swipe interface for browsing pets in `components/Search/Swiper.tsx`
+### Authentication
 
-**Chat System**:
-- One-to-one messaging between users
-- Chat list in `app/(tabs)/chatList.tsx`
-- Individual chats in `app/chat/` with bubble components
-- Real-time message fetching from Firestore
-
-**Authentication**:
-- Google OAuth via `expo-auth-session`
-- User data stored in AsyncStorage after sign-in
-- User info fetched from `https://www.googleapis.com/userinfo/v2/me`
+- Google OAuth via `expo-auth-session` + `@react-native-google-signin/google-signin`
+- Stored in Zustand auth store after sign-in
+- Persisted in AsyncStorage via `services/storage/userStorage.ts`
 
 ### Component Organization
-- `components/ui/`: Reusable UI components (Button, CheckBox, TextInputCustom, Loading, Toast, etc.)
-- `components/Search/`: Pet browsing components (Swiper, SwiperCard)
-- `components/MyPets/`: User's pet list components
-- `components/ChatList/`: Chat list components
-- Screen-specific components in respective `app/*/components/` directories
+
+- `components/ui/` — Reusable: `Button`, `CheckBox`, `TextInputCustom`, `Loading`, `HeaderCustom`, `HeaderAnimated`, `ToggleButton`, `InputAge`, `InputOption`, `IconSymbol.ios.tsx`
+- `components/<feature>/` — Feature-scoped: `chat/`, `search/`, `myPets/`, `managementPet/`, `filter/`, `account/`, `chatList/`, `saved/`, `home/`
 
 ### Styling
-- Uses `react-native-size-matters` for responsive scaling (scale function)
-- Theme support via `@react-navigation/native` (DarkTheme/DefaultTheme)
-- Custom color scheme hook in `hooks/useColorScheme.ts`
-- Color constants in `constants/Colors.ts`
 
-### TypeScript Configuration
-- Path alias: `@/*` maps to root directory
+- `react-native-size-matters` for responsive scaling (`scale`, `s()` functions)
+- `@react-navigation/native` theme system (`DarkTheme`/`DefaultTheme`)
+- Color constants in `constants/Colors.ts`, scheme hook in `hooks/useColorScheme.ts`
+
+### TypeScript
+
+- Path alias: `@/*` → root directory
 - Firebase Auth type override for React Native in tsconfig paths
 - Strict mode enabled
 
 ## Important Notes
 
-- The app uses Expo SDK 54 with React 19.1.0 and React Native 0.81.5
-- Firebase credentials are currently exposed in `FirebaseConfig.js` - these should be moved to environment variables
-- Secret files exist (`secret-google.ts`, `constants/secret.ts`) - ensure these are in .gitignore
-- Google services configuration in `google-services.json` for Android
-- Recent migration to SDK 54 (per git history)
-- Pet queries use multiple Firestore `where` clauses - be mindful of composite index requirements
-- Age filtering has special handling for YEAR vs MONTH types (see `getPetsAgeTypeMonth` in `service/dataBase/usePet.ts`)
+- Firebase credentials in `FirebaseConfig.js` and Google Maps API keys in `app.json` are exposed — move to env vars
+- Secret files (`secret-google.ts`, `constants/secret.ts`) must stay in `.gitignore`
+- `google-services.json` required for Android builds
+- Route params accessed via `useLocalSearchParams<T>()` with typed generics
+- Chat has a global real-time listener (`hooks/useGlobalChatListener.ts`) set up at root layout level

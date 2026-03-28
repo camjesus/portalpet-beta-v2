@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   StyleSheet,
   Pressable,
@@ -7,216 +7,50 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { scale } from "react-native-size-matters";
-import { MessageId, ChatId, User, PetId, Validation } from "@/models";
 import { ViewCustom, HeaderCustom, IconSymbol, Toast } from "@/components/ui";
-import { resolveChat } from "@/features/chat/services/chatService";
 import {
-  listenMessages,
-  sendAdoptionAcceptedMessage,
-  sendAdoptionMessage,
-  sendAdoptionRejectedMessage,
-  sendMessage,
-} from "@/features/chat/services/messageService";
-import { Bubble, InputMessage } from "@/components/chat";
-import { AdoptionModal } from "@/components/chat";
-import { getAdoptionProfile } from "@/features/adoption/services/adoptionService";
-import { useFocusEffect } from "expo-router";
-import { useCallback } from "react";
-import { sendAdoptionRequest } from "@/features/adoption/services/adoptionService";
-import { AdoptionRequestModal } from "@/components/chat";
-import {
-  getAdoptionRequestByPet,
-  updateAdoptionRequestStatus,
-} from "@/features/adoption/services/adoptionService";
-import { AdoptionProfile } from "@/models";
-import { FIELD_VALIDATION } from "@/constants/Validations";
-import { useAuthStore } from "@/store/authStore";
+  Bubble,
+  InputMessage,
+  AdoptionModal,
+  AdoptionRequestModal,
+} from "@/components/chat";
+import { useChatScreen } from "@/features/chat/hooks/useChatScreen";
+import { useChatMessages } from "@/features/chat/hooks/useChatMessages";
 
 export default function Chat() {
-  const { chatId, petString } = useLocalSearchParams<{
-    chatId: string;
-    petString: string;
-  }>();
-  const [messages, setMessages] = useState<MessageId[]>([]);
-  const [chat, setChat] = useState<ChatId>();
-  const [user, setUser] = useState<User>();
-  const scrollViewRef = useRef<ScrollView>(null);
-  console.log("chat" + chat);
-  const title =
-    chat?.chat.rescuer?.id === user?.id
-      ? chat?.chat.user?.name
-      : chat?.chat.rescuer?.name;
-  const isNotMine = chat?.chat.user?.id === user?.id;
-  const [showModal, setShowModal] = useState(false);
-  const pendingAdoption = useRef(false);
-  const [hasPendingRequest, setHasPendingRequest] = useState(false);
+  const scrollViewRef = useRef<ScrollView | null>(null);
+  const {
+    chat,
+    user,
+    title,
+    isMine,
+    isNotMine,
+    hasPendingRequest,
+    adoptionProfile,
+    showModal,
+    setShowModal,
+    showRequestModal,
+    setShowRequestModal,
+    toast,
+    setToast,
+    toastConfig,
+    handleSendMessage,
+    handleAdoptionRequest,
+    handleOpenRequest,
+    handleAccept,
+    handleReject,
+  } = useChatScreen();
 
-  const [showRequestModal, setShowRequestModal] = useState(false);
-  const [adoptionProfile, setAdoptionProfile] =
-    useState<AdoptionProfile | null>(null);
-  const [adoptionRequestId, setAdoptionRequestId] = useState<string | null>(
-    null,
-  );
-  const [toast, setToast] = useState(false);
-  const [toastConfig, setToastConfig] = useState<Validation>();
-  const unsubscribeRef = useRef<(() => void) | null>(null);
-  const setActiveChatId = useAuthStore((s) => s.setActiveChatId);
-
-  const isMine = chat?.chat.rescuer?.id === user?.id;
-  useFocusEffect(
-    useCallback(() => {
-      if (!pendingAdoption.current) return;
-      pendingAdoption.current = false;
-      triggerAdoptionRequest();
-    }, [user, chat]),
-  );
-  const triggerAdoptionRequest = async () => {
-    if (!user?.id || !chat) return;
-    const profile = await getAdoptionProfile(user.id);
-    if (!profile) {
-      pendingAdoption.current = true;
-      router.push("/adoptionProfile");
-      return;
-    }
-
-    const petId = chat.chat.pet.id;
-    const rescuerId = chat.chat.rescuer.id;
-    const result = await sendAdoptionRequest(
-      user.id,
-      petId,
-      rescuerId,
-      chat.id,
-    );
-
-    if (result === "already_sent") {
-      setToastConfig(
-        FIELD_VALIDATION("Ya enviaste una solicitud para esta mascota"),
-      );
-      setToast(true);
-    } else {
-      await sendAdoptionMessage(chat, user);
-    }
-  };
-  const handleAdoptionRequest = async () => {
-    setShowModal(false);
-    await triggerAdoptionRequest();
-  };
-  const petParse = useMemo(() => {
-    return petString ? (JSON.parse(petString) as PetId) : undefined;
-  }, [petString]);
-
-  useEffect(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: true });
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (chat?.id) setActiveChatId(chat.id);
-
-      return () => {
-        setActiveChatId(null);
-      };
-    }, [chat?.id]),
-  );
-
-  useEffect(() => {
-    if (!chat?.id) return;
-
-    unsubscribeRef.current?.();
-    unsubscribeRef.current = null;
-
-    unsubscribeRef.current = listenMessages(chat.id, (msgs) => {
-      setMessages(msgs);
-      requestAnimationFrame(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      });
-    });
-
-    return () => {
-      unsubscribeRef.current?.();
-      unsubscribeRef.current = null;
-    };
-  }, [chat?.id]);
-
-  function goToBack() {
-    router.back();
-  }
-
-  const sendMessageAsync = async (message: string) => {
-    if (chat) {
-      try {
-        const isNewChat = chat.id === "";
-        const res = await sendMessage(chat, message, user);
-
-        if (isNewChat && res?.chat?.id) {
-          setChat({ ...res.chat });
-        }
-      } catch (error) {
-        console.error("Error sending message:", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (!petParse && !chatId) return;
-
-    resolveChat(chatId, petParse?.pet, petParse?.id).then((res) => {
-      if (res) {
-        setChat(res.chat);
-        setUser(res.user);
-      }
-    });
-  }, [chatId, petParse]);
-
-  useEffect(() => {
-    if (!chat?.chat.pet.id || !isMine) return;
-    getAdoptionRequestByPet(chat.chat.pet.id).then((request) => {
-      setHasPendingRequest(!!request);
-    });
-  }, [chat, isMine]);
-
-  const handleOpenRequest = async () => {
-    if (!chat?.chat.pet.id) return;
-    const request = await getAdoptionRequestByPet(chat.chat.pet.id);
-    if (!request) return;
-    setAdoptionRequestId(request.id);
-    const profile = await getAdoptionProfile(request.userId);
-    setAdoptionProfile(profile);
-    setShowRequestModal(true);
-  };
-
-  const handleAccept = async () => {
-    if (!adoptionRequestId || !chat) return;
-    await updateAdoptionRequestStatus(
-      adoptionRequestId,
-      "accepted",
-      chat.id ?? "",
-    );
-    await sendAdoptionAcceptedMessage(chat, user);
-    setShowRequestModal(false);
-    setHasPendingRequest(false);
-  };
-
-  const handleReject = async () => {
-    if (!adoptionRequestId || !chat) return;
-    await updateAdoptionRequestStatus(
-      adoptionRequestId,
-      "rejected",
-      chat.id ?? "",
-    );
-    await sendAdoptionRejectedMessage(chat, user);
-    setShowRequestModal(false);
-    setHasPendingRequest(false);
-  };
+  const { messages } = useChatMessages(chat?.id, scrollViewRef);
 
   return (
     <ViewCustom>
       <HeaderCustom
         title={title}
         childrenLeft={
-          <Pressable onPress={goToBack}>
+          <Pressable onPress={() => router.back()}>
             <IconSymbol size={30} name="arrow-back" color="white" />
           </Pressable>
         }
@@ -246,16 +80,11 @@ export default function Chat() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
         <ScrollView ref={scrollViewRef} style={styles.flatList}>
           {messages.map((item) => (
-            <Bubble
-              key={item.id}
-              item={item}
-              userId={user?.id ? user?.id : ""}
-            />
+            <Bubble key={item.id} item={item} userId={user?.id ?? ""} />
           ))}
         </ScrollView>
-
         <View style={styles.footer}>
-          <InputMessage sendMessage={sendMessageAsync} />
+          <InputMessage sendMessage={handleSendMessage} />
         </View>
         {toast && toastConfig && (
           <Toast validation={toastConfig} setToast={setToast} />
@@ -282,16 +111,5 @@ const styles = StyleSheet.create({
   flatList: {
     marginHorizontal: scale(10),
     backgroundColor: "transparent",
-  },
-  leftIcon: {
-    alignSelf: "flex-start",
-    marginTop: scale(2),
-  },
-  rightIcon: {
-    alignSelf: "flex-end",
-    marginTop: scale(2),
-  },
-  text: {
-    fontSize: scale(13),
   },
 });
