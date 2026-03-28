@@ -5,7 +5,7 @@ import { scale } from "react-native-size-matters";
 
 type Props = {
   validation: Validation;
-  setToast: React.Dispatch<React.SetStateAction<boolean>>;
+  setToast: (v: boolean) => void;
 };
 
 export default function Toast({ validation, setToast }: Props) {

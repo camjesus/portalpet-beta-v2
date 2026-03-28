@@ -26,6 +26,7 @@ export default function Card({ item }: Props) {
         petId: item.id,
         stringItem: JSON.stringify(item),
         image: encodeURI(item.pet.image),
+        isMy: "true",
       },
     });
   }

@@ -32,7 +32,7 @@ export function PetCard({ item }: { item: PetId }) {
             petId: item.id,
             stringItem: JSON.stringify(item),
             image: encodeURI(pet.image),
-            isMy: "no",
+            isMy: "false",  
           },
         })
       }>

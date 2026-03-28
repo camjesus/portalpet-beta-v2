@@ -4,13 +4,15 @@ import Svg, { Path } from "react-native-svg";
 
 type Props = {
   onPress: () => void;
+  disabled?: boolean;
 };
 
-export default function GoogleButton({ onPress }: Props) {
+export default function GoogleButton({ onPress, disabled }: Props) {
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={[styles.button, disabled && styles.buttonDisabled]}
       onPress={onPress}
+      disabled={disabled}
       activeOpacity={0.7}>
       <View style={styles.contentWrapper}>
         <View style={styles.icon}>
@@ -41,6 +43,9 @@ export default function GoogleButton({ onPress }: Props) {
 }
 
 const styles = StyleSheet.create({
+  buttonDisabled: {
+    opacity: 0.5,
+  },
   button: {
     height: 48,
     borderRadius: 40,
