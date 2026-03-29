@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   Pressable,
@@ -21,6 +21,7 @@ import { useChatMessages } from "@/features/chat/hooks/useChatMessages";
 
 export default function Chat() {
   const scrollViewRef = useRef<ScrollView | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false); // 👈
   const {
     chat,
     user,
@@ -44,6 +45,7 @@ export default function Chat() {
   } = useChatScreen();
 
   const { messages } = useChatMessages(chat?.id, scrollViewRef);
+  if (!title) return null;
 
   return (
     <ViewCustom>
@@ -78,11 +80,24 @@ export default function Chat() {
         style={{ flex: 1, backgroundColor: "transparent" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
-        <ScrollView ref={scrollViewRef} style={styles.flatList}>
+        <ScrollView ref={scrollViewRef} style={styles.flatList}
+          onScroll={(e) => {                                    
+            const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
+            const distanceFromBottom = contentSize.height - contentOffset.y - layoutMeasurement.height;
+            setShowScrollButton(distanceFromBottom > 100);
+          }}
+          scrollEventThrottle={16}  >
           {messages.map((item) => (
             <Bubble key={item.id} item={item} userId={user?.id ?? ""} />
           ))}
         </ScrollView>
+        {showScrollButton && (
+          <Pressable
+            style={styles.scrollButton}
+            onPress={() => scrollViewRef.current?.scrollToEnd({ animated: true })}>
+            <IconSymbol name="chevron-down" size={20} color="white" />
+          </Pressable>
+        )}
         <View style={styles.footer}>
           <InputMessage sendMessage={handleSendMessage} />
         </View>
@@ -112,4 +127,17 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(10),
     backgroundColor: "transparent",
   },
+  scrollButton: {
+  position: "absolute",
+  bottom: scale(70),
+  alignSelf: "center",
+  backgroundColor: "#ffb13d",
+  borderRadius: 20,
+  padding: scale(8),
+  elevation: 4,
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+},
 });

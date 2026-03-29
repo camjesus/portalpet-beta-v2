@@ -2,7 +2,7 @@ import { Tabs, usePathname } from "expo-router";
 import React, { useEffect } from "react";
 import { IconSymbol } from "@/components/ui";
 import { useAuthStore } from "@/store/authStore";
-import { useGlobalChatListener } from "@/hooks/useGlobalChatListener_";
+import { useGlobalChatListener } from "@/hooks/useGlobalChatListener";
 import { View, StyleSheet } from "react-native";
 
 export default function TabLayout() {
