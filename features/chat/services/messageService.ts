@@ -8,6 +8,7 @@ import { ChatId, Message, MessageId, User } from "@/models";
 import { addSystemMessage } from "../utils/messageUtils";
 import { addChatAsync, markChatAsUnread } from "../repository/chatRepository";
 import { Timestamp } from "firebase/firestore";
+import { useAuthStore } from "@/store/authStore";
 
 export const sendMessage = async (
   chat: ChatId,
@@ -19,7 +20,6 @@ export const sendMessage = async (
     const newChat = await addChatAsync(chat.chat);
     chat.id = newChat.id;
   }
-
   const message: Message = {
     createAt: Timestamp.now(),
     text,
@@ -31,7 +31,7 @@ export const sendMessage = async (
   };
 
   const doc = await createMessage(message);
- const isRescuer = user?.id === chat.chat.rescuer.id;
+  const isRescuer = user?.id === chat.chat.rescuer.id;
   await markChatAsUnread(chat.id, !isRescuer);
   
   return {

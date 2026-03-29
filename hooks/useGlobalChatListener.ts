@@ -1,50 +1,52 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  orderBy,
-  limit,
-  Timestamp,
-} from "firebase/firestore"; 
+  collection, query, where, onSnapshot, orderBy, limit, Timestamp,
+} from "firebase/firestore";
 import { db } from "@/FirebaseConfig";
 import { useNotification } from "@/context/NotificationContext";
+import { useAuthStore } from "@/store/authStore";
+import { markChatAsRead } from "@/features/chat/repository/chatRepository";
 
 interface UseGlobalChatListenerOptions {
   userId: string | undefined;
-  activeChatId?: string | null;
 }
 
-export function useGlobalChatListener({
-  userId,
-  activeChatId = null,
-}: UseGlobalChatListenerOptions) {
+export function useGlobalChatListener({ userId }: UseGlobalChatListenerOptions) {
   const { showNotification } = useNotification();
   const seenMessageIds = useRef<Set<string>>(new Set());
   const initializedChats = useRef<Set<string>>(new Set());
-  const activeChatIdRef = useRef(activeChatId);
+  const messageUnsubs = useRef<Map<string, () => void>>(new Map());
+  const unreadMap = useRef<Map<string, boolean>>(new Map());
+  const [hasUnreadGlobal, setHasUnreadGlobal] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
-    const unsubscribers: (() => void)[] = [];
+    const chatUnsubs: (() => void)[] = [];
 
-    const qUser = query(
-      collection(db, "chats"),
-      where("user.id", "==", userId),
-      orderBy("createDate", "asc"),
-    );
+ const queries = [
+  query(collection(db, "chats"), where("user.id", "==", userId), orderBy("createDate", "asc")),
+  query(collection(db, "chats"), where("rescuer.id", "==", userId), orderBy("createDate", "asc")),
+];
 
-    const qRescuer = query(
-      collection(db, "chats"),
-      where("rescuer.id", "==", userId),
-      orderBy("createDate", "asc"),
-    );
-
-    [qUser, qRescuer].forEach((chatQuery) => {
-      const unsub = onSnapshot(chatQuery, (chatsSnapshot) => {
+      queries.forEach((q, queryIndex) => {
+        const unsub = onSnapshot(q, (chatsSnapshot) => {  
         chatsSnapshot.docs.forEach((chatDoc) => {
           const chatId = chatDoc.id;
+          const data = chatDoc.data();
+          const activeChatId = useAuthStore.getState().activeChatId;
+          const isActiveChat = chatId === activeChatId;
+          const isRescuer = data.rescuer?.id === userId;
+          const hasUnread = isRescuer ? data.hasUnreadRescuer : data.hasUnreadUser; 
+          // Si el chat está activo y llega hasUnread true, re-marcarlo como leído
+          if (isActiveChat && hasUnread) {
+            markChatAsRead(chatId, isRescuer);
+          }
+
+          unreadMap.current.set(`${queryIndex}-${chatId}`, isActiveChat ? false : !!hasUnread);
+console.log([...unreadMap.current.entries()]);
+setHasUnreadGlobal(Array.from(unreadMap.current.values()).some(Boolean));
+          // Suscribir mensajes solo una vez por chat
+          if (messageUnsubs.current.has(chatId)) return;
 
           const messagesQuery = query(
             collection(db, "messages"),
@@ -53,65 +55,58 @@ export function useGlobalChatListener({
             limit(1),
           );
 
-          const unsubMessages = onSnapshot(
-            messagesQuery,
-            (messagesSnapshot) => {
-              if (!initializedChats.current.has(chatId)) {
-                initializedChats.current.add(chatId);
-                messagesSnapshot.docs.forEach((doc) => {
-                  seenMessageIds.current.add(doc.id);
-                });
+          const unsubMessages = onSnapshot(messagesQuery, (messagesSnapshot) => {
+            if (!initializedChats.current.has(chatId)) {
+              initializedChats.current.add(chatId);
+              messagesSnapshot.docs.forEach((doc) => seenMessageIds.current.add(doc.id));
+              return;
+            }
+
+            messagesSnapshot.docChanges().forEach((change) => {
+              if (change.type !== "added") return;
+              const messageId = change.doc.id;
+              const message = change.doc.data();
+              const currentActiveChatId = useAuthStore.getState().activeChatId;
+
+              if (
+                seenMessageIds.current.has(messageId) ||
+                message.sender?.id === userId ||
+                chatId === currentActiveChatId
+              ) {
+                seenMessageIds.current.add(messageId);
                 return;
               }
-              messagesSnapshot.docChanges().forEach((change) => {
-                if (change.type !== "added") return;
 
-                const messageId = change.doc.id;
-                const message = change.doc.data();
-
-                if (
-                  seenMessageIds.current.has(messageId) ||
-                  message.sender?.id === userId ||
-                  chatId === activeChatIdRef.current
-                ) {
-                  seenMessageIds.current.add(messageId);
-                  return;
-                }
-
-                seenMessageIds.current.add(messageId);
-
-                const createdAt: Timestamp | undefined = message.createAt;
-                const time = createdAt
-                  ? formatTime(createdAt.toDate())
-                  : undefined;
-
-                showNotification({
-                  senderName: message.sender?.name ?? "Nuevo mensaje",
-                  message: message.text ?? "Te enviaron un mensaje",
-                  chatId,
-                  time,
-                });
+              seenMessageIds.current.add(messageId);
+              const createdAt: Timestamp | undefined = message.createAt;
+              const time = createdAt ? formatTime(createdAt.toDate()) : undefined;
+              showNotification({
+                senderName: message.sender?.name ?? "Nuevo mensaje",
+                message: message.text ?? "Te enviaron un mensaje",
+                chatId,
+                time,
               });
-            },
-          );
+            });
+          });
 
-          unsubscribers.push(unsubMessages);
+          messageUnsubs.current.set(chatId, unsubMessages);
         });
       });
 
-      unsubscribers.push(unsub);
+      chatUnsubs.push(unsub);
     });
 
     return () => {
-      unsubscribers.forEach((unsub) => unsub());
+      chatUnsubs.forEach((unsub) => unsub());
+      messageUnsubs.current.forEach((unsub) => unsub());
       seenMessageIds.current.clear();
       initializedChats.current.clear();
+      messageUnsubs.current.clear();
+      unreadMap.current.clear();
     };
   }, [userId]);
 
-    useEffect(() => {
-    activeChatIdRef.current = activeChatId;
-  }, [activeChatId]);
+  return { hasUnreadGlobal };
 }
 
 function formatTime(date: Date): string {

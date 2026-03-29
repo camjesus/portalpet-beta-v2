@@ -16,6 +16,7 @@ import {
 } from "@/features/adoption/services/adoptionService";
 import { ChatId, User, PetId, AdoptionProfile, Validation } from "@/models";
 import { FIELD_VALIDATION } from "@/constants/Validations";
+import { markChatAsRead } from "@/features/chat/repository/chatRepository";
 
 export function useChatScreen() {
   const { chatId, petString } = useLocalSearchParams<{
@@ -51,6 +52,7 @@ export function useChatScreen() {
       if (res) {
         setChat(res.chat);
         setUser(res.user);
+        if (res.chat?.id) setActiveChatId(res.chat.id);
       }
     });
   }, [chatId, petParse]);
@@ -67,6 +69,7 @@ export function useChatScreen() {
   useFocusEffect(
     useCallback(() => {
       if (chat?.id) setActiveChatId(chat.id);
+      
       return () => setActiveChatId(null);
     }, [chat?.id]),
   );
@@ -120,6 +123,22 @@ export function useChatScreen() {
       console.error("Error sending message:", error);
     }
   };
+
+  useFocusEffect(
+  useCallback(() => {
+    if (chat?.id && user?.id) {
+      setActiveChatId(chat.id);
+      const isRescuer = chat.chat.rescuer?.id === user.id;
+      markChatAsRead(chat.id, isRescuer);
+    }
+    return () => {
+      if (chat?.id && user?.id) {
+        const isRescuer = chat.chat.rescuer?.id === user.id;
+        markChatAsRead(chat.id, isRescuer); 
+      }
+      setActiveChatId(null);
+    };  }, [chat?.id, user?.id]),
+);
 
   const handleOpenRequest = async () => {
     if (!chat?.chat.pet.id) return;

@@ -2,15 +2,14 @@ import { Tabs, usePathname } from "expo-router";
 import React, { useEffect } from "react";
 import { IconSymbol } from "@/components/ui";
 import { useAuthStore } from "@/store/authStore";
-import { useGlobalChatListener } from "@/hooks/useGlobalChatListener";
+import { useGlobalChatListener } from "@/hooks/useGlobalChatListener_";
+import { View, StyleSheet } from "react-native";
 
 export default function TabLayout() {
   const pathname = usePathname();
   const userId = useAuthStore((s) => s.user?.id);
-  const activeChatId = useAuthStore((s) => s.activeChatId);
-
-  useGlobalChatListener({ userId, activeChatId });
-
+  const { hasUnreadGlobal } = useGlobalChatListener({ userId });
+  console.log("hasUnreadGlobal", hasUnreadGlobal);
   return (
     <Tabs
       screenOptions={{
@@ -51,7 +50,12 @@ export default function TabLayout() {
         options={{
           title: "Chats",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="chat" color={color} />
+            <View>
+              <IconSymbol size={28} name="chat" color={color} />
+              {hasUnreadGlobal && (
+                <View style={styles.dot} />
+              )}
+            </View>
           ),
         }}
       />
@@ -76,3 +80,15 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#f95748",
+    position: "absolute",
+    top: 0,
+    right: 0,
+  },
+});

@@ -13,17 +13,19 @@ type Props = {
   userId: string | undefined | null;
 };
 
-export default function Card({ item, userId }: Props) {
+export default function ChatCard({ item, userId }: Props) {
   const [data, setData] = useState({ action: "", color: "" });
   const image = item?.chat?.pet?.image ?? "";
   const contactName =
     userId === item?.chat.rescuer?.id
       ? item?.chat.user?.name
       : item?.chat.rescuer?.name;
-  const hasUnread =
+
+  const [hasUnread, setHasUnread] = useState(
     userId === item?.chat.rescuer?.id
       ? item?.chat.hasUnreadRescuer
-      : item?.chat.hasUnreadUser;
+      : item?.chat.hasUnreadUser
+  );
   const adoptionConfig = {
     pending: { label: "Solicitud pendiente", color: "#DCAD5F" },
     accepted: { label: "Adopción aceptada", color: "#4CAF50" },
@@ -40,10 +42,12 @@ export default function Card({ item, userId }: Props) {
   }, []);
 
   useEffect(() => {
-    if (!item?.id || !item?.id) return;
+    if (!item?.id || !userId) return;
     const isRescuer = userId === item.chat.rescuer.id;
-    markChatAsRead(item.id, isRescuer);
-  }, [item?.id, item?.id]);
+    markChatAsRead(item.id, isRescuer).then(() => {
+      setHasUnread(false);
+    });
+  }, [item?.id]);
 
   return (
     <Pressable
