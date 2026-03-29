@@ -1,6 +1,3 @@
-// components/chat/ChatNotification.tsx
-// Pop-up de notificación de nuevo mensaje - adaptado a tu proyecto
-
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
@@ -22,7 +19,7 @@ export interface ChatNotificationData {
   time?: string;
 }
 
-// ─── Item individual de notificación ────────────────────────────────────────
+// ─── Item ────────────────────────────────────────
 
 interface NotificationItemProps {
   notification: ChatNotificationData;
@@ -40,7 +37,6 @@ function ChatNotificationItem({
   const progressWidth = useRef(new Animated.Value(100)).current;
 
   useEffect(() => {
-    // Entrada desde arriba
     Animated.parallel([
       Animated.spring(translateY, {
         toValue: 0,
@@ -55,7 +51,6 @@ function ChatNotificationItem({
       }),
     ]).start();
 
-    // Barra de progreso
     Animated.timing(progressWidth, {
       toValue: 0,
       duration: 4500,
@@ -82,7 +77,6 @@ function ChatNotificationItem({
     ]).start(() => onDismiss(notification.id));
   }
 
-  // Iniciales del remitente como avatar
   const initials = notification.senderName
     .split(" ")
     .map((w) => w[0])
@@ -100,13 +94,11 @@ function ChatNotificationItem({
           onPress?.(notification);
         }}
         style={styles.cardBody}>
-        {/* Avatar */}
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{initials}</Text>
           <View style={styles.avatarBadge} />
         </View>
 
-        {/* Contenido */}
         <View style={styles.textContent}>
           <View style={styles.topRow}>
             <Text style={styles.senderName} numberOfLines={1}>
@@ -121,11 +113,9 @@ function ChatNotificationItem({
           </Text>
         </View>
 
-        {/* Punto de nuevo mensaje */}
         <View style={styles.newDot} />
       </TouchableOpacity>
 
-      {/* Barra de progreso */}
       <View style={styles.progressTrack}>
         <Animated.View
           style={[
@@ -143,7 +133,7 @@ function ChatNotificationItem({
   );
 }
 
-// ─── Contenedor principal ────────────────────────────────────────────────────
+// ─── Container ────────────────────────────────────────────────────
 
 interface ChatNotificationContainerProps {
   notifications: ChatNotificationData[];
@@ -175,8 +165,6 @@ export function ChatNotificationContainer({
     </View>
   );
 }
-
-// ─── Estilos ─────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   container: {

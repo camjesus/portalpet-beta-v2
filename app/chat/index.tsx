@@ -21,7 +21,7 @@ import { useChatMessages } from "@/features/chat/hooks/useChatMessages";
 
 export default function Chat() {
   const scrollViewRef = useRef<ScrollView | null>(null);
-  const [showScrollButton, setShowScrollButton] = useState(false); // 👈
+  const [showScrollButton, setShowScrollButton] = useState(false); 
   const {
     chat,
     user,

@@ -37,15 +37,14 @@ export function useGlobalChatListener({ userId }: UseGlobalChatListenerOptions) 
           const isActiveChat = chatId === activeChatId;
           const isRescuer = data.rescuer?.id === userId;
           const hasUnread = isRescuer ? data.hasUnreadRescuer : data.hasUnreadUser; 
-          // Si el chat está activo y llega hasUnread true, re-marcarlo como leído
+          // If the chat is active and hasUnread is true, mark it as read
           if (isActiveChat && hasUnread) {
             markChatAsRead(chatId, isRescuer);
           }
 
           unreadMap.current.set(`${queryIndex}-${chatId}`, isActiveChat ? false : !!hasUnread);
-console.log([...unreadMap.current.entries()]);
-setHasUnreadGlobal(Array.from(unreadMap.current.values()).some(Boolean));
-          // Suscribir mensajes solo una vez por chat
+          setHasUnreadGlobal(Array.from(unreadMap.current.values()).some(Boolean));
+          // Subscribe to messages only once per chat
           if (messageUnsubs.current.has(chatId)) return;
 
           const messagesQuery = query(

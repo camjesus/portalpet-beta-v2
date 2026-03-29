@@ -19,7 +19,7 @@ export function useHome() {
 
   const navigation = useNavigation();
 
-  // Bloquear back
+  // Block back
   useEffect(() => {
     navigation.setOptions({ gestureEnabled: false, headerBackVisible: false });
 
@@ -35,7 +35,7 @@ export function useHome() {
     return () => navigation.setOptions({ tabBarStyle: undefined });
   }, [navigation]);
 
-  // Cargar datos
+  // Load data
   useEffect(() => {
     getData();
   }, [goToSearch]);

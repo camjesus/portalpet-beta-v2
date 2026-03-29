@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     padding: 0,
     flex: 5,
     marginBottom: 0,
-    //textTransform: "capitalize",
   },
   buttonLeft: {
     width: scale(30),

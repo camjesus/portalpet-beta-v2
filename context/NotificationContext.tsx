@@ -1,6 +1,3 @@
-// context/NotificationContext.tsx
-// Contexto global para mostrar notificaciones desde cualquier pantalla
-
 import React, { createContext, useCallback, useContext, useState } from "react";
 import { router } from "expo-router";
 import {
@@ -8,13 +5,13 @@ import {
   ChatNotificationData,
 } from "@/components/chat/ChatNotification";
 
-// ─── Tipos ────────────────────────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface NotificationContextValue {
   showNotification: (data: Omit<ChatNotificationData, "id">) => void;
 }
 
-// ─── Contexto ─────────────────────────────────────────────────────────────────
+// ─── Context ─────────────────────────────────────────────────────────────────
 
 const NotificationContext = createContext<NotificationContextValue | null>(
   null,
@@ -44,7 +41,6 @@ export function NotificationProvider({
   }, []);
 
   const handlePress = useCallback((notification: ChatNotificationData) => {
-    // Navega al chat al tocar la notificación
     router.push({
       pathname: "/chat",
       params: {
@@ -68,7 +64,7 @@ export function NotificationProvider({
   );
 }
 
-// ─── Hook de acceso ───────────────────────────────────────────────────────────
+// ─── Hook ───────────────────────────────────────────────────────────
 
 export function useNotification() {
   const ctx = useContext(NotificationContext);

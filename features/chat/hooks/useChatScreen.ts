@@ -45,7 +45,7 @@ export function useChatScreen() {
     return petString ? (JSON.parse(petString) as PetId) : undefined;
   }, [petString]);
 
-  // Resolver chat inicial
+  // Resolve chat
   useEffect(() => {
     if (!petParse && !chatId) return;
     resolveChat(chatId, petParse?.pet, petParse?.id).then((res) => {
@@ -57,7 +57,7 @@ export function useChatScreen() {
     });
   }, [chatId, petParse]);
 
-  // Solicitud de adopción pendiente
+  // Adoption request
   useEffect(() => {
     if (!chat?.chat.pet.id || !isMine) return;
     getAdoptionRequestByPet(chat.chat.pet.id).then((request) => {
@@ -65,7 +65,7 @@ export function useChatScreen() {
     });
   }, [chat, isMine]);
 
-  // Marcar chat como activo
+  // Mark chat as active
   useFocusEffect(
     useCallback(() => {
       if (chat?.id) setActiveChatId(chat.id);
@@ -74,7 +74,7 @@ export function useChatScreen() {
     }, [chat?.id]),
   );
 
-  // Retomar adopción pendiente al volver de adoptionProfile
+  // Resume adoption request when returning from adoptionProfile
   useFocusEffect(
     useCallback(() => {
       if (!pendingAdoption.current) return;

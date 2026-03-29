@@ -38,7 +38,6 @@ export const initialPet: State = {
       rescuerId: "",
       rescuer: defaultRescuer,
       createDate: new Date(),
-      //ubication: undefined
     },
   },
 };

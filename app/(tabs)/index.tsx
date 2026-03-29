@@ -13,7 +13,7 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    if (user === undefined) return; // todavía cargando
+    if (user === undefined) return;
 
     if (user) {
       router.replace("/(tabs)/home");

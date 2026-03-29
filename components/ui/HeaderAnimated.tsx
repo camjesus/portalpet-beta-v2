@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
     marginTop: scale(15),
     padding: 0,
     marginBottom: 0,
-    //textTransform: "capitalize",
   },
   buttonRight: {
     right: 0,

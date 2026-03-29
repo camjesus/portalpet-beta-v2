@@ -29,9 +29,7 @@ export const savePet = async (pet: Pet) => {
 
 export const updatePet = async (petId: string, pet: Pet) => {
   const image = await resolvePetImage(pet.image);
-
-  //if (image) pet.image = image;
-
+  pet.image = image ?? pet.image;
   const { createDate, rescuer, rescuerId, ...rest } = pet;
 
   await updatePetDoc(petId, rest);

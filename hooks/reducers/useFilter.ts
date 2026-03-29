@@ -42,9 +42,6 @@ export const ACTION = {
 };
 
 export const filterReducer = (state: State, action: Action) => {
-  console.log(state);
-  console.log(action);
-  console.log(action.payload.value);
   switch (action.type) {
     case ACTION.CHANGE_FILTER:
       return {
