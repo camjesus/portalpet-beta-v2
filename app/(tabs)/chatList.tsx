@@ -2,6 +2,7 @@ import { FlatList, StyleSheet } from "react-native";
 import { HeaderCustom, ViewCustom } from "@/components/ui";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/chatList/ChatCard";
+import { EmptyState } from "@/components/chatList/EmptyState";
 import { useChatList } from "@/features/chat/hooks/useChatList";
 
 export default function ChatList() {
@@ -17,6 +18,7 @@ export default function ChatList() {
         )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.flatList}
+        ListEmptyComponent={<EmptyState />}
       />
     </ViewCustom>
   );

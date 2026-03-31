@@ -54,7 +54,7 @@ export function loadAction(petAction:string) {
 
 //private
 function loadName(pet:Pet) {
-  const name = pet.name === "" ? "No tiene" : pet.name;
+  const name = pet.name === "" ? "Sin nombre" : pet.name;
   
   let ageType = "";
   if (pet.age === 1) {

@@ -38,6 +38,12 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   "clipboard-arrow-up-outline": "clipboard-arrow-up-outline",
   "clipboard-clock-outline": "clipboard-clock-outline",
   "chevron-down": "chevron-down",
+  clock: "clock",
+  calendar: "calendar",
+  "dots-vertical": "dots-vertical",
+  delete: "trash-can-outline",
+  email: "email-outline",
+  "text-account": "text-account",
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

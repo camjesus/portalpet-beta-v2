@@ -21,6 +21,8 @@ export type Chat = {
     };
     required: boolean;
     hasUnreadRescuer: boolean;
-    hasUnreadUser: boolean; 
-    adoptionStatus: "none" | "pending" | "accepted" | "rejected";
+    hasUnreadUser: boolean;
+    deletedAt?: Record<string, any>;
+    lastMessageAt?: any;
+    adoptionStatus: "none" | "pending" | "accepted" | "rejected" | "cancelled";
 };

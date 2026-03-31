@@ -6,7 +6,7 @@ import {
 import { mapMessageFromFirestore } from "../mappers/messageMapper";
 import { ChatId, Message, MessageId, User } from "@/models";
 import { addSystemMessage } from "../utils/messageUtils";
-import { addChatAsync, markChatAsUnread } from "../repository/chatRepository";
+import { addChatAsync, markChatAsUnread, updateLastMessageAt } from "../repository/chatRepository";
 import { Timestamp } from "firebase/firestore";
 import { useAuthStore } from "@/store/authStore";
 
@@ -32,7 +32,10 @@ export const sendMessage = async (
 
   const doc = await createMessage(message);
   const isRescuer = user?.id === chat.chat.rescuer.id;
-  await markChatAsUnread(chat.id, !isRescuer);
+  await Promise.all([
+    markChatAsUnread(chat.id, !isRescuer),
+    updateLastMessageAt(chat.id),
+  ]);
   
   return {
     chat,
@@ -113,6 +116,21 @@ export const sendAdoptionRejectedMessage = async (
     text: "Solicitud de adopción rechazada",
     chatId: chat.id,
     type: "adoption_rejected",
+    sender: { id: user?.id ?? "", name: user?.name ?? "" },
+  };
+  const doc = await createMessage(message);
+  return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };
+};
+
+export const sendAdoptionCancelledMessage = async (
+  chat: ChatId,
+  user: User | undefined
+) => {
+  const message: Message = {
+    createAt: Timestamp.now(),
+    text: "Solicitud de adopción cancelada",
+    chatId: chat.id,
+    type: "adoption_cancelled",
     sender: { id: user?.id ?? "", name: user?.name ?? "" },
   };
   const doc = await createMessage(message);

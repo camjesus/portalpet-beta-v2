@@ -23,13 +23,13 @@ export default function InputName({
           options={{
             value: name,
             onChangeText: (t) => changeName(t, "name"),
-            placeholder: noName ? "No tiene" : "Nombre",
+            placeholder: noName ? "Sin nombre" : "Nombre",
           }}
           editable={!noName}
         />
       </View>
 
-      <CheckBox label="No tiene" active={noName} onPress={changeNoName} />
+      <CheckBox label="Sin nombre" active={noName} onPress={changeNoName} />
     </>
   );
 }

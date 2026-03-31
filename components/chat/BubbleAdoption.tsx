@@ -4,7 +4,7 @@ import { IconSymbol } from "@/components/ui";
 
 type Props = {
   isMyMessage: boolean;
-  type: "adoption_request" | "adoption_accepted" | "adoption_rejected";
+  type: "adoption_request" | "adoption_accepted" | "adoption_rejected" | "adoption_cancelled";
 };
 
 const config = {
@@ -33,6 +33,16 @@ const config = {
     badgeColor: "#4CAF50",
     icon: "check",
     iconColor: "#4CAF50",
+  },
+  adoption_cancelled: {
+    title: "Solicitud cancelada",
+    subtitle: (isMyMessage: boolean) =>
+      isMyMessage ? "Cancelaste tu solicitud" : "El adoptante canceló su solicitud",
+    description: () => "",
+    badgeText: "Cancelada",
+    badgeColor: "#757575",
+    icon: "close",
+    iconColor: "#757575",
   },
   adoption_rejected: {
     title: "Adopción rechazada",

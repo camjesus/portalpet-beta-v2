@@ -7,21 +7,25 @@ import {
   sendAdoptionMessage,
   sendAdoptionAcceptedMessage,
   sendAdoptionRejectedMessage,
+  sendAdoptionCancelledMessage,
 } from "@/features/chat/services/messageService";
 import {
   getAdoptionProfile,
   sendAdoptionRequest,
   getAdoptionRequestByPet,
   updateAdoptionRequestStatus,
+  cancelAdoptionRequest,
 } from "@/features/adoption/services/adoptionService";
+import { getPetById } from "@/features/pet/services/petService";
 import { ChatId, User, PetId, AdoptionProfile, Validation } from "@/models";
 import { FIELD_VALIDATION } from "@/constants/Validations";
-import { markChatAsRead } from "@/features/chat/repository/chatRepository";
+import { markChatAsRead, listenChatDoc, softDeleteChat } from "@/features/chat/repository/chatRepository";
 
 export function useChatScreen() {
-  const { chatId, petString } = useLocalSearchParams<{
-    chatId: string;
-    petString: string;
+  const { chatId, petString, profileSaved } = useLocalSearchParams<{
+  chatId: string;
+  petString: string;
+  profileSaved: string;
   }>();
 
   const [chat, setChat] = useState<ChatId>();
@@ -31,10 +35,12 @@ export function useChatScreen() {
   const [adoptionProfile, setAdoptionProfile] = useState<AdoptionProfile | null>(null);
   const [adoptionRequestId, setAdoptionRequestId] = useState<string | null>(null);
   const [hasPendingRequest, setHasPendingRequest] = useState(false);
+  const [myAdoptionProfile, setMyAdoptionProfile] = useState<AdoptionProfile | null>(null);
+  const [showMyRequestModal, setShowMyRequestModal] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [toast, setToast] = useState(false);
   const [toastConfig, setToastConfig] = useState<Validation>();
 
-  const pendingAdoption = useRef(false);
   const setActiveChatId = useAuthStore((s) => s.setActiveChatId);
 
   const isMine = chat?.chat.rescuer?.id === user?.id;
@@ -44,6 +50,12 @@ export function useChatScreen() {
   const petParse = useMemo(() => {
     return petString ? (JSON.parse(petString) as PetId) : undefined;
   }, [petString]);
+
+  useEffect(() => {
+  if (profileSaved === "true" && chat && user) {
+    triggerAdoptionRequest();
+  }
+}, [profileSaved, chat]);
 
   // Resolve chat
   useEffect(() => {
@@ -57,13 +69,28 @@ export function useChatScreen() {
     });
   }, [chatId, petParse]);
 
-  // Adoption request
+  // Listen to chat document changes in real-time
+  useEffect(() => {
+    if (!chat?.id) return;
+    const unsub = listenChatDoc(chat.id, (updated) => {
+      setChat(updated);
+    });
+    return unsub;
+  }, [chat?.id]);
+
+  // Rescuer: check for pending adoption request
   useEffect(() => {
     if (!chat?.chat.pet.id || !isMine) return;
     getAdoptionRequestByPet(chat.chat.pet.id).then((request) => {
       setHasPendingRequest(!!request);
     });
   }, [chat, isMine]);
+
+  // Adopter: load own profile when request is pending
+  useEffect(() => {
+    if (!isNotMine || !user?.id || chat?.chat.adoptionStatus !== "pending") return;
+    getAdoptionProfile(user.id).then(setMyAdoptionProfile);
+  }, [isNotMine, user?.id, chat?.chat.adoptionStatus]);
 
   // Mark chat as active
   useFocusEffect(
@@ -74,24 +101,25 @@ export function useChatScreen() {
     }, [chat?.id]),
   );
 
-  // Resume adoption request when returning from adoptionProfile
-  useFocusEffect(
-    useCallback(() => {
-      if (!pendingAdoption.current) return;
-      pendingAdoption.current = false;
-      triggerAdoptionRequest();
-    }, [user, chat]),
-  );
-
   const triggerAdoptionRequest = async () => {
     if (!user?.id || !chat) return;
     const profile = await getAdoptionProfile(user.id);
 
     if (!profile) {
-      pendingAdoption.current = true;
-      router.push("/adoptionProfile");
+      router.push({
+        pathname: "/adoptionProfile",
+        params: { fromChat: "true", chatId: chat.id },
+      });
       return;
     }
+
+    setMyAdoptionProfile(profile);
+    setShowPreviewModal(true);
+  };
+
+  const handleConfirmSendRequest = async () => {
+    if (!user?.id || !chat) return;
+    setShowPreviewModal(false);
 
     const result = await sendAdoptionRequest(
       user.id,
@@ -114,7 +142,7 @@ export function useChatScreen() {
   };
 
   const handleSendMessage = async (message: string) => {
-    if (!chat) return;
+    if (!chat || message.trim() === "") return;
     try {
       const isNewChat = chat.id === "";
       const res = await sendMessage(chat, message, user);
@@ -166,13 +194,52 @@ export function useChatScreen() {
     setHasPendingRequest(false);
   };
 
+  const handleCancelRequest = async () => {
+    if (!chat?.id || !user?.id) return;
+    await cancelAdoptionRequest(user.id, chat.chat.pet.id, chat.id);
+    await sendAdoptionCancelledMessage(chat, user);
+    setShowMyRequestModal(false);
+    setMyAdoptionProfile(null);
+  };
+
+  const handleViewPetProfile = async () => {
+    if (!chat) return;
+    const petDoc = await getPetById(chat.chat.pet.id);
+    if (!petDoc) return;
+    router.push({
+      pathname: "/petProfile",
+      params: {
+        petId: petDoc.id,
+        stringItem: JSON.stringify(petDoc),
+        image: encodeURI(petDoc.pet.image),
+        isMy: "false",
+      },
+    });
+  };
+
+  const handleDeleteChat = async () => {
+    if (!chat?.id || !user?.id) return;
+    await softDeleteChat(chat.id, user.id);
+    router.back();
+  };
+
+  const handleViewContactProfile = () => {
+    // TODO: navigate to contact profile screen
+  };
+
+  const userDeletedAt = user?.id ? chat?.chat.deletedAt?.[user.id] : undefined;
+
   return {
     chat, setChat, user, title, isMine, isNotMine,
+    userDeletedAt,
+    handleViewPetProfile, handleDeleteChat, handleViewContactProfile,
     hasPendingRequest, adoptionProfile,
+    myAdoptionProfile, showMyRequestModal, setShowMyRequestModal,
+    showPreviewModal, setShowPreviewModal, handleConfirmSendRequest,
     showModal, setShowModal,
     showRequestModal, setShowRequestModal,
     toast, setToast, toastConfig,
     handleSendMessage, handleAdoptionRequest,
-    handleOpenRequest, handleAccept, handleReject,
+    handleOpenRequest, handleAccept, handleReject, handleCancelRequest,
   };
 }

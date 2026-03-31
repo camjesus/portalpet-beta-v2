@@ -22,7 +22,8 @@ export default function Bubble({ item, userId }: Props) {
       )}
       {item.message?.type === "adoption_request" ||
       item.message?.type === "adoption_accepted" ||
-      item.message?.type === "adoption_rejected" ? (
+      item.message?.type === "adoption_rejected" ||
+      item.message?.type === "adoption_cancelled" ? (
         <BubbleAdoption isMyMessage={isMyMessage} type={item.message.type} />
       ) : (
         <BubbleText

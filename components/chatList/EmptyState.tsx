@@ -5,10 +5,10 @@ import { scale } from "react-native-size-matters";
 export function EmptyState() {
   return (
     <View style={styles.container}>
-      <IconSymbol name="paw" size={60} color="#A5A5A5" />
-      <Text style={styles.title}>Sin Mascotas</Text>
+      <IconSymbol name="chat" size={60} color="#A5A5A5" />
+      <Text style={styles.title}>Sin mensajes</Text>
       <Text style={styles.text}>
-        Publica tus mascotas y gestionalas desde acá
+        Tus conversaciones aparecerán acá
       </Text>
     </View>
   );

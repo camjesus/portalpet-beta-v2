@@ -38,6 +38,8 @@ export default function AdoptionRequestForm() {
     setToast,
     toastConfig,
     submit,
+    submitLabel,
+    handleBack
   } = useAdoptionProfile();
 
   return (
@@ -45,7 +47,7 @@ export default function AdoptionRequestForm() {
       <HeaderCustom
         title="Formulario"
         childrenLeft={
-          <Pressable onPress={() => router.back()}>
+          <Pressable onPress={handleBack}>
             <IconSymbol size={30} name="arrow-back" color="white" />
           </Pressable>
         }
@@ -172,7 +174,7 @@ export default function AdoptionRequestForm() {
               </View>
             </View>
             <View style={styles.submit}>
-              <Button label="Guardar perfil" onPress={submit} />
+              <Button label={submitLabel} onPress={submit} />
             </View>
           </View>
         </ScrollView>

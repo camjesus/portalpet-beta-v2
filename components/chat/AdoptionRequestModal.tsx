@@ -15,8 +15,11 @@ type Props = {
   visible: boolean;
   profile: AdoptionProfile | null;
   onClose: () => void;
-  onAccept: () => void;
-  onReject: () => void;
+  onAccept?: () => void;
+  onReject?: () => void;
+  onCancel?: () => void;
+  onConfirmSend?: () => void;
+  readOnly?: boolean;
 };
 
 export default function AdoptionRequestModal({
@@ -25,6 +28,9 @@ export default function AdoptionRequestModal({
   onClose,
   onAccept,
   onReject,
+  onCancel,
+  onConfirmSend,
+  readOnly = false,
 }: Props) {
   return (
     <Modal transparent animationType="slide" visible={visible}>
@@ -83,24 +89,39 @@ export default function AdoptionRequestModal({
             )}
           </ScrollView>
 
-          <View style={styles.buttons}>
+          {!readOnly && (
+            <View style={styles.buttons}>
+              <Pressable
+                style={({ pressed }) => [styles.rejectButton, pressed && { opacity: 0.7 }]}
+                onPress={onReject}>
+                <Text style={styles.rejectText}>Rechazar</Text>
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [styles.acceptButton, pressed && { opacity: 0.7 }]}
+                onPress={onAccept}>
+                <Text style={styles.acceptText}>Aceptar</Text>
+              </Pressable>
+            </View>
+          )}
+{readOnly && onConfirmSend && (
+  <Pressable
+    style={({ pressed }) => [
+      styles.acceptButton,
+      styles.acceptButtonFull, 
+      { marginTop: scale(16) },
+      pressed && { opacity: 0.7 }
+    ]}
+    onPress={onConfirmSend}>
+    <Text style={styles.acceptText}>Enviar solicitud</Text>
+  </Pressable>
+)}
+          {readOnly && onCancel && (
             <Pressable
-              style={({ pressed }) => [
-                styles.rejectButton,
-                pressed && { opacity: 0.7 },
-              ]}
-              onPress={onReject}>
-              <Text style={styles.rejectText}>Rechazar</Text>
+              style={({ pressed }) => [styles.cancelButton, pressed && { opacity: 0.7 }]}
+              onPress={onCancel}>
+              <Text style={styles.cancelText}>Cancelar solicitud</Text>
             </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                styles.acceptButton,
-                pressed && { opacity: 0.7 },
-              ]}
-              onPress={onAccept}>
-              <Text style={styles.acceptText}>Aceptar</Text>
-            </Pressable>
-          </View>
+          )}
         </View>
       </View>
     </Modal>
@@ -173,6 +194,19 @@ const styles = StyleSheet.create({
     gap: scale(10),
     marginTop: scale(16),
   },
+  cancelButton: {
+    marginTop: scale(16),
+    padding: scale(14),
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#757575",
+    alignItems: "center",
+  },
+  cancelText: {
+    color: "#757575",
+    fontWeight: "bold",
+    fontSize: scale(14),
+  },
   rejectButton: {
     flex: 1,
     padding: scale(14),
@@ -197,5 +231,9 @@ const styles = StyleSheet.create({
     color: "#151718",
     fontWeight: "bold",
     fontSize: scale(14),
+  },
+  acceptButtonFull: {
+    flex: 0,
+    width: "100%",
   },
 });

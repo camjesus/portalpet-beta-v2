@@ -6,17 +6,19 @@ import {
   AdoptionProfileCard,
   LogoutCard,
   InfoCard,
+  AccountAvatar,
 } from "@/components/account";
 
 export default function Account() {
-  const { name, lastname, email, clearAll } = useAccount();
+  const { name, lastname, email, image, bio, saveBio, clearAll } = useAccount();
 
   return (
     <ViewCustom>
       <HeaderCustom title="Mis datos" />
       <View style={styles.wrapper}>
         <View style={styles.container}>
-          <InfoCard name={name} lastname={lastname} email={email} />
+          <AccountAvatar image={image} name={name} lastname={lastname} />
+          <InfoCard email={email} bio={bio} onSaveBio={saveBio} />
           <AdoptionProfileCard />
         </View>
         <LogoutCard onPress={clearAll} />

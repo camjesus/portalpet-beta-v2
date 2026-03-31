@@ -6,3 +6,5 @@ export { ChatNotificationContainer } from "./ChatNotification";
 export type { ChatNotificationData } from "./ChatNotification";
 export { default as AdoptionModal } from "./AdoptionModal";
 export { default as AdoptionRequestModal } from "./AdoptionRequestModal";
+export { AdoptionBanner } from "./AdoptionBanner";
+export { ChatMenu } from "./ChatMenu";

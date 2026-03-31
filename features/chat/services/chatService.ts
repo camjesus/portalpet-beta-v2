@@ -22,8 +22,16 @@ export const getChatsAsync = async (
   let userChats: ChatId[] = [];
   let rescuerChats: ChatId[] = [];
 
+  const isVisibleForUser = (chat: ChatId) => {
+    const deletedAt = chat.chat.deletedAt?.[user.id];
+    if (!deletedAt) return true;
+    const lastMessageAt = chat.chat.lastMessageAt;
+    if (!lastMessageAt) return false;
+    return lastMessageAt.seconds > deletedAt.seconds;
+  };
+
   const merge = () => {
-    onUpdate([...userChats, ...rescuerChats]);
+    onUpdate([...userChats, ...rescuerChats].filter(isVisibleForUser));
   };
 
   const qUser = query(

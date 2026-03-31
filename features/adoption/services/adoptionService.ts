@@ -75,3 +75,14 @@ export async function updateAdoptionRequestStatus(
   await updateAdoptionRequestDoc(docId, { status });
   await updateChatAdoptionStatus(chatId, status);
 }
+
+export async function cancelAdoptionRequest(
+  userId: string,
+  petId: string,
+  chatId: string,
+) {
+  const request = await getAdoptionRequestByPetAndUser(petId, userId);
+  if (!request) return;
+  await updateAdoptionRequestDoc(request.id, { status: "cancelled" });
+  await updateChatAdoptionStatus(chatId, "cancelled");
+}

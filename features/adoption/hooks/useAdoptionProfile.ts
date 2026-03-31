@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
 import {
   saveAdoptionProfile,
@@ -10,7 +10,7 @@ import { Validation } from "@/models";
 
 export function useAdoptionProfile() {
   const user = useAuthStore((s) => s.user);
-
+const { fromChat, chatId } = useLocalSearchParams<{ fromChat: string; chatId: string }>();
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
   const [housingType, setHousingType] = useState<"house" | "apartment">("house");
@@ -22,6 +22,15 @@ export function useAdoptionProfile() {
   const [previousPetsDescription, setPreviousPetsDescription] = useState("");
   const [toast, setToast] = useState(false);
   const [toastConfig, setToastConfig] = useState<Validation>();
+  const submitLabel = fromChat === "true" ? "Enviar solicitud" : "Guardar perfil";
+
+  const handleBack = () => {
+  if (fromChat === "true" && chatId) {
+    router.dismissTo({ pathname: "/chat", params: { chatId } });
+  } else {
+    router.dismiss();
+  }
+};
 
   useEffect(() => {
     if (!user?.id) return;
@@ -71,8 +80,11 @@ export function useAdoptionProfile() {
       previousPetsDescription,
       updatedAt: new Date(),
     });
-
-    router.back();
+    if (fromChat === "true" && chatId) {
+      router.dismissTo({ pathname: "/chat", params: { chatId, profileSaved: "true" } });
+    } else {
+      router.dismiss();
+    }
   };
 
   return {
@@ -86,6 +98,6 @@ export function useAdoptionProfile() {
     hadPetsBefore, setHadPetsBefore,
     previousPetsDescription, setPreviousPetsDescription,
     toast, setToast, toastConfig,
-    submit,
+    submit, submitLabel, handleBack
   };
 }

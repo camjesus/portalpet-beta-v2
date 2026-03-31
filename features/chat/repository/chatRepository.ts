@@ -10,6 +10,7 @@ import {
   getDoc,
   onSnapshot,
   updateDoc,
+  Timestamp,
 } from "firebase/firestore";
 
 import { Chat, ChatId } from "@/models";
@@ -65,7 +66,28 @@ export async function markChatAsUnread(chatId: string, isRescuer: boolean) {
 
 export async function updateChatAdoptionStatus(
   chatId: string,
-  status: "none" | "pending" | "accepted" | "rejected"
+  status: "none" | "pending" | "accepted" | "rejected" | "cancelled"
 ) {
   return await updateDoc(doc(db, "chats", chatId), { adoptionStatus: status });
+}
+
+export const softDeleteChat = async (chatId: string, userId: string) => {
+  return await updateDoc(doc(db, "chats", chatId), {
+    [`deletedAt.${userId}`]: Timestamp.now(),
+  });
+};
+
+export const updateLastMessageAt = async (chatId: string) => {
+  return await updateDoc(doc(db, "chats", chatId), {
+    lastMessageAt: Timestamp.now(),
+  });
+};
+
+export function listenChatDoc(chatId: string, callback: (chat: ChatId) => void) {
+  const chatRef = doc(db, "chats", chatId);
+  return onSnapshot(chatRef, (snapshot) => {
+    if (snapshot.exists()) {
+      callback(mapChatFromFirestore(snapshot.id, snapshot.data()));
+    }
+  });
 }

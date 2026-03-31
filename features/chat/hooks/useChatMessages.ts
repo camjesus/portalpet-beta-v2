@@ -6,6 +6,7 @@ import { MessageId } from "@/models";
 export function useChatMessages(
   chatId: string | undefined,
   scrollViewRef: React.RefObject<ScrollView | null>,
+  deletedAt?: any,
 ) {
   const [messages, setMessages] = useState<MessageId[]>([]);
   const unsubscribeRef = useRef<(() => void) | null>(null);
@@ -15,7 +16,10 @@ export function useChatMessages(
 
     unsubscribeRef.current?.();
     unsubscribeRef.current = listenMessages(chatId, (msgs) => {
-      setMessages(msgs);
+      const filtered = deletedAt
+        ? msgs.filter((m) => m.message.createAt && m.message.createAt.seconds > deletedAt.seconds)
+        : msgs;
+      setMessages(filtered);
       requestAnimationFrame(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       });

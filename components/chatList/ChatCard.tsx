@@ -30,6 +30,7 @@ export default function ChatCard({ item, userId }: Props) {
     pending: { label: "Solicitud pendiente", color: "#DCAD5F" },
     accepted: { label: "Adopción aceptada", color: "#4CAF50" },
     rejected: { label: "Solicitud rechazada", color: "#E57373" },
+    cancelled: null,
     none: null,
   };
   const adoption = adoptionConfig[item?.chat.adoptionStatus ?? "none"];
@@ -60,7 +61,7 @@ export default function ChatCard({ item, userId }: Props) {
           <View style={styles.viewRow}>
             <IconSymbol name="paw" size={20} color="#ffb13d" />
             <Text style={styles.textName}>
-              {item?.chat.pet?.name === "" ? "No tiene" : item?.chat.pet?.name}
+              {item?.chat.pet?.name === "" ? "Sin nombre" : item?.chat.pet?.name}
             </Text>
           </View>
           <View style={styles.viewRow}>

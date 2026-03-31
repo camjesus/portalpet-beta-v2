@@ -39,7 +39,8 @@ export async function getAdoptionRequestByPetAndUser(petId: string, userId: stri
   const q = query(
     collection(db, "adoptionRequests"),
     where("petId", "==", petId),
-    where("userId", "==", userId)
+    where("userId", "==", userId),
+    where("status", "==", "pending")
   );
   const snapshot = await getDocs(q);
   if (snapshot.empty) return null;

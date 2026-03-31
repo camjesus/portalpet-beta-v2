@@ -15,6 +15,8 @@ import {
   InputMessage,
   AdoptionModal,
   AdoptionRequestModal,
+  AdoptionBanner,
+  ChatMenu,
 } from "@/components/chat";
 import { useChatScreen } from "@/features/chat/hooks/useChatScreen";
 import { useChatMessages } from "@/features/chat/hooks/useChatMessages";
@@ -30,6 +32,8 @@ export default function Chat() {
     isNotMine,
     hasPendingRequest,
     adoptionProfile,
+    myAdoptionProfile, showMyRequestModal, setShowMyRequestModal,
+    showPreviewModal, setShowPreviewModal, handleConfirmSendRequest,
     showModal,
     setShowModal,
     showRequestModal,
@@ -42,9 +46,14 @@ export default function Chat() {
     handleOpenRequest,
     handleAccept,
     handleReject,
+    handleCancelRequest,
+    userDeletedAt,
+    handleViewPetProfile,
+    handleDeleteChat,
+    handleViewContactProfile,
   } = useChatScreen();
 
-  const { messages } = useChatMessages(chat?.id, scrollViewRef);
+  const { messages } = useChatMessages(chat?.id, scrollViewRef, userDeletedAt);
   if (!title) return null;
 
   return (
@@ -57,24 +66,23 @@ export default function Chat() {
           </Pressable>
         }
         childrenRight={
-          isMine && hasPendingRequest ? (
-            <Pressable onPress={handleOpenRequest}>
-              <IconSymbol
-                size={30}
-                name="clipboard-clock-outline"
-                color="white"
-              />
-            </Pressable>
-          ) : isNotMine ? (
-            <Pressable onPress={() => setShowModal(true)}>
-              <IconSymbol
-                size={30}
-                name="clipboard-arrow-up-outline"
-                color="white"
-              />
-            </Pressable>
-          ) : undefined
+          <ChatMenu
+            items={[
+              { label: "Ver perfil de mascota", icon: "paw", onPress: handleViewPetProfile },
+              { label: "Ver perfil de contacto", icon: "account", onPress: handleViewContactProfile },
+              { label: "Eliminar chat", icon: "delete", onPress: handleDeleteChat, danger: true },
+            ]}
+          />
         }
+      />
+      <AdoptionBanner
+        isMine={isMine}
+        isNotMine={isNotMine}
+        hasPendingRequest={hasPendingRequest}
+        isPending={chat?.chat.adoptionStatus === "pending"}
+        onOpenRequest={handleOpenRequest}
+        onSendRequest={() => setShowModal(true)}
+        onViewMyRequest={() => setShowMyRequestModal(true)}
       />
       <KeyboardAvoidingView
         style={{ flex: 1, backgroundColor: "transparent" }}
@@ -116,6 +124,20 @@ export default function Chat() {
         onClose={() => setShowRequestModal(false)}
         onAccept={handleAccept}
         onReject={handleReject}
+      />
+      <AdoptionRequestModal
+        visible={showMyRequestModal}
+        profile={myAdoptionProfile}
+        onClose={() => setShowMyRequestModal(false)}
+        onCancel={handleCancelRequest}
+        readOnly
+      />
+      <AdoptionRequestModal
+        visible={showPreviewModal}
+        profile={myAdoptionProfile}
+        onClose={() => setShowPreviewModal(false)}
+        onConfirmSend={handleConfirmSendRequest}
+        readOnly
       />
     </ViewCustom>
   );

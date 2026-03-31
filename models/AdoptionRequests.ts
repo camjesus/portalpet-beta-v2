@@ -4,6 +4,6 @@ export interface AdoptionRequest
   petId: string,
   rescuerId: string,
   adoptionProfileId: string,
-  status: "pending" | "accepted" | "rejected",
+  status: "pending" | "accepted" | "rejected" | "cancelled",
   createdAt: Date,
 }
