@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
-import { IconSymbol, IconSymbolName } from "@/components/ui";
+import { IconSymbol } from "@/components/ui";
 
 type MenuItem = {
   label: string;
-  icon: IconSymbolName;
+  icon: string;
   onPress: () => void;
   danger?: boolean;
 };

@@ -69,7 +69,6 @@ export default function Chat() {
           <ChatMenu
             items={[
               { label: "Ver perfil de mascota", icon: "paw", onPress: handleViewPetProfile },
-              { label: "Ver perfil de contacto", icon: "account", onPress: handleViewContactProfile },
               { label: "Eliminar chat", icon: "delete", onPress: handleDeleteChat, danger: true },
             ]}
           />
