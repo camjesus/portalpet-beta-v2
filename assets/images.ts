@@ -16,9 +16,10 @@ export const IMAGES = {
 },
 };
 
-const env = Constants.expoConfig?.extra.ENV || "dev";
+const env = (Constants.expoConfig?.extra?.ENV ?? "dev") as keyof typeof IMAGES;
+const resolvedEnv = env in IMAGES ? env : "dev"; 
 
-export const logo = IMAGES[env].logo;
-export const defaultImg = IMAGES[env].defaultImg;
-export const googleSignin = IMAGES[env].googleSignin;
-export const loading = IMAGES[env].loading;
+export const logo = IMAGES[resolvedEnv].logo;
+export const defaultImg = IMAGES[resolvedEnv].defaultImg;
+export const googleSignin = IMAGES[resolvedEnv].googleSignin;
+export const loading = IMAGES[resolvedEnv].loading;

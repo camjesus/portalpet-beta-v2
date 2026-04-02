@@ -6,7 +6,9 @@ export default ({ config }) => ({
   scheme: ["portalpet", "com.camjesus.portalpetbetav2"],
 
   extra: {
-    ENV: process.env.ENV || "dev",
+    ENV: process.env.ENV,
+    androidClientId: process.env.GOOGLE_ANDROID_ID,
+    webClientId: process.env.GOOGLE_WEB_ID,
     eas: {
       projectId: "f3967fa5-3be1-48ad-b2aa-f62e4242487d",
     },

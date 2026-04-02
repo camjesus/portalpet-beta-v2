@@ -126,6 +126,8 @@ export function useChatScreen() {
       chat.chat.pet.id,
       chat.chat.rescuer.id,
       chat.id,
+      user.name,
+      user.image,
     );
 
     if (result === "already_sent") {

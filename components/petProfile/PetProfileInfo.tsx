@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
-import { IconSymbol } from "@/components/ui";
+import { IconSymbol, DetailRow } from "@/components/ui";
 import { Pet } from "@/models";
 import { formatAge, formatDate, getPetName, ACTION_LABEL, SIZE_LABEL } from "./petProfileUtils";
 
@@ -49,15 +49,6 @@ export function PetProfileInfo({ pet }: Props) {
   );
 }
 
-function DetailRow({ label, value }: { label: string; value: string }) {
-  return (
-    <View style={styles.detailRow}>
-      <Text style={styles.detailLabel}>{label}</Text>
-      <Text style={styles.detailValue}>{value}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#1E1E1E",
@@ -82,21 +73,6 @@ const styles = StyleSheet.create({
   },
   detailsGrid: {
     gap: scale(10),
-  },
-  detailRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: scale(10),
-  },
-  detailLabel: {
-    color: "#A5A5A5",
-    fontSize: scale(13),
-    flex: 1,
-  },
-  detailValue: {
-    color: "white",
-    fontSize: scale(13),
-    fontWeight: "600",
   },
   rescuerRow: {
     flexDirection: "row",

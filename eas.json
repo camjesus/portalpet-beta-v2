@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "appVersionSource": "local"
+  },
   "build": {
     "debug": {
       "android": {
@@ -13,7 +16,7 @@
         "gradleCommand": ":app:assembleRelease"
       },
       "env": {
-        "ENV": "production",
+        "ENV": "prod",
         "GOOGLE_ANDROID_ID": "@GOOGLE_ANDROID_ID",
         "GOOGLE_WEB_ID": "@GOOGLE_WEB_ID",
         "API_KEY_LOCATIONIQ": "@API_KEY_LOCATIONIQ"
@@ -24,7 +27,7 @@
         "buildType": "apk"
       },
       "env": {
-        "ENV": "production"
+        "ENV": "prod"
       }
     }
   }

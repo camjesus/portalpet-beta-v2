@@ -19,15 +19,8 @@ export default function Card({ item }: Props) {
   }, []);
   console.log();
   function goToPetProfile() {
-    router.push({
-      pathname: "/petProfile",
-      params: {
-        petId: item.id,
-        stringItem: JSON.stringify(item),
-        image: encodeURI(item.pet.image),
-        isMy: "true",
-      },
-    });
+    router.push({ pathname: "/managementAdoption", params: { petId: item.id } 
+  })
   }
 
   return (

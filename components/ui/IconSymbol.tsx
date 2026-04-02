@@ -42,6 +42,8 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   calendar: "calendar",
   "dots-vertical": "dots-vertical",
   delete: "trash-can-outline",
+  pin: "pin",
+  "pin-off": "pin-off",
   email: "email-outline",
   "text-account": "text-account",
 };

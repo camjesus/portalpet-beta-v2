@@ -27,9 +27,19 @@ export function formatAge(age: number, ageType: string) {
     : `${age} ${age === 1 ? "año" : "años"}`;
 }
 
-export function formatDate(date: Date) {
+export function formatDate(date: any) {
   if (!date) return null;
-  return new Date(date).toLocaleDateString("es-AR", {
+  let d: Date;
+
+  if (date instanceof Date) {
+    d = date;
+  } else if (date?.seconds !== undefined) {
+    d = new Date(date.seconds * 1000);
+  } else {
+    d = new Date(date);
+  }
+
+  return d.toLocaleDateString("es-AR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",

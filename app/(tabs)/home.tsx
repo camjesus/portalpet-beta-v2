@@ -32,16 +32,6 @@ export default function Home() {
 
       {load && <Loading />}
 
-      {!load && (
-        <View style={styles.containerCenter}>
-          <PanelButtons
-            option={optAction}
-            labels={LABELS_ACCTION}
-            changeOption={changeValue}
-          />
-        </View>
-      )}
-
       {!load && myPets.length > 0 && (
         <FlatList
           data={myPets}
@@ -53,18 +43,31 @@ export default function Home() {
       )}
 
       {!load && myPets.length === 0 && <EmptyState onPress={goToFilter} />}
+
+      {!load && (
+        <View style={styles.containerCenter} pointerEvents="box-none">
+          <PanelButtons
+            option={optAction}
+            labels={LABELS_ACCTION}
+            changeOption={changeValue}
+          />
+        </View>
+      )}
     </ViewCustom>
   );
 }
 
 const styles = StyleSheet.create({
   containerCenter: {
+    position: "absolute",
+    paddingTop: scale(85),
+    left: 0,
+    right: 0,
     alignItems: "center",
-    marginTop: scale(16),
   },
   list: {
     paddingHorizontal: scale(16),
-    paddingTop: scale(12),
+    paddingTop: scale(70),
     paddingBottom: scale(40),
   },
 });

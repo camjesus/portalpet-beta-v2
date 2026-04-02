@@ -8,7 +8,7 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { AdoptionProfile, AdoptionRequest } from "@/models";
+import { AdoptionProfile, AdoptionRequest, AdoptionRequestId } from "@/models";
 
 export async function saveAdoptionProfileDoc(profile: AdoptionProfile) {
   return await addDoc(collection(db, "adoptionProfiles"), profile);
@@ -60,4 +60,17 @@ export async function getAdoptionRequestByPetId(petId: string) {
   const snapshot = await getDocs(q);
   if (snapshot.empty) return null;
   return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() as AdoptionRequest };
+}
+
+export async function getAllAdoptionRequestsByPetId(petId: string): Promise<AdoptionRequestId[]> {
+  const q = query(
+    collection(db, "adoptionRequests"),
+    where("petId", "==", petId),
+    where("status", "==", "pending")
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data() as AdoptionRequest,
+  }));
 }

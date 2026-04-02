@@ -14,10 +14,12 @@ export type Chat = {
     rescuer: {
         id: string;
         name: string;
+        image?: string;
     };
     user: {
         id: string;
         name: string;
+        image?: string;
     };
     required: boolean;
     hasUnreadRescuer: boolean;

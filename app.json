@@ -69,12 +69,16 @@
       "typedRoutes": true
     },
     "extra": {
+      "androidClientId":"411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com",
+      "webClientId":"411434491747-m8qsjh1g8mvfmllkb3fnf5mdqektmvk7.apps.googleusercontent.com",
+      
       "router": {
         "origin": false
       },
       "eas": {
         "projectId": "0c2bb168-a812-4a46-9c47-28dd79a62a0f"
       }
+      
     }
   }
 }

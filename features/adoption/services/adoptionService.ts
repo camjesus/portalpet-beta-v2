@@ -7,7 +7,8 @@ import {
   getAdoptionRequestByPetAndUser,
   saveAdoptionRequestDoc,
   updateAdoptionRequestDoc,
-  getAdoptionRequestByPetId
+  getAdoptionRequestByPetId,
+  getAllAdoptionRequestsByPetId,
 } from "../repository/AdoptionRepository";
 
 export function validateAdoptionProfile(profile: Partial<AdoptionProfile>): Validation | null {
@@ -42,6 +43,8 @@ export async function sendAdoptionRequest(
   petId: string,
   rescuerId: string,
   chatId: string,
+  userName?: string,
+  userImage?: string,
 ): Promise<"sent" | "already_sent"> {
   const existing = await getAdoptionRequestByPetAndUser(petId, userId);
   if (existing) return "already_sent";
@@ -53,7 +56,10 @@ export async function sendAdoptionRequest(
     userId,
     petId,
     rescuerId,
+    chatId,
     adoptionProfileId: profile.id,
+    userName,
+    userImage,
     status: "pending",
     createdAt: new Date(),
   });
@@ -61,6 +67,17 @@ export async function sendAdoptionRequest(
   await updateChatAdoptionStatus(chatId, "pending");
 
   return "sent";
+}
+
+export async function getAdoptionRequestsByPet(petId: string) {
+  const requests = await getAllAdoptionRequestsByPetId(petId);
+  const withProfiles = await Promise.all(
+    requests.map(async (request) => {
+      const profile = await getAdoptionProfileByUser(request.userId);
+      return { request, profile };
+    })
+  );
+  return withProfiles;
 }
 
 export async function getAdoptionRequestByPet(petId: string) {

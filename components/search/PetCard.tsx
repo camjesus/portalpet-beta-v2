@@ -1,18 +1,21 @@
 import { PetId } from "@/models";
-import { loadAction, loadPet } from "@/services/utils/usePet";
+import { loadAction } from "@/services/utils/usePet";
 import { router } from "expo-router";
 import { Pressable, View, Image, Text, StyleSheet } from "react-native";
 import { IconSymbol } from "../ui";
 import { scale } from "react-native-size-matters";
 import { toggleLike, isLiked } from "@/services/storage/likesStorage";
 import { useEffect, useState } from "react";
+import { formatAge, getPetName, SIZE_LABEL, SEX_LABEL, TYPE_LABEL } from "../petProfile/petProfileUtils";
 
 export function PetCard({ item }: { item: PetId }) {
   const { pet } = item;
-  const { name } = loadPet(pet);
-  const [liked, setLiked] = useState(false);
+  const petName = getPetName(pet.name);
+  const age = formatAge(pet.age, pet.ageType);
   const actionData = loadAction(pet.action);
   const actionColor = Array.isArray(actionData) ? actionData[1] : "#ffb13d";
+  const actionLabel = Array.isArray(actionData) ? actionData[0] : "";
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     isLiked(item.id).then(setLiked);
@@ -32,49 +35,14 @@ export function PetCard({ item }: { item: PetId }) {
             petId: item.id,
             stringItem: JSON.stringify(item),
             image: encodeURI(pet.image),
-            isMy: "false",  
+            isMy: "false",
           },
         })
-      }>
-      <View style={[styles.card, { borderLeftColor: actionColor }]}>
+      }
+      style={styles.card}>
+
+      <View style={styles.imageContainer}>
         <Image source={{ uri: pet.image }} style={styles.image} />
-        <View style={styles.viewDesc}>
-          <View style={styles.viewRow}>
-            <IconSymbol
-              name={pet.type === "DOG" ? "dog" : "cat"}
-              size={22}
-              color="#ffb13d"
-            />
-            <Text style={styles.textName}>{name}</Text>
-          </View>
-          <View style={styles.viewRow}>
-            <IconSymbol
-              name={pet.sex === "MALE" ? "male" : "female"}
-              size={22}
-              color="#A5A5A5"
-            />
-            <Text style={styles.textMeta}>
-              {pet.age} {pet.ageType === "YEAR" ? "años" : "meses"}
-            </Text>
-          </View>
-          <View style={styles.viewRow}>
-            <IconSymbol
-              name="paw"
-              size={14}
-              color={pet.size === "SMALL" ? "#ffb13d" : "#A5A5A5"}
-            />
-            <IconSymbol
-              name="paw"
-              size={18}
-              color={pet.size === "MEDIUM" ? "#ffb13d" : "#A5A5A5"}
-            />
-            <IconSymbol
-              name="paw"
-              size={22}
-              color={pet.size === "BIG" ? "#ffb13d" : "#A5A5A5"}
-            />
-          </View>
-        </View>
         <Pressable
           style={styles.likeButton}
           onPress={(e) => {
@@ -83,10 +51,46 @@ export function PetCard({ item }: { item: PetId }) {
           }}>
           <IconSymbol
             name={liked ? "heart" : "heart-outline"}
-            size={26}
-            color={liked ? "#E57373" : "#A5A5A5"}
+            size={24}
+            color={liked ? "#E57373" : "white"}
           />
         </Pressable>
+      </View>
+
+      <View style={styles.content}>
+        <View style={styles.nameRow}>
+          <IconSymbol
+            name={pet.type === "DOG" ? "dog" : "cat"}
+            size={18}
+            color="#ffb13d"
+          />
+          <Text style={styles.name} numberOfLines={1}>{petName}</Text>
+        </View>
+
+        <View style={styles.metaRow}>
+          <View style={styles.chipRow}>
+          {pet.type && (
+            <View style={styles.chip}>
+              <Text style={styles.chipText}>{TYPE_LABEL[pet.type] ?? pet.type}</Text>
+            </View>
+          )}
+          {pet.sex && (
+            <View style={styles.chip}>
+              <Text style={styles.chipText}>{SEX_LABEL[pet.sex] ?? pet.sex}</Text>
+              <IconSymbol
+                name={pet.sex === "MALE" ? "male" : "female"}
+                size={14}
+                color="#ffb13d"
+              />
+            </View>
+          )}
+          {age && (
+            <View style={styles.chip}>
+              <Text style={styles.chipText}>{age}</Text>
+            </View>
+          )}
+        </View>
+        </View>
       </View>
     </Pressable>
   );
@@ -94,55 +98,99 @@ export function PetCard({ item }: { item: PetId }) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
-    width: "100%",
-    height: scale(120),
-    marginBottom: scale(10),
-    flexDirection: "row",
-    alignItems: "center",
-    overflow: "hidden",
     backgroundColor: "white",
-    elevation: 3,
+    borderRadius: 16,
+    overflow: "hidden",
+    marginBottom: scale(12),
+    elevation: 2,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
-    shadowRadius: 8,
-    borderWidth: 1,
-    borderColor: "#F0E6D3",
-    borderLeftWidth: scale(4),
-    borderLeftColor: "#ffb13d",
+    shadowRadius: 4,
+  },
+  imageContainer: {
+    width: "100%",
+    height: scale(250),
   },
   image: {
-    width: scale(120),
-    height: scale(120),
+    width: "100%",
+    height: "100%",
     resizeMode: "cover",
   },
-  viewDesc: {
-    flex: 1,
-    paddingHorizontal: scale(12),
-    flexDirection: "column",
-    justifyContent: "center",
-    gap: scale(8),
+  actionChip: {
+    position: "absolute",
+    top: scale(10),
+    left: scale(10),
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(4),
+    borderRadius: 20,
   },
-  viewRow: {
+  actionText: {
+    color: "white",
+    fontSize: scale(10),
+    fontWeight: "bold",
+    letterSpacing: 0.5,
+  },
+  likeButton: {
+    position: "absolute",
+    top: scale(8),
+    right: scale(10),
+    backgroundColor: "rgba(0,0,0,0.35)",
+    borderRadius: 20,
+    padding: scale(6),
+  },
+  content: {
+    padding: scale(12),
+    gap: scale(6),
+  },
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(6),
+  },
+  name: {
+    color: "#151718",
+    fontSize: scale(16),
+    fontWeight: "bold",
+    flex: 1,
+  },
+  metaRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: scale(5),
   },
-  textName: {
-    color: "#151718",
-    fontSize: scale(15),
-    fontWeight: "bold",
+  metaText: {
+    color: "#777",
+    fontSize: scale(12),
   },
-  textMeta: {
-    color: "#A5A5A5",
-    fontSize: scale(13),
+  dot: {
+    color: "#ffb13d",
+    fontSize: scale(12),
   },
-  likeButton: {
-    paddingRight: scale(14),
-    paddingBottom: scale(10),
-    position: "absolute",
-    right: 0,
-    bottom: 0,
+  description: {
+    color: "#777",
+    fontSize: scale(12),
+    lineHeight: scale(18),
+    marginTop: scale(2),
+  },
+
+  chipRow: {
+    flexDirection: "row",
+    gap: scale(6),
+  },
+  chip: {
+    backgroundColor: "rgba(255,177,61,0.2)",
+    borderWidth: 1,
+    borderColor: "#ffb13d",
+    borderRadius: 20,
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(3),
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  chipText: {
+    color: "#ffb13d",
+    fontSize: scale(11),
+    fontWeight: "600",
   },
 });

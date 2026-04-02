@@ -1,4 +1,5 @@
 import { StyleSheet, Text, Pressable, View } from "react-native";
+import { rgbaColor } from "react-native-reanimated/lib/typescript/Colors";
 import { scale } from "react-native-size-matters";
 
 type Props = {
@@ -16,13 +17,13 @@ export default function PanelButtons({
 }: Props) {
   return (
     <View style={[styles.containerButton]}>
-      <View style={styles.box}>
+      <View style={styles.boxLeft}>
         <Pressable
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? "#DCAD5F" : "white",
             },
-            styles.button,
+            styles.buttonLeft,
             option === 0 ? styles.active : styles.desactive,
             children && styles.static,
           ]}
@@ -35,7 +36,7 @@ export default function PanelButtons({
           {children && children[0]}
         </Pressable>
       </View>
-      <View style={styles.box}>
+      <View style={styles.boxCenter}>
         <Pressable
           style={({ pressed }) => [
             {
@@ -54,13 +55,13 @@ export default function PanelButtons({
           {children && children[1]}
         </Pressable>
       </View>
-      <View style={styles.box}>
+      <View style={styles.boxRight}>
         <Pressable
           style={({ pressed }) => [
             {
               backgroundColor: pressed ? "#DCAD5F" : "white",
             },
-            styles.button,
+            styles.buttonRight,
             option == 2 ? styles.active : styles.desactive,
             children && styles.static,
           ]}
@@ -84,13 +85,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#ffb13d",
-    borderRadius: 5,
+    borderRadius: 40,
+    backgroundColor: "rgba(255, 255, 255, 0)"
   },
   button: {
     borderWidth: 2,
     borderColor: "white",
     paddingHorizontal: scale(10),
     paddingVertical: scale(8),
+  },
+  buttonRight: {
+    borderWidth: 2,
+    borderColor: "white",
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(8),
+    borderTopRightRadius: 40,
+    borderBottomRightRadius: 40,
+  },
+  buttonLeft: {
+    borderWidth: 2,
+    borderColor: "white",
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(8),
+    borderTopLeftRadius: 40,
+    borderBottomLeftRadius: 40,
   },
   active: {
     backgroundColor: "#ffb13d",
@@ -113,7 +131,19 @@ const styles = StyleSheet.create({
   activeLabel: {
     color: "#4B4B4B",
   },
-  box: {
+  boxRight: {
+    borderColor: "#ffb13d",
+    borderWidth: 2,
+    borderTopRightRadius: 40,
+    borderBottomRightRadius: 40,
+  },
+  boxLeft: {
+    borderColor: "#ffb13d",
+    borderWidth: 2,
+    borderTopLeftRadius: 40,
+    borderBottomLeftRadius: 40,
+  },
+  boxCenter: {
     borderColor: "#ffb13d",
     borderWidth: 2,
   },

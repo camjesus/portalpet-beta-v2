@@ -49,6 +49,7 @@ function RootLayoutContent() {
             name="adoptionProfile"
             options={{ headerShown: false }}
           />
+          <Stack.Screen name="managementAdoption" options={{ headerShown: false }} />
           <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
