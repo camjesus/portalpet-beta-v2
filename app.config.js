@@ -5,15 +5,15 @@ export default ({ config }) => ({
   slug: "portalpet-beta-v2",
   scheme: ["portalpet", "com.camjesus.portalpetbetav2"],
 
-  extra: {
-    ENV: process.env.ENV,
-    androidClientId: process.env.GOOGLE_ANDROID_ID,
-    webClientId: process.env.GOOGLE_WEB_ID,
-    eas: {
-      projectId: "f3967fa5-3be1-48ad-b2aa-f62e4242487d",
-    },
-    ASSET_SET: process.env.ASSET_SET,
+extra: {
+  ENV: process.env.ENV,
+  androidClientId: process.env.GOOGLE_ANDROID_ID ?? "411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com",
+  webClientId: process.env.GOOGLE_WEB_ID ?? "411434491747-m8qsjh1g8mvfmllkb3fnf5mdqektmvk7.apps.googleusercontent.com",
+  eas: {
+    projectId: "f3967fa5-3be1-48ad-b2aa-f62e4242487d",
   },
+  ASSET_SET: process.env.ASSET_SET,
+},
 
   android: {
     ...config.android,

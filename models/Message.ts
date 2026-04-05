@@ -17,11 +17,7 @@ export type Message = {
         name: string;
       }
     | undefined;
-  type?:
-    | "text"
-    | "adoption_request"
-    | "adoption_accepted"
-    | "adoption_rejected";
+  type?: "text" | "adoption_request" | "adoption_accepted" | "adoption_rejected" | "adoption_cancelled";
 };
 
 export function newSystemMessageId(index: string, text: string) {

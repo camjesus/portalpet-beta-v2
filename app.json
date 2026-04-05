@@ -7,6 +7,11 @@
     "icon": "./assets/dev/images/icon.png",
     "scheme": "portalpet",
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/dev/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "newArchEnabled": true,
     "androidStatusBar": {
       "backgroundColor": "#DCAD5F",
