@@ -15,7 +15,7 @@ export function AdoptionProfileCard() {
           Completá tu perfil para solicitar adopciones
         </Text>
       </View>
-      <IconSymbol name="arrow-next" size={20} color="#A5A5A5" />
+      <IconSymbol name="arrow-next" size={20} color="white" />
     </Pressable>
   );
 }
@@ -24,13 +24,11 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#4b4b4bff",
     marginHorizontal: scale(20),
     padding: scale(16),
     borderRadius: 12,
     gap: scale(12),
-    borderWidth: 1,
-    borderColor: "#ffb13d",
   },
   cardPressed: {
     backgroundColor: "#2A2A2A",
@@ -41,7 +39,7 @@ const styles = StyleSheet.create({
     fontSize: scale(14),
   },
   subtitle: {
-    color: "#A5A5A5",
+    color: "#d7d7d7ff",
     fontSize: scale(11),
     marginTop: scale(2),
   },

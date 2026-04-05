@@ -28,7 +28,7 @@ export function InfoCard({ email, bio, onSaveBio }: InfoCardProps) {
     <>
       <View style={styles.card}>
         <View style={styles.row}>
-          <IconSymbol name="email" size={18} color="#A5A5A5" />
+          <IconSymbol name="email" size={18} color="#ffb13d" />
           <View style={{ flex: 1 }}>
             <Text style={styles.label}>Email</Text>
             <Text style={styles.value}>{email || "—"}</Text>
@@ -38,7 +38,7 @@ export function InfoCard({ email, bio, onSaveBio }: InfoCardProps) {
         <View style={styles.divider} />
 
         <View style={styles.row}>
-          <IconSymbol name="text-account" size={18} color="#A5A5A5" />
+          <IconSymbol name="text-account" size={18} color="#ffb13d" />
           <View style={{ flex: 1 }}>
             <Text style={styles.label}>Sobre mí</Text>
             <Text style={[styles.value, !bio && styles.empty]}>
@@ -66,11 +66,11 @@ export function InfoCard({ email, bio, onSaveBio }: InfoCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#ffffffff",
     marginHorizontal: scale(20),
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#2A2A2A",
+    borderColor: "#c4cfd5ff",
     overflow: "hidden",
   },
   row: {
@@ -80,17 +80,17 @@ const styles = StyleSheet.create({
     gap: scale(12),
   },
   label: {
-    color: "#A5A5A5",
+    color: "#151718",
     fontSize: scale(11),
     marginBottom: scale(2),
   },
   value: {
-    color: "white",
+    color: "#151718",
     fontSize: scale(14),
     fontWeight: "bold",
   },
   empty: {
-    color: "#555",
+    color: "#151718",
     fontWeight: "normal",
     fontStyle: "italic",
   },
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: "#2A2A2A",
+    backgroundColor: "#c4cfd5ff",
     marginHorizontal: scale(16),
   },
 });

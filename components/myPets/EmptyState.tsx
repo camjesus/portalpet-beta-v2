@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#A5A5A5",
-    fontSize: scale(13),
+    fontSize: scale(16),
     textAlign: "center",
     lineHeight: scale(20),
   },

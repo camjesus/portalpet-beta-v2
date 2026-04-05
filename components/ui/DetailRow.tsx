@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
     gap: scale(10),
   },
   label: {
-    color: "#A5A5A5",
+    color: "#151718",
     fontSize: scale(13),
     flex: 1,
   },
   value: {
-    color: "white",
+    color: "#151718",
     fontSize: scale(13),
     fontWeight: "600",
   },

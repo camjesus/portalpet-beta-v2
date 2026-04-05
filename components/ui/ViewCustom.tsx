@@ -11,6 +11,6 @@ export default function ViewCustom({ children }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#151718",
+    backgroundColor: "#ffffffff",
   },
 });

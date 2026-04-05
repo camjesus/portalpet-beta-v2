@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: "left",
-    color: "white",
+    color: "#151718",
     fontWeight: "bold",
     marginBottom: scale(5),
   },

@@ -16,19 +16,19 @@ export function BioEditModal({ visible, value, onChange, onSave, onClose }: Prop
     <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
       <Pressable style={styles.overlay} onPress={onClose}>
         <Pressable style={styles.card} onPress={() => {}}>
-          <Text style={styles.title}>Sobre mí</Text>
-
+          <Text style={styles.label}>Sobre mí ({value.length}/{BIO_MAX})</Text>
           <TextInput
             style={styles.input}
             value={value}
             onChangeText={(v) => onChange(v.slice(0, BIO_MAX))}
             placeholder="Presentate ante la comunidad"
-            placeholderTextColor="#555"
+            placeholderTextColor="#A5A5A5"
             multiline
             autoFocus
             maxLength={BIO_MAX}
+            scrollEnabled
+            textAlignVertical="top"
           />
-          <Text style={styles.counter}>{value.length}/{BIO_MAX}</Text>
 
           <View style={styles.buttons}>
             <Pressable
@@ -57,38 +57,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
   },
   card: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#ffffffff",
     borderRadius: 16,
     padding: scale(20),
     width: "100%",
     borderWidth: 1,
-    borderColor: "#2A2A2A",
+    borderColor: "#ffffffff",
   },
-  title: {
-    color: "#ffb13d",
-    fontSize: scale(14),
+  label: {
+    color: "#151718",
     fontWeight: "bold",
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-    marginBottom: scale(14),
+    fontSize: scale(13),
+    marginBottom: scale(5),
   },
   input: {
-    backgroundColor: "#151718",
-    borderRadius: 10,
-    padding: scale(12),
-    color: "white",
-    fontSize: scale(14),
-    lineHeight: scale(20),
-    minHeight: scale(100),
-    textAlignVertical: "top",
     borderWidth: 1,
-    borderColor: "#2A2A2A",
-  },
-  counter: {
-    color: "#555",
-    fontSize: scale(10),
-    textAlign: "right",
-    marginTop: scale(6),
+    borderColor: "#A5A5A5",
+    borderRadius: 10,
+    backgroundColor: "white",
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(8),
+    fontSize: scale(14),
+    color: "#151718",
+    minHeight: scale(80),
+    maxHeight: scale(120),
   },
   buttons: {
     flexDirection: "row",

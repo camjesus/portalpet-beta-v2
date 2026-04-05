@@ -21,6 +21,8 @@ export default function TitleCustom({ title, children }: Props) {
 const styles = StyleSheet.create({
   column: {
     flexDirection: "column",
+    borderColor: "#c4cfd5ff",
+    borderWidth: 1,
   },
   checkBoxContainer: {
     backgroundColor: "white",

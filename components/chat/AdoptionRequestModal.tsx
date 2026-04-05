@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   card: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: scale(20),
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: scale(16),
   },
   title: {
-    color: "white",
+    color: "#151718",
     fontWeight: "bold",
     fontSize: scale(16),
     flex: 1,
@@ -170,22 +170,24 @@ const styles = StyleSheet.create({
     paddingBottom: scale(16),
   },
   infoRow: {
-    backgroundColor: "#151718",
+    backgroundColor: "white",
     padding: scale(12),
-    borderRadius: 10,
+    borderRadius: 20,
     gap: scale(4),
+    borderWidth: 1,
+    borderColor: "#c4cfd5ff",
   },
   infoLabel: {
-    color: "#A5A5A5",
+    color: "#151718",
     fontSize: scale(11),
   },
   infoValue: {
-    color: "white",
+    color: "#151718",
     fontSize: scale(13),
     fontWeight: "bold",
   },
   noProfile: {
-    color: "#A5A5A5",
+    color: "#151718",
     textAlign: "center",
     padding: scale(20),
   },

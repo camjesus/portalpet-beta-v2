@@ -41,12 +41,12 @@ export default function Card({ item }: Props) {
               <IconSymbol size={30} name="edit" color="white" />
             </Link>
           </View>
+          <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>
+            {data.action}
+          </Text>
         </View>
 
         <Text style={styles.textName}>{data.name}</Text>
-        <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>
-          {data.action}
-        </Text>
       </View>
     </Pressable>
   );
@@ -57,20 +57,28 @@ const styles = StyleSheet.create({
     right: 10,
     top: 10,
     position: "absolute",
+    backgroundColor: "rgba(0, 0, 0, 0.32)",
+    borderRadius: 20,
+    padding: scale(6),
   },
   card: {
-    borderRadius: 10,
-    borderWidth: scale(3),
+    borderRadius: 20,
+    borderWidth: scale(2),
     width: scale(150),
-    height: scale(280),
+    height: scale(250),
     alignItems: "center",
     alignContent: "center",
     marginRight: scale(10),
-    marginBottom: scale(15),
+    marginBottom: scale(10),
     backgroundColor: "white",
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
   },
   image: {
-    width: scale(145),
+    width: scale(150),
     height: scale(200),
     borderTopEndRadius: 8,
     borderStartStartRadius: 8,
@@ -83,15 +91,15 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(10),
   },
   labelAcction: {
-    marginTop: scale(3),
-    padding: scale(5),
-    paddingHorizontal: scale(10),
+    position: "absolute",
+    bottom: scale(3),
+    left: scale(8),
+    paddingVertical: scale(3),
+    paddingHorizontal: scale(8),
     color: "white",
     fontWeight: "bold",
-    textAlign: "center",
-    fontSize: scale(12),
-    borderRadius: 5,
-    bottom: scale(8),
-    position: "absolute",
+    fontSize: scale(11),
+    borderRadius: 6,
+    overflow: "hidden",
   },
 });

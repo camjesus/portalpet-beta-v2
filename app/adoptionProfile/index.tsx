@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     marginTop: scale(10),
   },
   sectionLabel: {
-    color: "white",
+    color: "#151718",
     fontWeight: "bold",
     marginBottom: scale(8),
     fontSize: scale(13),
@@ -214,11 +214,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: scale(8),
-    marginBottom: scale(20),
-    marginTop: scale(10),
+    marginBottom: scale(5),
+    marginTop: scale(5),
   },
   title: {
-    color: "white",
+    color: "#151718",
     fontSize: scale(18),
     fontWeight: "bold",
   },

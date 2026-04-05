@@ -27,7 +27,6 @@ export function PetProfileInfo({ pet }: Props) {
         <View style={styles.detailsGrid}>
           <DetailRow label="Tamaño" value={SIZE_LABEL[pet.size] ?? pet.size} />
           {age && <DetailRow label="Edad" value={age} />}
-          {pet.action && <DetailRow label="Acción" value={ACTION_LABEL[pet.action] ?? pet.action} />}
           {date && <DetailRow label="Publicado" value={date} />}
         </View>
       </View>
@@ -51,23 +50,21 @@ export function PetProfileInfo({ pet }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#ffffffff",
     borderRadius: 12,
     padding: scale(16),
     marginBottom: scale(12),
-    borderWidth: 1,
-    borderColor: "#2A2A2A",
   },
   cardTitle: {
     color: "#ffb13d",
-    fontSize: scale(13),
+    fontSize: scale(16),
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 0.8,
     marginBottom: scale(10),
   },
   cardText: {
-    color: "#D0D0D0",
+    color: "#151718",
     fontSize: scale(14),
     lineHeight: scale(21),
   },
@@ -88,7 +85,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   rescuerName: {
-    color: "white",
+    color: "#151718",
     fontSize: scale(14),
     fontWeight: "500",
   },

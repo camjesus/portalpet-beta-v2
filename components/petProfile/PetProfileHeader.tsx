@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(16),
     paddingBottom: scale(16),
     paddingTop: scale(7),
-    backgroundColor: "rgba(21, 23, 24, 0.34)",
+    backgroundColor: "rgba(0, 0, 0, 0.32)",
   },
   petName: {
     color: "white",

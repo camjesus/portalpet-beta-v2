@@ -5,6 +5,7 @@ import { ViewCustom, HeaderCustom, IconSymbol } from "@/components/ui";
 import { Pressable } from "react-native";
 import AdoptionRequestModal from "@/components/chat/AdoptionRequestModal";
 import { AdoptionRequestCard } from "@/components/managementAdoption/AdoptionRequestCard";
+import { EmptyState } from "@/components/managementAdoption/EmptyState";
 import { useManagementAdoption } from "@/features/adoption/hooks/useManagementAdoption";
 
 export default function ManagementAdoption() {
@@ -34,6 +35,7 @@ export default function ManagementAdoption() {
         data={items}
         keyExtractor={(item) => item.request.id}
         contentContainerStyle={styles.list}
+        ListEmptyComponent={<EmptyState />}
         renderItem={({ item }) => (
           <AdoptionRequestCard
             request={item.request}

@@ -41,7 +41,7 @@ export function PetProfileView({ pet, image, isMy, goToBack, goToReport, goToCha
             <Text style={styles.contactCardTitle}>Ponete en contacto</Text>
             <Text style={styles.contactCardSubtitle}>Escribile al rescatista</Text>
           </View>
-          <IconSymbol name="arrow-next" size={20} color="#A5A5A5" />
+          <IconSymbol name="arrow-next" size={20} color="white" />
         </Pressable>
       )}
     </ViewCustom>
@@ -50,14 +50,14 @@ export function PetProfileView({ pet, image, isMy, goToBack, goToReport, goToCha
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingHorizontal: scale(16),
     paddingTop: scale(16),
     paddingBottom: scale(20),
+    backgroundColor: "#eeeeeeff",
   },
   contactCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#4b4b4bff",
     marginHorizontal: scale(20),
     marginBottom: scale(20),
     padding: scale(16),
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   contactCardPressed: {
-    backgroundColor: "#2A2A2A",
+    backgroundColor: "#6f6f6fff",
   },
   contactCardTitle: {
     color: "white",
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     fontSize: scale(14),
   },
   contactCardSubtitle: {
-    color: "#A5A5A5",
+    color: "#d7d7d7ff",
     fontSize: scale(11),
     marginTop: scale(2),
   },
