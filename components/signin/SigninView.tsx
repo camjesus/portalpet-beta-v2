@@ -31,7 +31,7 @@ export function SigninView({ loading, handleLogin }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#151718",
+    backgroundColor: "#f8f8f8ff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(12),
   },
   subtitle: {
-    color: "rgba(255, 255, 255, 0.45)",
+    color: "#151718",
     fontSize: scale(12),
     letterSpacing: 2,
     textTransform: "uppercase",
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   terms: {
-    color: "rgba(255, 255, 255, 0.47)",
+    color: "#686868ff",
     fontSize: scale(10),
     marginTop: scale(16),
     letterSpacing: 0.3,

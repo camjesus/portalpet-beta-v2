@@ -5,6 +5,8 @@ import * as WebBrowser from "expo-web-browser";
 import { router } from "expo-router";
 import { getGoogleUserInfo } from "@/services/dataBase/useGoogleSignin";
 import { useAuthStore } from "@/store/authStore";
+import { GOOGLE_ANDROID_ID, GOOGLE_WEB_ID } from "@/secret-google";
+
 WebBrowser.maybeCompleteAuthSession();
 
 const redirectUri = AuthSession.makeRedirectUri({
@@ -15,8 +17,8 @@ export function useSignin() {
   const [loading, setLoading] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
   const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: process.env.GOOGLE_WEB_ID,
-    androidClientId: process.env.GOOGLE_ANDROID_ID,
+    webClientId: GOOGLE_WEB_ID,
+    androidClientId: GOOGLE_ANDROID_ID,
     scopes: ["profile", "email"],
     usePKCE: true,
     redirectUri,

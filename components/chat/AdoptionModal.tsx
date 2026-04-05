@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalCard: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "white",
     borderRadius: 16,
     padding: scale(24),
     marginHorizontal: scale(30),
@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
     borderColor: "#ffb13d",
   },
   modalTitle: {
-    color: "white",
+    color: "#151718",
     fontWeight: "bold",
     fontSize: scale(16),
     textAlign: "center",
   },
   modalSubtitle: {
-    color: "#A5A5A5",
+    color: "#7f7e7eff",
     fontSize: scale(12),
     textAlign: "center",
   },
@@ -71,10 +71,10 @@ const styles = StyleSheet.create({
     paddingVertical: scale(10),
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#A5A5A5",
+    borderColor: "#7f7e7eff",
   },
   modalButtonNoText: {
-    color: "#A5A5A5",
+    color: "#7f7e7eff",
     fontWeight: "bold",
     fontSize: scale(13),
   },

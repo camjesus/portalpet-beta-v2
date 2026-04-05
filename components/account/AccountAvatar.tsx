@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   name: {
-    color: "white",
+    color: "#151718",
     fontSize: scale(16),
     fontWeight: "bold",
   },

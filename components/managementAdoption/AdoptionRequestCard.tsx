@@ -67,10 +67,16 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "white",
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#2A2A2A",
     padding: scale(16),
     gap: scale(14),
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   cardPinned: {
     borderColor: "#ffb13d",

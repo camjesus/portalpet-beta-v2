@@ -1,20 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
-import { IconSymbol, Button } from "@/components/ui";
+import { IconSymbol } from "@/components/ui";
 import { scale } from "react-native-size-matters";
 
-interface EmptyStateProps {
-  onPress: () => void;
-}
-
-export function EmptyState({ onPress }: EmptyStateProps) {
+export function EmptyState() {
   return (
     <View style={styles.container}>
-      <IconSymbol name="paw" size={60} color="#A5A5A5" />
-      <Text style={styles.title}>Sin resultados</Text>
+      <IconSymbol name="clipboard" size={60} color="#A5A5A5" />
+      <Text style={styles.title}>Sin solicitudes</Text>
       <Text style={styles.text}>
-        No encontramos mascotas con los filtros seleccionados
+        Todavía no hay solicitudes para esta mascota
       </Text>
-      <Button label="Modificar filtros" onPress={onPress} />
     </View>
   );
 }
@@ -22,7 +17,7 @@ export function EmptyState({ onPress }: EmptyStateProps) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    marginTop: scale(100),
+    marginTop: scale(60),
     gap: scale(12),
     paddingHorizontal: scale(30),
   },

@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     gap: scale(10),
     borderWidth: 1,
     borderColor: "#ffb13d",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#ffffffff",
   },
   left: {
     alignSelf: "flex-start",
@@ -97,12 +97,12 @@ const styles = StyleSheet.create({
     marginLeft: scale(10),
   },
   title: {
-    color: "white",
+    color: "#151718",
     fontWeight: "bold",
     fontSize: scale(12),
   },
   subtitle: {
-    color: "#A5A5A5",
+    color: "#4b4b4bff",
     fontSize: scale(11),
     marginTop: scale(2),
   },

@@ -1,7 +1,6 @@
-import { FlatList, StyleSheet, View, Pressable } from "react-native";
+import { FlatList, StyleSheet, View, Pressable, Image, Text } from "react-native";
 import {
   ViewCustom,
-  HeaderCustom,
   PanelButtons,
   IconSymbol,
   Loading,
@@ -11,6 +10,7 @@ import { PetCard } from "@/components/search/PetCard";
 import { LABELS_ACCTION } from "@/constants/StaticData";
 import { useHome } from "@/features/pet/hooks/useHome";
 import { EmptyState } from "@/components/home/EmptyState";
+import { logo } from "@/assets/images";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -21,14 +21,15 @@ export default function Home() {
 
   return (
     <ViewCustom>
-      <HeaderCustom
-        title="Portal Pet"
-        childrenRight={
-          <Pressable onPress={goToFilter}>
-            <IconSymbol size={30} name="filter" color="white" />
-          </Pressable>
-        }
-      />
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <Image source={logo} style={styles.logo} />
+          <Text style={styles.headerTitle}>Portal Pet</Text>
+        </View>
+        <Pressable onPress={goToFilter}>
+          <IconSymbol size={30} name="filter" color="white" />
+        </Pressable>
+      </View>
 
       {load && <Loading />}
 
@@ -58,9 +59,35 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#ffb13d",
+    paddingHorizontal: scale(20),
+    paddingTop: scale(50),
+    paddingBottom: scale(12),
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+  },
+  headerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(8),
+  },
+  headerTitle: {
+    color: "white",
+    fontSize: scale(22),
+    fontWeight: "bold",
+  },
+  logo: {
+    width: scale(24),
+    height: scale(24),
+    resizeMode: "contain",
+  },
   containerCenter: {
     position: "absolute",
-    paddingTop: scale(85),
+    paddingTop: scale(100),
     left: 0,
     right: 0,
     alignItems: "center",

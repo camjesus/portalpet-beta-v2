@@ -34,7 +34,7 @@ export function AdoptionBanner({ isMine, isNotMine, hasPendingRequest, isPending
         <Text style={styles.text}>
           {isPending ? "Ver tu solicitud enviada" : "Enviar solicitud de adopción"}
         </Text>
-        <IconSymbol name="arrow-next" size={18} color="#A5A5A5" />
+        <IconSymbol name="arrow-next" size={18} color="white" />
       </Pressable>
     );
   }
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   banner: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#4b4b4bff",
     marginHorizontal: scale(12),
     marginTop: scale(8),
     marginBottom: scale(4),

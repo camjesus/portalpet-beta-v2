@@ -43,6 +43,7 @@ export function ReportForm({ other, option, toast, setOther, setToast, changeOpt
                 <Text style={styles.text}>La información tiene contenido inapropiado</Text>
               </View>
             </Pressable>
+          </View>
             <TextInputCustom
               label={"Otro (" + (200 - other.length) + ")"}
               options={{
@@ -54,25 +55,29 @@ export function ReportForm({ other, option, toast, setOther, setToast, changeOpt
               }}
               multiline={true}
             />
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
       <View style={styles.submit}>
         <Button label="Enviar" onPress={handlePress} />
       </View>
-      <View style={styles.containerCenter}>
-        {toast && <Toast validation={OK_REPORT} setToast={setToast} />}
-      </View>
+      {toast && <Toast validation={OK_REPORT} setToast={setToast} />}
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  label: {
+    fontSize: scale(14),
+    fontWeight: "bold",
+    color: "#151718",
+    marginHorizontal: scale(15),
+  },
   viewOptions: {
     flex: 1,
     marginHorizontal: scale(15),
     gap: scale(20),
     marginTop: scale(40),
+
   },
   containerCenter: {
     alignItems: "center",
@@ -95,11 +100,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderWidth: 3,
     borderColor: "white",
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
   },
   boxActive: {
-    backgroundColor: "#ffb13d",
+    borderColor: "#d13232ff",
     borderWidth: 3,
-    borderColor: "white",
   },
   text: {
     fontSize: scale(20),

@@ -16,7 +16,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#ffb13d",
         headerShown: false,
         //tabBarButton: HapticTab,
-        tabBarStyle: pathname === "/" ? { display: "none" } : {},
+        tabBarStyle: pathname === "/" ? { display: "none" } : { backgroundColor: "white" },
       }}>
       <Tabs.Screen
         name="index"

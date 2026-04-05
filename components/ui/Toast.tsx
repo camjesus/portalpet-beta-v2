@@ -34,22 +34,33 @@ export default function Toast({ validation, setToast }: Props) {
   }, []);
 
   return (
-    <Animated.View
-      onLayout={(e) => setHeight(e.nativeEvent.layout.height)}
-      style={[
-        styles.container,
-        { top: "50%", transform: [{ translateY: -height / 2 }], opacity },
-      ]}>
-      <Text style={{ fontSize: 25 }}>💬</Text>
-      <View style={{ marginLeft: scale(12), flexShrink: 1 }}>
-        <Text style={styles.title}>{validation.type}</Text>
-        <Text style={styles.message}>{validation.msg}</Text>
-      </View>
-    </Animated.View>
+    <>
+      <Animated.View style={[styles.backdrop, { opacity }]} />
+      <Animated.View
+        onLayout={(e) => setHeight(e.nativeEvent.layout.height)}
+        style={[
+          styles.container,
+          { top: "50%", transform: [{ translateY: -height / 2 }], opacity },
+        ]}>
+        <Text style={{ fontSize: 25 }}>💬</Text>
+        <View style={{ marginLeft: scale(12), flexShrink: 1 }}>
+          <Text style={styles.title}>{validation.type}</Text>
+          <Text style={styles.message}>{validation.msg}</Text>
+        </View>
+      </Animated.View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  backdrop: { 
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
   container: {
     flexDirection: "row",
     paddingHorizontal: scale(10),

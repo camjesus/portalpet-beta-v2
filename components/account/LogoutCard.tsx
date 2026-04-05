@@ -21,12 +21,12 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "white",
     marginHorizontal: scale(20),
     padding: scale(16),
     borderRadius: 12,
     gap: scale(12),
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#E57373",
   },
   cardPressed: {
