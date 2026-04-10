@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   label: {
     marginStart: scale(10),
     textAlign: "center",
-    color: "white",
+    color: "#151718",
     fontWeight: "bold",
   },
 });

@@ -1,6 +1,6 @@
 import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
-import { IconSymbol } from "@/components/ui";
+import { ContactActions, IconSymbol } from "@/components/ui";
 import { AdoptionProfile, AdoptionRequestId } from "@/models";
 import { formatDate } from "../petProfile/petProfileUtils";
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function AdoptionRequestCard({ request, pinned, onGoToChat, onOpenProfile, onTogglePin }: Props) {
-  const displayName = request.userName ?? "Usuario";
+  const displayName = request.userName + " " + request.userLastName;
   const date = formatDate(request.createdAt);
 
   return (
@@ -45,20 +45,7 @@ export function AdoptionRequestCard({ request, pinned, onGoToChat, onOpenProfile
         </Pressable>
       </View>
 
-      <View style={styles.actions}>
-        <Pressable
-          style={({ pressed }) => [styles.button, styles.chatButton, pressed && { opacity: 0.7 }]}
-          onPress={onGoToChat}>
-          <IconSymbol name="chat" size={16} color="#ffb13d" />
-          <Text style={styles.chatText}>Ver chat</Text>
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [styles.button, styles.profileButton, pressed && { opacity: 0.7 }]}
-          onPress={onOpenProfile}>
-          <IconSymbol name="clipboard" size={16} color="#151718" />
-          <Text style={styles.profileText}>Ver solicitud</Text>
-        </Pressable>
-      </View>
+      <ContactActions onGoToChat={onGoToChat} onOpenProfile={onOpenProfile} />
     </View>
   );
 }

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { User } from "@/models";
 import { getUserAsync, saveUserAsync, cleanAllAsync } from "@/services/storage/userStorage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { updatePetsRescuer } from "@/features/pet/services/petService";
 
 export function useAccount() {
   const [name, setName] = useState("");
@@ -24,12 +26,14 @@ export function useAccount() {
   const saveBio = async (value: string) => {
     const storedUser = await getUserAsync();
     if (!storedUser) return;
+    await updatePetsRescuer(storedUser.id, value);
     await saveUserAsync({ ...storedUser, bio: value });
     setBio(value);
   };
 
   const clearAll = async () => {
     await cleanAllAsync();
+    await GoogleSignin.signOut();
     router.replace("/signin");
   };
 

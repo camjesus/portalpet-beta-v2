@@ -6,15 +6,13 @@ import { IconSymbol } from "../ui";
 import { scale } from "react-native-size-matters";
 import { toggleLike, isLiked } from "@/services/storage/likesStorage";
 import { useEffect, useState } from "react";
-import { formatAge, getPetName, SIZE_LABEL, SEX_LABEL, TYPE_LABEL } from "../petProfile/petProfileUtils";
+import { formatAge, getPetName, SEX_LABEL, TYPE_LABEL } from "../petProfile/petProfileUtils";
+import { PetWithDistance } from "@/models";
 
-export function PetCard({ item }: { item: PetId }) {
+export function PetCard({ item }: { item: PetWithDistance }) {
   const { pet } = item;
   const petName = getPetName(pet.name);
   const age = formatAge(pet.age, pet.ageType);
-  const actionData = loadAction(pet.action);
-  const actionColor = Array.isArray(actionData) ? actionData[1] : "#ffb13d";
-  const actionLabel = Array.isArray(actionData) ? actionData[0] : "";
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
@@ -59,12 +57,13 @@ export function PetCard({ item }: { item: PetId }) {
 
       <View style={styles.content}>
         <View style={styles.nameRow}>
+          <Text style={styles.name} numberOfLines={1}>{petName}</Text>
           <IconSymbol
-            name={pet.type === "DOG" ? "dog" : "cat"}
-            size={18}
+            name={"location"}
+            size={14}
             color="#ffb13d"
           />
-          <Text style={styles.name} numberOfLines={1}>{petName}</Text>
+          <Text style={styles.distance} numberOfLines={1}>{item.distanceKm?.toFixed(2)} km</Text>        
         </View>
 
         <View style={styles.metaRow}>
@@ -72,6 +71,11 @@ export function PetCard({ item }: { item: PetId }) {
           {pet.type && (
             <View style={styles.chip}>
               <Text style={styles.chipText}>{TYPE_LABEL[pet.type] ?? pet.type}</Text>
+                <IconSymbol
+                name={pet.type === "DOG" ? "dog" : "cat"}
+                size={18}
+                color="#ffb13d"
+              />
             </View>
           )}
           {pet.sex && (
@@ -97,6 +101,11 @@ export function PetCard({ item }: { item: PetId }) {
 }
 
 const styles = StyleSheet.create({
+  distance:{
+    color:"#ffb13d",
+    fontSize: scale(12),
+    fontWeight: "600",
+  },
   card: {
     backgroundColor: "white",
     borderRadius: 16,
@@ -187,6 +196,7 @@ const styles = StyleSheet.create({
     paddingVertical: scale(3),
     flexDirection: "row",
     alignItems: "center",
+    gap: scale(3),
   },
   chipText: {
     color: "#ffb13d",

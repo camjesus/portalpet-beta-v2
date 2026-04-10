@@ -31,7 +31,7 @@ export default function MyPets() {
       <View style={styles.float}>
         <Button circle={true}>
           <Link href={{ pathname: "/managementPet" }}>
-            <IconSymbol size={30} name="add" color="black" />
+            <IconSymbol size={30} name="add" color="white" />
           </Link>
         </Button>
       </View>

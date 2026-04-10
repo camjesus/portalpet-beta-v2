@@ -15,3 +15,6 @@ export { default as HeaderCustom } from "./HeaderCustom";
 export { default as ToggleButton } from "./ToggleButton";
 export { default as GoogleButton } from "./GoogleButton";
 export { DetailRow } from "./DetailRow";
+export { TextInfo } from "./TextInfo";
+export { ContactActions } from "./ContactActions";
+

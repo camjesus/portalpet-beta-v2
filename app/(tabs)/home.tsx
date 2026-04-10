@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <ViewCustom>
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
+        <View style={styles.headerCenter}>
           <Image source={logo} style={styles.logo} />
           <Text style={styles.headerTitle}>Portal Pet</Text>
         </View>
@@ -59,42 +59,48 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#ffb13d",
-    paddingHorizontal: scale(20),
-    paddingTop: scale(50),
-    paddingBottom: scale(12),
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: scale(8),
-  },
-  headerTitle: {
-    color: "white",
-    fontSize: scale(22),
-    fontWeight: "bold",
-  },
-  logo: {
-    width: scale(24),
-    height: scale(24),
-    resizeMode: "contain",
-  },
+  header: {                                                                              
+    flexDirection: "row",                                                                
+    alignItems: "center",                                                                
+    backgroundColor: "#ffb13d",                                                          
+    paddingHorizontal: scale(20),                                                        
+    paddingTop: scale(40),                                                               
+    paddingBottom: scale(12),                                                            
+    borderBottomLeftRadius: 25,                                                          
+    borderBottomRightRadius: 25,                                                         
+  },                                                                                     
+  headerSide: {                                                                          
+    flex: 1,                                                                             
+    alignItems: "flex-end",                                                              
+  },                                                                                     
+  headerCenter: {                                                                        
+    flex: 3,                                                                             
+    flexDirection: "row",                                                                
+    alignItems: "center",                                                                
+    justifyContent: "center",                                                            
+    gap: scale(8),                                                                       
+  },                                                                                     
+  headerTitle: {         
+    textAlign: "center",                                                                
+    color: "white",                                                                      
+    fontSize: scale(25),                                                                 
+    fontWeight: "bold",                                                                  
+  },                                                                                     
+  logo: {                                                                                
+    width: scale(26),                                                                    
+    height: scale(26),                                                                   
+    resizeMode: "contain",                                                               
+  }, 
   containerCenter: {
     position: "absolute",
-    paddingTop: scale(100),
+    paddingTop: scale(90),
     left: 0,
     right: 0,
     alignItems: "center",
   },
   list: {
     paddingHorizontal: scale(16),
-    paddingTop: scale(70),
+    paddingTop: scale(60),
     paddingBottom: scale(40),
   },
 });

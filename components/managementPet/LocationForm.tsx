@@ -1,5 +1,5 @@
 import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Button } from "@/components/ui";
+import { Button, TextInfo, TextInputCustom } from "@/components/ui";
 import MapView, { Marker } from "react-native-maps";
 import { scale } from "react-native-size-matters";
 import { Coords } from "@/models";
@@ -31,17 +31,20 @@ export function LocationForm({
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <View style={styles.row}>
-          <TextInput
-            style={styles.input}
-            value={address}
-            onChangeText={handleAddressChange}
-            placeholder="Buscar dirección..."
-            onSubmitEditing={() => {
-              search(address);
-              setSuggestions([]);
+          <TextInputCustom
+            options={{
+              maxLength: 200,
+              value: address,
+              selectTextOnFocus: true,
+              onChangeText: handleAddressChange,
+              placeholder: "Buscar dirección...",
+              onSubmitEditing: () => {
+                search(address);
+                setSuggestions([]);
+              },
             }}
-            selectTextOnFocus
           />
+          <View style={styles.buttonContainer}>
           <Button
             label="Buscar"
             onPress={() => {
@@ -49,6 +52,7 @@ export function LocationForm({
               setSuggestions([]);
             }}
           />
+          </View>
           {suggestions.length > 0 && (
             <FlatList
               data={suggestions}
@@ -74,10 +78,9 @@ export function LocationForm({
             />
           )}
         </View>
+        <TextInfo text="Tu dirección queda privada 🔒 la usamos únicamente para mostrar resultados por cercanía." />
       </View>
-      <Text style={styles.infoText}>
-        Tu dirección queda privada 🔒 la usamos únicamente para mostrar resultados por cercanía.
-      </Text>
+
       <MapView
         provider="google"
         style={styles.map}
@@ -106,15 +109,18 @@ export function LocationForm({
 }
 
 const styles = StyleSheet.create({
+  buttonContainer:{
+    marginBottom: scale(10),
+  },
   container: {
     flex: 1,
-    padding: 20,
-    gap: 15,
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
-    gap: scale(5),
+    gap: scale(2),
+    alignContent: "center",
+    justifyContent: "center",
   },
   input: {
     flex: 1,
@@ -128,20 +134,9 @@ const styles = StyleSheet.create({
     height: scale(450),
     overflow: "hidden",
   },
-  infoText: {
-    backgroundColor: "white",
-    color: "black",
-    fontSize: scale(12),
-    marginHorizontal: scale(2),
-    marginVertical: scale(5),
-    padding: scale(10),
-    borderRadius: 10,
-    borderColor: "#ffb13d",
-    borderWidth: 5,
-    textAlign: "center",
-  },
   searchContainer: {
     zIndex: 10,
+    padding: 20,
   },
   suggestions: {
     position: "absolute",

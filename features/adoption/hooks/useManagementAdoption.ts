@@ -8,6 +8,7 @@ import {
 import {
   sendAdoptionAcceptedMessage,
   sendAdoptionRejectedMessage,
+  sendPetInAdaptationNotification,
 } from "@/features/chat/services/messageService";
 import { getChatDocAsync } from "@/features/chat/repository/chatRepository";
 
@@ -24,11 +25,16 @@ export function useManagementAdoption() {
   const [selected, setSelected] = useState<RequestWithProfile | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set());
+  const [acceptedRequest, setAcceptedRequest] = useState<RequestWithProfile | null>(null);
+  const [isAdopted, setIsAdopted] = useState(false);
+  const [readOnly, setReadOnly] = useState(false);
 
   useEffect(() => {
     if (!petId) return;
     getAdoptionRequestsByPet(petId).then((data) => {
-      setItems(data);
+      setIsAdopted(data.some((item) => item.request.status === "adopted"));
+      setItems(data.filter((item) => item.request.status === "pending"));
+      setAcceptedRequest(data.find((item) => item.request.status === "accepted" || item.request.status === "adapting") ?? null);
       setLoading(false);
     });
   }, [petId]);
@@ -47,20 +53,22 @@ export function useManagementAdoption() {
     return aPinned - bPinned;
   });
 
-  const handleOpenModal = (item: RequestWithProfile) => {
+  const handleOpenModal = (item: RequestWithProfile, readOnly = false) => {
     setSelected(item);
+    setReadOnly(readOnly);
     setShowModal(true);
   };
 
   const handleAccept = async () => {
     if (!selected) return;
+    setShowModal(false);
     const { request } = selected;
     await updateAdoptionRequestStatus(request.id, "accepted", request.chatId);
     const chat = await getChatDocAsync(request.chatId);
     if (chat) await sendAdoptionAcceptedMessage(chat, undefined);
+    await sendPetInAdaptationNotification(request.petId);
     setItems((prev) => prev.filter((i) => i.request.id !== request.id));
-    setShowModal(false);
-    setSelected(null);
+    setAcceptedRequest(selected);
   };
 
   const handleReject = async () => {
@@ -85,5 +93,8 @@ export function useManagementAdoption() {
     handleOpenModal,
     handleAccept,
     handleReject,
+    acceptedRequest, 
+    isAdopted,
+    readOnly
   };
 }

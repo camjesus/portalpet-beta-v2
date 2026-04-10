@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.camjesus.portalpetbetav2",
+            "certificate_hash": "9397fe318357fa92628304c4344c3856da3738d8"
+          }
+        },
+        {
           "client_id": "411434491747-r1enhu4so6ahmsnfrbjbe91l7lj2k8tk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.camjesus.portalpetbetav2",
             "certificate_hash": "81cd1df07df72952dab3754d7e506e522d449788"
-          }
-        },
-        {
-          "client_id": "411434491747-fbq5ev70cei4pcaav346qbuivf9dle5e.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.camjesus.portalpetbetav2",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d54787676baa6f38cabf625"
           }
         }
       ],

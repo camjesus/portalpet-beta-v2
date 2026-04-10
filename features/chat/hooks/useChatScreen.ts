@@ -20,6 +20,7 @@ import { getPetById } from "@/features/pet/services/petService";
 import { ChatId, User, PetId, AdoptionProfile, Validation } from "@/models";
 import { FIELD_VALIDATION } from "@/constants/Validations";
 import { markChatAsRead, listenChatDoc, softDeleteChat } from "@/features/chat/repository/chatRepository";
+import { getAdoptionRequestByChatId } from "@/features/adoption/repository/AdoptionRepository";
 
 export function useChatScreen() {
   const { chatId, petString, profileSaved } = useLocalSearchParams<{
@@ -127,6 +128,7 @@ export function useChatScreen() {
       chat.chat.rescuer.id,
       chat.id,
       user.name,
+      user.lastname,
       user.image,
     );
 
@@ -172,7 +174,7 @@ export function useChatScreen() {
 
   const handleOpenRequest = async () => {
     if (!chat?.chat.pet.id) return;
-    const request = await getAdoptionRequestByPet(chat.chat.pet.id);
+    const request = await getAdoptionRequestByChatId(chat.id);
     if (!request) return;
     setAdoptionRequestId(request.id);
     const profile = await getAdoptionProfile(request.userId);
@@ -184,6 +186,7 @@ export function useChatScreen() {
     if (!adoptionRequestId || !chat) return;
     await updateAdoptionRequestStatus(adoptionRequestId, "accepted", chat.id ?? "");
     await sendAdoptionAcceptedMessage(chat, user);
+    
     setShowRequestModal(false);
     setHasPendingRequest(false);
   };
@@ -225,16 +228,12 @@ export function useChatScreen() {
     router.back();
   };
 
-  const handleViewContactProfile = () => {
-    // TODO: navigate to contact profile screen
-  };
-
   const userDeletedAt = user?.id ? chat?.chat.deletedAt?.[user.id] : undefined;
 
   return {
     chat, setChat, user, title, isMine, isNotMine,
     userDeletedAt,
-    handleViewPetProfile, handleDeleteChat, handleViewContactProfile,
+    handleViewPetProfile, handleDeleteChat,
     hasPendingRequest, adoptionProfile,
     myAdoptionProfile, showMyRequestModal, setShowMyRequestModal,
     showPreviewModal, setShowPreviewModal, handleConfirmSendRequest,

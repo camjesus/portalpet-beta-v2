@@ -10,6 +10,7 @@ import {
   getAdoptionRequestByPetId,
   getAllAdoptionRequestsByPetId,
 } from "../repository/AdoptionRepository";
+import { markPetAsAdopted } from "@/features/pet/services/petService";
 
 export function validateAdoptionProfile(profile: Partial<AdoptionProfile>): Validation | null {
   if (!profile.fullName?.trim())
@@ -44,6 +45,7 @@ export async function sendAdoptionRequest(
   rescuerId: string,
   chatId: string,
   userName?: string,
+  userLastName?: string,
   userImage?: string,
 ): Promise<"sent" | "already_sent"> {
   const existing = await getAdoptionRequestByPetAndUser(petId, userId);
@@ -59,6 +61,7 @@ export async function sendAdoptionRequest(
     chatId,
     adoptionProfileId: profile.id,
     userName,
+    userLastName,
     userImage,
     status: "pending",
     createdAt: new Date(),
@@ -103,3 +106,21 @@ export async function cancelAdoptionRequest(
   await updateAdoptionRequestDoc(request.id, { status: "cancelled" });
   await updateChatAdoptionStatus(chatId, "cancelled");
 }
+
+export const startAdaptation = async (requestId: string) => {
+  await updateAdoptionRequestDoc(requestId, {
+    status: "adapting",
+    adaptationStartDate: new Date(),
+  });
+};
+
+export const cancelAdaptation = async (requestId: string) => {
+  await updateAdoptionRequestDoc(requestId, {
+    adaptationStartDate: null,
+  });
+};
+
+export const finishAdaptation = async (requestId: string, petId: string, adopterId: string) => {
+  await updateAdoptionRequestDoc(requestId, { status: "adopted" });
+  await markPetAsAdopted(petId, adopterId);
+};

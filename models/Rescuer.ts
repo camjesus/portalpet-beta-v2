@@ -4,4 +4,5 @@ export type Rescuer = {
     id: string;
     email: string | null;
     image?: string;
+    bio?: string;
 };

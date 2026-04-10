@@ -51,26 +51,35 @@ export async function updateAdoptionRequestDoc(docId: string, data: Partial<Adop
   return await updateDoc(doc(db, "adoptionRequests", docId), data);
 }
 
-export async function getAdoptionRequestByPetId(petId: string) {
+export async function getAdoptionRequestByPetId(petId: string): Promise<AdoptionRequest[]> {
   const q = query(
     collection(db, "adoptionRequests"),
     where("petId", "==", petId),
     where("status", "==", "pending")
   );
   const snapshot = await getDocs(q);
-  if (snapshot.empty) return null;
-  return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() as AdoptionRequest };
+  if (snapshot.empty) return [];
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as AdoptionRequest }));
 }
 
 export async function getAllAdoptionRequestsByPetId(petId: string): Promise<AdoptionRequestId[]> {
   const q = query(
     collection(db, "adoptionRequests"),
-    where("petId", "==", petId),
-    where("status", "==", "pending")
+    where("petId", "==", petId)
   );
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data() as AdoptionRequest,
   }));
+}
+
+export async function getAdoptionRequestByChatId(chatId: string) {
+  const q = query(
+    collection(db, "adoptionRequests"),
+    where("chatId", "==", chatId)
+  );
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return null;
+  return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() as AdoptionRequest };
 }

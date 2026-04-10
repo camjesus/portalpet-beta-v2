@@ -7,7 +7,7 @@ const FILTER_KEY = "@filter";
 export const getFilterAsync = async () => {
   try {
     var filter = await AsyncStorage.getItem(FILTER_KEY);
-
+    console.log("filter en async" + filter);
     if (filter !== null) return JSON.parse(filter);
   } catch (error) {
     throw Error("error StoreData: UseFilter: getFilterAsync" + error);

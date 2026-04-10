@@ -13,11 +13,12 @@ type Props = {
 export default function Card({ item }: Props) {
   const [data, setData] = useState({ name: "", action: "", color: "" });
   const statePet = { statePet: item };
+  
   useEffect(() => {
     let data = loadPet(item.pet);
     setData(data);
   }, []);
-  console.log();
+
   function goToPetProfile() {
     router.push({ pathname: "/managementAdoption", params: { petId: item.id } 
   })

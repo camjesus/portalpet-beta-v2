@@ -1,3 +1,4 @@
+import { Rescuer } from "@/models";
 import { useLocalSearchParams, router } from "expo-router";
 
 export function usePetProfile() {
@@ -24,5 +25,13 @@ export function usePetProfile() {
     router.push({ pathname: "/chat", params: { petString: JSON.stringify(item) } });
   }
 
-  return { pet, image, isMy, goToBack, goToReport, goToChat };
+const rescuer: Rescuer = pet.rescuer
+  ? {
+      ...pet.rescuer,
+      name: pet.rescuer.name ?? '',
+      lastName: pet.rescuer.lastName ?? '',
+      image: pet.rescuer.image ?? '',
+    }
+  : { name: '', lastName: '', image: '' };
+  return { pet, image, isMy, rescuer, goToBack, goToReport, goToChat };
 }

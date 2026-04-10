@@ -50,7 +50,6 @@ export default function Chat() {
     userDeletedAt,
     handleViewPetProfile,
     handleDeleteChat,
-    handleViewContactProfile,
   } = useChatScreen();
 
   const { messages } = useChatMessages(chat?.id, scrollViewRef, userDeletedAt);
@@ -74,7 +73,7 @@ export default function Chat() {
           />
         }
       />
-      <AdoptionBanner
+      {chat?.id && ( <AdoptionBanner
         isMine={isMine}
         isNotMine={isNotMine}
         hasPendingRequest={hasPendingRequest}
@@ -82,12 +81,15 @@ export default function Chat() {
         onOpenRequest={handleOpenRequest}
         onSendRequest={() => setShowModal(true)}
         onViewMyRequest={() => setShowMyRequestModal(true)}
-      />
+      />)}
+     
       <KeyboardAvoidingView
         style={{ flex: 1, backgroundColor: "transparent" }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}>
-        <ScrollView ref={scrollViewRef} style={styles.flatList}
+        <ScrollView ref={scrollViewRef} 
+        keyboardDismissMode="interactive"
+        style={styles.flatList}
           onScroll={(e) => {                                    
             const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
             const distanceFromBottom = contentSize.height - contentOffset.y - layoutMeasurement.height;
@@ -105,9 +107,10 @@ export default function Chat() {
             <IconSymbol name="chevron-down" size={20} color="white" />
           </Pressable>
         )}
-        <View style={styles.footer}>
+        <View style={{ marginBottom: scale(15) }}>
           <InputMessage sendMessage={handleSendMessage} />
         </View>
+          
         {toast && toastConfig && (
           <Toast validation={toastConfig} setToast={setToast} />
         )}
@@ -143,7 +146,6 @@ export default function Chat() {
 }
 
 const styles = StyleSheet.create({
-  footer: {},
   flatList: {
     marginHorizontal: scale(10),
     backgroundColor: "transparent",

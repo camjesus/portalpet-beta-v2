@@ -17,7 +17,13 @@ export type Message = {
         name: string;
       }
     | undefined;
-  type?: "text" | "adoption_request" | "adoption_accepted" | "adoption_rejected" | "adoption_cancelled";
+  type?:
+    | "text"
+    | "adoption_request"
+    | "adoption_accepted"
+    | "adoption_rejected"
+    | "adoption_cancelled"
+    | "system";
 };
 
 export function newSystemMessageId(index: string, text: string) {

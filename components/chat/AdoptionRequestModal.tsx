@@ -103,18 +103,18 @@ export default function AdoptionRequestModal({
               </Pressable>
             </View>
           )}
-{readOnly && onConfirmSend && (
-  <Pressable
-    style={({ pressed }) => [
-      styles.acceptButton,
-      styles.acceptButtonFull, 
-      { marginTop: scale(16) },
-      pressed && { opacity: 0.7 }
-    ]}
-    onPress={onConfirmSend}>
-    <Text style={styles.acceptText}>Enviar solicitud</Text>
-  </Pressable>
-)}
+          {readOnly && onConfirmSend && (
+            <Pressable
+              style={({ pressed }) => [
+                styles.acceptButton,
+                styles.acceptButtonFull, 
+                { marginTop: scale(16) },
+                pressed && { opacity: 0.7 }
+              ]}
+              onPress={onConfirmSend}>
+              <Text style={styles.acceptText}>Enviar solicitud</Text>
+            </Pressable>
+          )}
           {readOnly && onCancel && (
             <Pressable
               style={({ pressed }) => [styles.cancelButton, pressed && { opacity: 0.7 }]}

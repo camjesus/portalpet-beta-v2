@@ -37,7 +37,7 @@ export default function HeaderCustom({
 const styles = StyleSheet.create({
   container: {
     paddingBottom: scale(10),
-    paddingTop: scale(10),
+    paddingTop: scale(15),
     alignItems: "center",
     backgroundColor: "#ffb13d",
     borderBottomLeftRadius: 25,
@@ -52,9 +52,10 @@ const styles = StyleSheet.create({
     padding: scale(10),
   },
   titleS: {
-    fontSize: scale(30),
+    fontSize: scale(25),
     textAlign: "center",
-    color: "#FFFFFF",
+    color: "#ffffffff",
+    fontWeight: "bold",
     marginTop: scale(15),
     padding: 0,
     flex: 5,

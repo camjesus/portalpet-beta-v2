@@ -8,16 +8,21 @@ const HEADERS = {
 };
 
 export async function getCurrentLocation() {
+  const FALLBACK = { lat: -34.6037, lng: -58.3816 };
+
   const { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") {
-    Alert.alert("Permiso denegado");
-    return null;
+    Alert.alert("Permiso denegado", "Usando ubicación predeterminada.");
+    return FALLBACK;
   }
 
   const enabled = await Location.hasServicesEnabledAsync();
   if (!enabled) {
-    Alert.alert("Activa los servicios de ubicación del dispositivo");
-    return null;
+    Alert.alert(
+      "Servicios de ubicación desactivados",
+      "Usando ubicación predeterminada."
+    );
+    return FALLBACK;
   }
 
   try {
@@ -30,7 +35,7 @@ export async function getCurrentLocation() {
     };
   } catch (error) {
     console.log("No se pudo obtener ubicación:", error);
-    return { lat: -34.6037, lng: -58.3816 };
+    return FALLBACK;
   }
 }
 

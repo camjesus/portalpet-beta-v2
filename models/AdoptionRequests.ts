@@ -5,9 +5,11 @@ export interface AdoptionRequest {
   adoptionProfileId: string;
   chatId: string;
   userName?: string;
+  userLastName?: string;
   userImage?: string;
-  status: "pending" | "accepted" | "rejected" | "cancelled";
+  status: "pending" | "accepted" | "rejected" | "cancelled" | "adapting" | "adopted";
   createdAt: Date;
+  adaptationStartDate?: Date | null;
 }
 
 export interface AdoptionRequestId extends AdoptionRequest {

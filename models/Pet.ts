@@ -20,10 +20,11 @@ export type Pet = {
 	rescuerId: string;
 	rescuer: Rescuer;
 	createDate: Date ;
-	//ubication: undefined; // N/A
 };
 
 export interface PetId {
 	id: string;
 	pet: Pet;
   }
+
+export type PetWithDistance = PetId & { distanceKm?: number };

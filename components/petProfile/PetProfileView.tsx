@@ -1,7 +1,7 @@
 import { View, Text, Pressable, ScrollView, StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
 import { IconSymbol, ViewCustom } from "@/components/ui";
-import { Pet } from "@/models";
+import { Pet, Rescuer } from "@/models";
 import { PetProfileHeader } from "./PetProfileHeader";
 import { PetProfileInfo } from "./PetProfileInfo";
 
@@ -9,12 +9,13 @@ type Props = {
   pet: Pet;
   image: string;
   isMy: boolean;
+  rescuer: Rescuer;
   goToBack: () => void;
   goToReport: () => void;
   goToChat: () => void;
 };
 
-export function PetProfileView({ pet, image, isMy, goToBack, goToReport, goToChat }: Props) {
+export function PetProfileView({ pet, image, isMy, rescuer, goToBack, goToReport, goToChat }: Props) {
   return (
     <ViewCustom>
       <PetProfileHeader
@@ -28,7 +29,7 @@ export function PetProfileView({ pet, image, isMy, goToBack, goToReport, goToCha
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
-        <PetProfileInfo pet={pet} />
+        <PetProfileInfo pet={pet} rescuer={rescuer}/>
         <View style={{ height: scale(100) }} />
       </ScrollView>
 

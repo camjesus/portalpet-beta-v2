@@ -9,6 +9,7 @@ import { addSystemMessage } from "../utils/messageUtils";
 import { addChatAsync, markChatAsUnread, updateLastMessageAt } from "../repository/chatRepository";
 import { Timestamp } from "firebase/firestore";
 import { useAuthStore } from "@/store/authStore";
+import { getAdoptionRequestByPetId } from "@/features/adoption/repository/AdoptionRepository";
 
 export const sendMessage = async (
   chat: ChatId,
@@ -136,3 +137,22 @@ export const sendAdoptionCancelledMessage = async (
   const doc = await createMessage(message);
   return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };
 };
+
+export const sendPetInAdaptationNotification = async (petId: string) => {
+  const requests = await getAdoptionRequestByPetId(petId);
+  if (!requests) return;
+
+  await Promise.all(
+    requests.map(async (request) => {
+      const message: Message = {
+        createAt: Timestamp.now(),
+        text: "La mascota está en proceso de adaptación. Si querés seguir en lista de espera, no canceles tu solicitud. Te avisaremos si hay novedades.",
+        chatId: request.chatId,
+        type: "system",
+        sender: { id: "", name: "Portal Pet" },
+      };
+      await createMessage(message);
+    })
+  );
+};
+

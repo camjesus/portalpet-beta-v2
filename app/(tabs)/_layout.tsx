@@ -9,13 +9,12 @@ export default function TabLayout() {
   const pathname = usePathname();
   const userId = useAuthStore((s) => s.user?.id);
   const { hasUnreadGlobal } = useGlobalChatListener({ userId });
-  console.log("hasUnreadGlobal", hasUnreadGlobal);
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "#ffb13d",
         headerShown: false,
-        //tabBarButton: HapticTab,
         tabBarStyle: pathname === "/" ? { display: "none" } : { backgroundColor: "white" },
       }}>
       <Tabs.Screen

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     borderColor: "#E57373",
   },
   cardPressed: {
-    backgroundColor: "#2A2A2A",
+    backgroundColor: "#986565ff",
   },
   text: {
     color: "#E57373",

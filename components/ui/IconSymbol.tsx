@@ -46,6 +46,7 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   "pin-off": "pin-off",
   email: "email-outline",
   "text-account": "text-account",
+  location: "map-marker",
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

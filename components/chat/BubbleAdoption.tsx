@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     gap: scale(10),
     borderWidth: 1,
     borderColor: "#ffb13d",
-    backgroundColor: "#ffffffff",
+    backgroundColor: "#fff7e6ff",
   },
   left: {
     alignSelf: "flex-start",
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   badgeText: {
-    color: "#151718",
+    color: "white",
     fontSize: scale(10),
     fontWeight: "bold",
   },
