@@ -73,7 +73,7 @@ export default function Chat() {
           />
         }
       />
-      {chat?.id && ( <AdoptionBanner
+      {chat?.id && chat?.chat.pet.action === "ADOPTION" && ( <AdoptionBanner
         isMine={isMine}
         isNotMine={isNotMine}
         hasPendingRequest={hasPendingRequest}
@@ -110,11 +110,8 @@ export default function Chat() {
         <View style={{ marginBottom: scale(15) }}>
           <InputMessage sendMessage={handleSendMessage} />
         </View>
-          
-        {toast && toastConfig && (
-          <Toast validation={toastConfig} setToast={setToast} />
-        )}
       </KeyboardAvoidingView>
+
       <AdoptionModal
         visible={showModal}
         onCancel={() => setShowModal(false)}
@@ -141,6 +138,9 @@ export default function Chat() {
         onConfirmSend={handleConfirmSendRequest}
         readOnly
       />
+      {toast && toastConfig && (
+        <Toast validation={toastConfig} setToast={setToast} />
+      )}
     </ViewCustom>
   );
 }

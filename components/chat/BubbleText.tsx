@@ -38,20 +38,23 @@ export default function BubbleText({ isMyMessage, message, system }: Props) {
 }
 
 const styles = StyleSheet.create({
-  systemText: {
-    fontSize: scale(10),
-    color: "white",
-  },
-  system: {
-    backgroundColor: "#A5A5A5",
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: "auto",
-    paddingHorizontal: scale(20),
-    marginVertical: scale(5),
-    paddingVertical: scale(5),
-    borderRadius: 15,
-  },
+system: {
+  backgroundColor: "rgba(255, 177, 61, 0.12)",
+  borderWidth: 1,
+  borderColor: "rgba(255, 177, 61, 0.4)",
+  alignSelf: "center",
+  paddingHorizontal: scale(14),
+  paddingVertical: scale(6),
+  marginVertical: scale(8),
+  borderRadius: 20,
+  maxWidth: "95%",
+},
+systemText: {
+  color: "#8a6a2a",
+  fontSize: scale(12),
+  textAlign: "center",
+  fontStyle: "italic",
+},
   default: {
     flexDirection: "row",
     alignItems: "baseline",

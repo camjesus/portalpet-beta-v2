@@ -6,9 +6,9 @@ import Animated, {
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { scale } from "react-native-size-matters";
-import { loading } from "@/assets/images";
+import IconSymbol from "./IconSymbol";
 
 const duration = 2000;
 const easing = Easing.bezier(0.25, -0.5, 0.25, 1);
@@ -27,7 +27,7 @@ export default function Loading() {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.box, animatedStyle]}>
-        <Image style={styles.image} source={loading} />
+        <IconSymbol name="paw" size={40} color="#151718" />
       </Animated.View>
     </View>
   );
@@ -44,6 +44,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignContent: "center",
     height: "100%",
+    width: "100%",
+    backgroundColor: "white",
   },
   box: {
     height: scale(50),

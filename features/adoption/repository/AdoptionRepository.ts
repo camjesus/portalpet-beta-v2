@@ -62,6 +62,17 @@ export async function getAdoptionRequestByPetId(petId: string): Promise<Adoption
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() as AdoptionRequest }));
 }
 
+export async function getAcceptedRequestByPetId(petId: string) {
+  const q = query(
+    collection(db, "adoptionRequests"),
+    where("petId", "==", petId),
+    where("status", "in", ["accepted", "adapting"])
+  );
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return null;
+  return { id: snapshot.docs[0].id, ...snapshot.docs[0].data() as AdoptionRequest };
+}
+
 export async function getAllAdoptionRequestsByPetId(petId: string): Promise<AdoptionRequestId[]> {
   const q = query(
     collection(db, "adoptionRequests"),

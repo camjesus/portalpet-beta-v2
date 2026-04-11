@@ -41,12 +41,13 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   clock: "clock",
   calendar: "calendar",
   "dots-vertical": "dots-vertical",
-  delete: "trash-can-outline",
   pin: "pin",
   "pin-off": "pin-off",
   email: "email-outline",
   "text-account": "text-account",
   location: "map-marker",
+  delete: "delete",
+  sort: "sort",
 };
 
 export type IconSymbolName = keyof typeof MAPPING;

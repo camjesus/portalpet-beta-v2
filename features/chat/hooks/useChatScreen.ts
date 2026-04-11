@@ -15,9 +15,10 @@ import {
   getAdoptionRequestByPet,
   updateAdoptionRequestStatus,
   cancelAdoptionRequest,
+  acceptAdoptionRequest,
 } from "@/features/adoption/services/adoptionService";
 import { getPetById } from "@/features/pet/services/petService";
-import { ChatId, User, PetId, AdoptionProfile, Validation } from "@/models";
+import { ChatId, User, PetId, AdoptionProfile, Validation, AdoptionRequestId } from "@/models";
 import { FIELD_VALIDATION } from "@/constants/Validations";
 import { markChatAsRead, listenChatDoc, softDeleteChat } from "@/features/chat/repository/chatRepository";
 import { getAdoptionRequestByChatId } from "@/features/adoption/repository/AdoptionRepository";
@@ -68,6 +69,9 @@ export function useChatScreen() {
         if (res.chat?.id) setActiveChatId(res.chat.id);
       }
     });
+    if(chat?.chat.pet.action === "ADOPTION") {
+      setShowRequestModal(false);
+    }
   }, [chatId, petParse]);
 
   // Listen to chat document changes in real-time
@@ -181,15 +185,17 @@ export function useChatScreen() {
     setAdoptionProfile(profile);
     setShowRequestModal(true);
   };
-
-  const handleAccept = async () => {
-    if (!adoptionRequestId || !chat) return;
-    await updateAdoptionRequestStatus(adoptionRequestId, "accepted", chat.id ?? "");
-    await sendAdoptionAcceptedMessage(chat, user);
-    
-    setShowRequestModal(false);
-    setHasPendingRequest(false);
-  };
+const handleAccept = async () => {
+  if (!adoptionRequestId || !chat) return;
+  setShowRequestModal(false);
+  const result = await acceptAdoptionRequest({ id: adoptionRequestId, chatId: chat.id ?? "", petId: chat.chat.pet.id} as AdoptionRequestId);
+  if (result === "already_accepted") {
+    setToastConfig(FIELD_VALIDATION("Ya aceptaste una solicitud para esta mascota"));
+    setToast(true);
+    return;
+  }
+  setHasPendingRequest(false);
+};
 
   const handleReject = async () => {
     if (!adoptionRequestId || !chat) return;
@@ -217,7 +223,7 @@ export function useChatScreen() {
         petId: petDoc.id,
         stringItem: JSON.stringify(petDoc),
         image: encodeURI(petDoc.pet.image),
-        isMy: "false",
+        isMy: "true",
       },
     });
   };

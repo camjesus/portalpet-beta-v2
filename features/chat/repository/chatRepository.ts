@@ -91,3 +91,17 @@ export function listenChatDoc(chatId: string, callback: (chat: ChatId) => void) 
     }
   });
 }
+
+export async function getChatsByPetId(petId: string) {
+  const chats: ChatId[] = [];
+  const q = query(
+    collection(db, "chats"),
+    where("pet.id", "==", petId),
+    orderBy("createDate", "desc"),
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    chats.push(mapChatFromFirestore(doc.id, doc.data()));
+  });
+  return chats;
+}

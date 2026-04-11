@@ -25,7 +25,6 @@ export const getPetsByRescuer = async (rescuerId: string) => {
   const q = query(
     collection(db, "pets"),
     where("rescuerId", "==", rescuerId),
-    where("active", "==", true),
     orderBy("createDate", "desc")
   );
 

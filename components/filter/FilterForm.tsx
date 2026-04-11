@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: scale(16),
-    gap: scale(20),
+    gap: scale(10),
     alignItems: "center",
   },
 });

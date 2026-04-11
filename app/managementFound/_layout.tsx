@@ -1,10 +1,9 @@
 import { Stack } from "expo-router";
 
-export default function ManagementAdoptionLayout() {
+export default function ManagementFoundLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="progress" options={{ headerShown: false }} />
     </Stack>
   );
 }

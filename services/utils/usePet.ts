@@ -1,11 +1,19 @@
-import { LABEL_SIZE } from "@/constants/StaticData";
+import { LABEL_SIZE , ACCTIONS, ACTION_CONFIG, ActionConfig, ActionType } from "@/constants/StaticData";
 import { AgeType, Size, Pet } from "@/models";
+
+type PetData = {
+  name: string;
+  action: string;
+  color: string;
+};
+
+const DEFAULT_ACTION: ActionConfig = { label: "", color: "" };
+
 //public
-export const loadPet = (pet:Pet) => {
-  let name = loadName(pet);
-  var [action, color] =  loadAction(pet.action);
-  return { name: name, action: action, color: color };
-}
+export const loadPet = (pet: Pet): PetData => {
+  const { label, color } = loadAction(pet.action);
+  return { name: loadName(pet), action: label, color };
+};
 
 export function loadLabels(size: string[]) {
   const opt0 = size.indexOf(Size.SMALL) > -1;
@@ -30,26 +38,8 @@ export function calculateAgeByMonths(age: number) {
   return age * 12;
 }
 
-export function loadAction(petAction:string) {
-  let action = "";
-  let color = "";
-  switch (petAction) {
-    case "ADOPTION":
-      action = "ADOPCIÓN";
-      color = "#9D69A3";
-      break;
-    case "WANTED":
-      action = "BUSCADO";
-      color = "#C73E1D";
-      break;
-    case "FOUND":
-      action = "ENCONTRADO";
-      color = "#2E86AB";
-      break;
-    default:
-      return action;
-  }
-  return [action, color];
+export function loadAction(petAction: string): ActionConfig {
+  return ACTION_CONFIG[petAction as ActionType] ?? DEFAULT_ACTION;
 }
 
 //private

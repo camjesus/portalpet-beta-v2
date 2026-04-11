@@ -14,6 +14,7 @@ export function useAccount() {
 
   useEffect(() => {
     getUserAsync().then((storedUser) => {
+      console.log(storedUser);
       if (!storedUser) return;
       setName(storedUser.name ?? "");
       setLastname(storedUser.lastname ?? "");
@@ -28,6 +29,7 @@ export function useAccount() {
     if (!storedUser) return;
     await updatePetsRescuer(storedUser.id, value);
     await saveUserAsync({ ...storedUser, bio: value });
+    console.log("guardado:", await getUserAsync()); 
     setBio(value);
   };
 

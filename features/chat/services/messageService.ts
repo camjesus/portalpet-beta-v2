@@ -144,9 +144,10 @@ export const sendPetInAdaptationNotification = async (petId: string) => {
 
   await Promise.all(
     requests.map(async (request) => {
+      console.log("sendPetInAdaptationNotification", request.chatId);
       const message: Message = {
         createAt: Timestamp.now(),
-        text: "La mascota está en proceso de adaptación. Si querés seguir en lista de espera, no canceles tu solicitud. Te avisaremos si hay novedades.",
+        text: `La mascota está en proceso de adaptación.\nSi querés seguir en lista de espera, no canceles tu solicitud.\nTe avisaremos si hay novedades 🐾`, 
         chatId: request.chatId,
         type: "system",
         sender: { id: "", name: "Portal Pet" },
@@ -156,3 +157,41 @@ export const sendPetInAdaptationNotification = async (petId: string) => {
   );
 };
 
+
+export const sendPetAdoptedNotification = async (petId: string) => {
+  const requests = await getAdoptionRequestByPetId(petId);
+  if (!requests) return;
+
+  await Promise.all(
+    requests.map(async (request) => {
+      console.log("sendPetAdoptedNotification", request.chatId);
+      const message: Message = {
+        createAt: Timestamp.now(),
+        text: "🏠 ¡Esta mascota ya encontró un nuevo hogar!\nPodés seguir buscando tu compañero ideal en Portal Pet 🐾",
+        chatId: request.chatId,
+        type: "system",
+        sender: { id: "", name: "Portal Pet" },
+      };
+      await createMessage(message);
+    })
+  );
+};
+
+export const sendPetAdoptionCancelledNotification = async (petId: string) => {
+  const requests = await getAdoptionRequestByPetId(petId);
+  if (!requests) return;
+
+  await Promise.all(
+    requests.map(async (request) => {
+      console.log("sendPetAdoptionCancelledNotification", request.chatId);
+      const message: Message = {
+        createAt: Timestamp.now(),
+        text: "¡La mascota volvió a estar en adopción! 🐾\nSi querés adoptarla, tu solicitud sigue en lista de espera.\nExpresa tu interés.",
+        chatId: request.chatId,
+        type: "system",
+        sender: { id: "", name: "Portal Pet" },
+      };
+      await createMessage(message);
+    })
+  );
+};

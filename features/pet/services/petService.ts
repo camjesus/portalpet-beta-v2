@@ -20,6 +20,7 @@ import { getAction, getFilters } from "@/features/filter/services/filterStorageS
 import { saveFilter } from "@/features/filter/services/filterService";
 import { getCurrentLocation } from "@/services/utils/location";
 import { haversineKm } from "@/services/utils/geo";
+import { useMyPetsStore } from "@/store/myPetsStore";
 
 export const savePet = async (pet: Pet) => {
   const image = await resolvePetImage(pet.image);
@@ -160,17 +161,18 @@ export async function savePetAsync(petId: string | null, pet: Pet) {
   return savePet(newPet);
 }
 
-export async function findMyPets(search: boolean): Promise<PetId[]> {
-  if (search) {
-    console.log("lo busco en dataBase");
-    var myPets = await getMyPets();
-    await saveMyPets(myPets);
+export async function findMyPets(): Promise<PetId[]> {
+  const { myPets, isDirty, setMyPets } = useMyPetsStore.getState();
+
+  if (!isDirty && myPets.length > 0) {
+    console.log("uso store");
     return myPets;
-  } else {
-    console.log("lo busco en storage");
-    var storagePet = await getMyPets();
-    return storagePet;
   }
+
+  console.log("consulto Firebase");
+  const pets = await getMyPets();
+  setMyPets(pets);
+  return pets;
 }
 
 export const updatePetsRescuer = async (rescuerId: string, bio: string) => {
@@ -185,5 +187,32 @@ export const markPetAsAdopted = async (petId: string, adopterId: string) => {
   await updatePetDoc(petId, {
     active: false,
     idAdopter: adopterId,
+    action: "ADOPTED",
   });
 };
+
+export const markPetAsArchived = async (petId: string) => {
+  await updatePetDoc(petId, {
+    active: false,
+    archived: true,
+  });
+};
+
+export const markPetAsAdapting = async (petId: string) => {
+  await updatePetDoc(petId, {
+    action: "ADAPTING",
+  });
+};
+
+export const markPetAsAdoption = async (petId: string) => {
+  await updatePetDoc(petId, {
+    action: "ADOPTION",
+  });
+};
+
+export const finalizePet = async (petId: string, finalStatus: string) => {
+  await updatePetDoc(petId, {
+    action: finalStatus,
+    active: false,
+  });
+}

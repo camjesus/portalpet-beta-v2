@@ -29,7 +29,7 @@ export default function Bubble({ item, userId }: Props) {
         <BubbleText
           isMyMessage={isMyMessage}
           message={item.message}
-          system={item.system}
+          system={item.message?.type === "system"}
         />
       )}
     </View>

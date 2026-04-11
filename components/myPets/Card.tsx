@@ -1,35 +1,34 @@
 import { View, StyleSheet, Image, Text, Pressable } from "react-native";
-import React, { useEffect, useState } from "react";
-import { loadPet } from "@/services/utils/usePet";
-import { PetId } from "@/models";
 import { scale } from "react-native-size-matters";
-import { Link, router } from "expo-router";
-import { Button, IconSymbol } from "../ui";
+import { Link } from "expo-router";
+import { IconSymbol, ConfirmModal } from "../ui";
+import { PetId } from "@/models";
+import { useCard } from "@/features/pet/hooks/useCard";
 
 type Props = {
   item: PetId;
+  onDelete: (id: string) => void;
 };
 
-export default function Card({ item }: Props) {
-  const [data, setData] = useState({ name: "", action: "", color: "" });
-  const statePet = { statePet: item };
-  
-  useEffect(() => {
-    let data = loadPet(item.pet);
-    setData(data);
-  }, []);
+export default function Card({ item, onDelete }: Props) {
+  const {
+    data,
+    showDelete,
+    showConfirm,
+    handlePress,
+    handleLongPress,
+    handleDeletePress,
+    handleConfirmDelete,
+    handleCancelDelete,
+  } = useCard(item, onDelete);
 
-  function goToPetProfile() {
-    router.push({ pathname: "/managementAdoption", params: { petId: item.id } 
-  })
-  }
+  const statePet = { statePet: item };
 
   return (
-    <Pressable onPress={goToPetProfile}>
-      <View
-        style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}>
+    <Pressable onPress={handlePress} onLongPress={handleLongPress}>
+      <View style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}>
         <View>
-          <Image source={{ uri: item.pet.image }} style={[styles.image]} />
+          <Image source={{ uri: item.pet.image }} style={styles.image} />
           <View style={styles.float}>
             <Link
               href={{
@@ -46,14 +45,41 @@ export default function Card({ item }: Props) {
             {data.action}
           </Text>
         </View>
-
         <Text style={styles.textName}>{data.name}</Text>
       </View>
+
+      {showDelete && (
+        <Pressable style={styles.deleteOverlay} onPress={handleDeletePress}>
+          <IconSymbol name="delete" size={30} color="white" />
+        </Pressable>
+      )}
+
+      <ConfirmModal
+        visible={showConfirm}
+        title="¿Eliminar mascota?"
+        description={`¿Seguro que querés eliminar a ${item.pet.name || "esta mascota"}? Esta acción no se puede deshacer.`}
+        confirmLabel="Sí, eliminar"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        danger
+      />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  deleteOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: scale(150),
+    height: scale(250),
+    backgroundColor: "rgba(0,0,0,0.6)",
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
+  },
   float: {
     right: 10,
     top: 10,

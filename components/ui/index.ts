@@ -17,4 +17,7 @@ export { default as GoogleButton } from "./GoogleButton";
 export { DetailRow } from "./DetailRow";
 export { TextInfo } from "./TextInfo";
 export { ContactActions } from "./ContactActions";
-
+export { ConfirmModal } from "./ConfirmModal";
+export { ContactChatCard } from "./ContactChatCard";
+export { EmptyContacts } from "./EmptyContacts";
+export { FinishedView } from "./FinishedView";

@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
   value: {
     color: "#151718",
     fontSize: scale(14),
-    fontWeight: "bold",
   },
   empty: {
     color: "#151718",

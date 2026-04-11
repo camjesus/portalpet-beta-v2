@@ -33,7 +33,7 @@ export function useSignin() {
         };
         await saveUserAsync(user);
         setUser(user);
-        router.replace("/(tabs)");
+        router.replace("/(tabs)/home");
       }
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {

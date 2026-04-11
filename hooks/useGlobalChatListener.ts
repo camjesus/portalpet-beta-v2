@@ -70,7 +70,8 @@ export function useGlobalChatListener({ userId }: UseGlobalChatListenerOptions) 
               if (
                 seenMessageIds.current.has(messageId) ||
                 message.sender?.id === userId ||
-                chatId === currentActiveChatId
+                chatId === currentActiveChatId ||
+                message.type === "system"
               ) {
                 seenMessageIds.current.add(messageId);
                 return;

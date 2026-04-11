@@ -11,24 +11,30 @@ import { LABELS_ACCTION } from "@/constants/StaticData";
 import { useHome } from "@/features/pet/hooks/useHome";
 import { EmptyState } from "@/components/home/EmptyState";
 import { logo } from "@/assets/images";
+import { SortModal } from "@/components/home/SortModal";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
 export default function Home() {
-  const { myPets, load, optAction, goToFilter, changeValue } = useHome();
+  const { myPets, load, optAction, goToFilter, changeValue, sort, setSort, showSortModal, setShowSortModal } = useHome();
 
   return (
     <ViewCustom>
       <View style={styles.header}>
+        <Pressable onPress={goToFilter}>
+          <IconSymbol size={26} name="filter" color="white" />
+        </Pressable>
         <View style={styles.headerCenter}>
           <Image source={logo} style={styles.logo} />
           <Text style={styles.headerTitle}>Portal Pet</Text>
         </View>
-        <Pressable onPress={goToFilter}>
-          <IconSymbol size={30} name="filter" color="white" />
+        <View style={styles.headerActions}>
+        <Pressable onPress={() => setShowSortModal(true)}>
+          <IconSymbol size={26} name="sort" color="white" />
         </Pressable>
+        </View>
       </View>
 
       {load && <Loading />}
@@ -54,11 +60,23 @@ export default function Home() {
           />
         </View>
       )}
+
+      <SortModal
+        visible={showSortModal}
+        selected={sort}
+        onSelect={setSort}
+        onClose={() => setShowSortModal(false)}
+      />
     </ViewCustom>
   );
 }
 
 const styles = StyleSheet.create({
+  headerActions: {
+  flexDirection: "row",
+  alignItems: "center",
+  gap: scale(12),
+},
   header: {                                                                              
     flexDirection: "row",                                                                
     alignItems: "center",                                                                

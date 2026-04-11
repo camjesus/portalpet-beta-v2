@@ -7,17 +7,12 @@ import { HeaderCustom, IconSymbol, TextInfo } from "../ui";
 
 type Props = {
   items: any[];
-  selected: any;
-  showModal: boolean;
-  setShowModal: (v: boolean) => void;
   pinnedIds: Set<string>;
   togglePin: (id: string) => void;
   handleOpenModal: (item: any) => void;
-  handleAccept: () => void;
-  handleReject: () => void;
 };
 
-export function PendingRequestsView({ items, selected, showModal, setShowModal, pinnedIds, togglePin, handleOpenModal, handleAccept, handleReject }: Props) {
+export function PendingRequestsView({ items, pinnedIds, togglePin, handleOpenModal }: Props) {
   return (
     <>
       <HeaderCustom

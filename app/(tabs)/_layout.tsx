@@ -12,20 +12,12 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="home"
       screenOptions={{
         tabBarActiveTintColor: "#ffb13d",
         headerShown: false,
         tabBarStyle: pathname === "/" ? { display: "none" } : { backgroundColor: "white" },
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          href: null,
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="search" color={color} />
-          ),
-        }}
-      />
       <Tabs.Screen
         name="home"
         options={{

@@ -38,6 +38,7 @@ function RootLayoutContent() {
     <GestureHandlerRootView>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="managementPet" options={{ headerShown: false }} />
           <Stack.Screen name="petProfile" options={{ headerShown: false }} />
@@ -50,6 +51,8 @@ function RootLayoutContent() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="managementAdoption" options={{ headerShown: false }} />
+          <Stack.Screen name="managementFound" options={{ headerShown: false }} />
+          <Stack.Screen name="managementWanted" options={{ headerShown: false }} />
           <Stack.Screen name="oauthredirect" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>

@@ -20,6 +20,7 @@ export type Pet = {
 	rescuerId: string;
 	rescuer: Rescuer;
 	createDate: Date ;
+	archived: boolean;
 };
 
 export interface PetId {

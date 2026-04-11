@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { scale } from "react-native-size-matters";
-import IconSymbol from "@/components/ui/IconSymbol";
+import IconSymbol from "./IconSymbol";
 
 type Props = {
   onGoToChat: () => void;

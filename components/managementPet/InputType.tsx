@@ -15,7 +15,7 @@ export default function InputType({ type, changeValue }: Props) {
         optOne={type === Type.DOG}
         optTwo={type === Type.CAT}
         changeOption={(opt) => {
-          changeValue(opt === "optOne" ? "DOG" : "CAT", "type");
+          changeValue(opt === "optOne" ? Type.DOG : Type.CAT, "type");
         }}
         icon={[
           <IconSymbol
