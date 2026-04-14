@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Platform } from "react-native";
 import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 import { saveUserAsync } from "@/services/storage/userStorage";
@@ -10,6 +11,7 @@ const extra = Constants.expoConfig?.extra;
 
 GoogleSignin.configure({
   webClientId: extra?.webClientId,
+  iosClientId: extra?.iosClientId,
 });
 
 export function useSignin() {
@@ -19,7 +21,9 @@ export function useSignin() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await GoogleSignin.hasPlayServices();
+      if (Platform.OS === "android") {
+        await GoogleSignin.hasPlayServices();
+      }
       const userInfo = await GoogleSignin.signIn();
       const data = userInfo.data?.user;
 

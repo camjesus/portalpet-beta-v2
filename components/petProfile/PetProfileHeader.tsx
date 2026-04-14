@@ -38,11 +38,21 @@ export function PetProfileHeader({ pet, image, isMy, goToBack, goToReport }: Pro
           {pet.type && (
             <View style={styles.chip}>
               <Text style={styles.chipText}>{TYPE_LABEL[pet.type] ?? pet.type}</Text>
+              <IconSymbol
+                name={pet.type === "DOG" ? "dog" : "cat"}
+                size={18}
+                color="#ffb13d"
+              />
             </View>
           )}
           {pet.sex && (
             <View style={styles.chip}>
               <Text style={styles.chipText}>{SEX_LABEL[pet.sex] ?? pet.sex}</Text>
+              <IconSymbol
+                name={pet.sex === "MALE" ? "male" : "female"}
+                size={14}
+                color="#ffb13d"
+              />
             </View>
           )}
           {age && (
@@ -111,6 +121,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: scale(10),
     paddingVertical: scale(3),
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(3),
   },
   chipText: {
     color: "#ffb13d",

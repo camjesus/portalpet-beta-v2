@@ -8,6 +8,9 @@
         "buildType": "apk",
         "gradleCommand": ":app:assembleDebug"
       },
+      "ios": {
+        "simulator": true
+      },
       "developmentClient": false
     },
     "preview": {
@@ -15,9 +18,13 @@
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease"
       },
+      "ios": {
+        "simulator": false
+      },
       "env": {
         "ENV": "prod",
         "GOOGLE_ANDROID_ID": "@GOOGLE_ANDROID_ID",
+        "GOOGLE_IOS_ID": "@GOOGLE_IOS_ID",
         "GOOGLE_WEB_ID": "@GOOGLE_WEB_ID",
         "API_KEY_LOCATIONIQ": "@API_KEY_LOCATIONIQ"
       }
@@ -26,8 +33,12 @@
       "android": {
         "buildType": "apk"
       },
+      "ios": {},
       "env": {
-        "ENV": "prod"
+        "ENV": "prod",
+        "GOOGLE_ANDROID_ID": "@GOOGLE_ANDROID_ID",
+        "GOOGLE_IOS_ID": "@GOOGLE_IOS_ID",
+        "GOOGLE_WEB_ID": "@GOOGLE_WEB_ID"
       }
     }
   }

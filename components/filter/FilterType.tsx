@@ -36,12 +36,12 @@ export default function FilterType({ type, changeValue }: Props) {
         }}
         icon={[
           <IconSymbol
-            size={25}
+            size={30}
             name={"dog"}
             color={isDog ? "#4B4B4B" : "#A5A5A5"}
           />,
           <IconSymbol
-            size={25}
+            size={30}
             name={"cat"}
             color={isCat ? "#4B4B4B" : "#A5A5A5"}
           />,

@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",                                                                
     backgroundColor: "#ffb13d",                                                          
     paddingHorizontal: scale(20),                                                        
-    paddingTop: scale(40),                                                               
+    paddingTop: scale(60),                                                               
     paddingBottom: scale(12),                                                            
     borderBottomLeftRadius: 25,                                                          
     borderBottomRightRadius: 25,                                                         
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   }, 
   containerCenter: {
     position: "absolute",
-    paddingTop: scale(90),
+    paddingTop: scale(110),
     left: 0,
     right: 0,
     alignItems: "center",

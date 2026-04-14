@@ -86,7 +86,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#ffb13d",
     borderRadius: 40,
-    backgroundColor: "rgba(255, 255, 255, 0)"
+    backgroundColor: "rgba(255, 255, 255, 0)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 7
   },
   button: {
     borderWidth: 2,

@@ -26,8 +26,9 @@ export default function Card({ item, onDelete }: Props) {
 
   return (
     <Pressable onPress={handlePress} onLongPress={handleLongPress}>
-      <View style={[styles.card, { borderColor: data.color, overflow: "hidden" }]}>
+      <View style={[styles.card, { borderColor: data.color }]}>
         <View>
+          <View style={styles.imageContainer}> 
           <Image source={{ uri: item.pet.image }} style={styles.image} />
           <View style={styles.float}>
             <Link
@@ -44,8 +45,11 @@ export default function Card({ item, onDelete }: Props) {
           <Text style={[styles.labelAcction, { backgroundColor: data.color }]}>
             {data.action}
           </Text>
+          </View>
         </View>
-        <Text style={styles.textName}>{data.name}</Text>
+        <View style={styles.nameContainer}>
+          <Text style={styles.textName}>{data.name}</Text>
+        </View>
       </View>
 
       {showDelete && (
@@ -68,6 +72,12 @@ export default function Card({ item, onDelete }: Props) {
 }
 
 const styles = StyleSheet.create({
+  nameContainer: {
+    alignContent: "center",
+    justifyContent: "center",
+    paddingVertical: scale(2),
+    paddingHorizontal: scale(8),
+  },
   deleteOverlay: {
     position: "absolute",
     top: 0,
@@ -104,13 +114,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 8,
   },
-  image: {
-    width: scale(150),
-    height: scale(200),
-    borderTopEndRadius: 8,
-    borderStartStartRadius: 8,
-    marginBottom: scale(8),
-  },
+    imageContainer: {
+      width: scale(150) - scale(4),
+      height: scale(200),
+      borderTopLeftRadius: 18,
+      borderTopRightRadius: 18,
+      overflow: "hidden",
+    },
+    image: {
+      width: scale(150) - scale(4),
+      height: scale(190),
+    },
   textName: {
     color: "black",
     textAlign: "center",
@@ -127,6 +141,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: scale(11),
     borderRadius: 6,
-    overflow: "hidden",
   },
 });

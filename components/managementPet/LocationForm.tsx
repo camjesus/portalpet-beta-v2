@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Platform } from "react-native";
 import { Button, TextInfo, TextInputCustom } from "@/components/ui";
 import MapView, { Marker } from "react-native-maps";
 import { scale } from "react-native-size-matters";
@@ -82,7 +82,7 @@ export function LocationForm({
       </View>
 
       <MapView
-        provider="google"
+        provider={Platform.OS === 'android' ? 'google' : undefined}
         style={styles.map}
         region={{
           latitude: coords!.lat,
@@ -103,12 +103,17 @@ export function LocationForm({
           }}
         />
       </MapView>
-      <Button label="Confirmar ubicación" onPress={saveCoords} />
+      <View style={styles.submit}>
+        <Button label="Confirmar ubicación" onPress={saveCoords} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  submit:{
+    margin: scale(10),
+    },
   buttonContainer:{
     marginBottom: scale(10),
   },
@@ -131,12 +136,12 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: scale(450),
+    height: scale(400),
     overflow: "hidden",
   },
   searchContainer: {
     zIndex: 10,
-    padding: 20,
+    padding: scale(10),
   },
   suggestions: {
     position: "absolute",

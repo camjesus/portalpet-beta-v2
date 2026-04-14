@@ -36,11 +36,9 @@ export default function ChatCard({ item, userId }: Props) {
   const adoption = adoptionConfig[item?.chat.adoptionStatus ?? "none"];
 
   useEffect(() => {
-    const result = loadAction(item?.chat.pet?.action ?? "");
-    if (Array.isArray(result)) {
-      setData({ action: result[0], color: result[1] });
-    }
-  }, []);
+    const { label, color } = loadAction(item?.chat.pet?.action ?? "");
+    setData({ action: label, color: color });
+  }, [item?.chat.pet?.action]);
 
   useEffect(() => {
     if (!item?.id || !userId) return;
@@ -110,27 +108,26 @@ const styles = StyleSheet.create({
     right: scale(10),
   },
   card: {
-    borderRadius: 16,
-    width: "100%",
-    height: scale(90),
+    borderRadius: 22,
     marginBottom: scale(10),
     flexDirection: "row",
     alignItems: "center",
-    overflow: "hidden",
     backgroundColor: "white",
     elevation: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.25,
     shadowRadius: 8,
     borderWidth: 1,
-    borderColor: "#F0E6D3",
+    borderColor: "#d5d5d5ff",
     borderLeftWidth: scale(4),
   },
   image: {
     width: scale(90),
     height: scale(90),
     resizeMode: "cover",
+    borderTopLeftRadius: 14,
+    borderBottomLeftRadius: 14,
   },
   viewDesc: {
     flex: 1,

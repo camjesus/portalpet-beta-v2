@@ -6,7 +6,7 @@ import { useSaved } from "@/features/pet/hooks/useSaved";
 import { EmptyState } from "@/components/saved/EmptyState";
 
 export default function Saved() {
-  const { pets, loading } = useSaved();
+  const { pets, loading, setPets } = useSaved();
 
   return (
     <ViewCustom>
@@ -17,7 +17,7 @@ export default function Saved() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => <PetCard item={item} />}
+          renderItem={({ item }) => <PetCard item={item} onUnlike={(id) => setPets((prev) => prev.filter((p) => p.id !== id))} />}
         />
       ) : (
         !loading && <EmptyState />

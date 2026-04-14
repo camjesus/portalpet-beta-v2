@@ -1,12 +1,9 @@
-// This file is a fallback for using MaterialIcons on Android and web.
-
-import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { SymbolWeight } from "expo-symbols";
-import React from "react";
+import React, { JSX } from "react";
 import { OpaqueColorValue, StyleProp, ViewStyle } from "react-native";
+import { CatIcon, DogIcon, MaleIcon, FemaleIcon } from "@/assets/icons";
 
-// Add your SFSymbol to Ionicons mappings here.
 const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   chat: "chat",
   paw: "paw",
@@ -16,8 +13,6 @@ const MAPPING: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
   "arrow-next": "arrow-right",
   male: "gender-male",
   female: "gender-female",
-  cat: "cat",
-  dog: "dog",
   "add-image": "camera-plus",
   "add-location": "map-marker-plus",
   clipboard: "clipboard-text",
@@ -57,6 +52,15 @@ export type IconSymbolName = keyof typeof MAPPING;
  *
  * Icon `name`s are based on SFSymbols and require manual mapping to MaterialIcons.
  */
+
+// en el componente, manejás los custom aparte:
+const CUSTOM_ICONS: Partial<Record<string, (props: any) => JSX.Element>> = {
+  cat: CatIcon,
+  dog: DogIcon,
+  male: MaleIcon,
+  female: FemaleIcon,
+};
+
 export default function IconSymbol({
   name,
   size = 24,
@@ -69,6 +73,11 @@ export default function IconSymbol({
   style?: StyleProp<ViewStyle>;
   weight?: SymbolWeight;
 }) {
+    const CustomIcon = CUSTOM_ICONS[name];
+  
+  if (CustomIcon) {
+    return <CustomIcon size={size} color={color} />;
+  }
   return (
     <MaterialCommunityIcons
       color={color}

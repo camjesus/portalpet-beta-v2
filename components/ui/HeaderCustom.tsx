@@ -37,7 +37,7 @@ export default function HeaderCustom({
 const styles = StyleSheet.create({
   container: {
     paddingBottom: scale(10),
-    paddingTop: scale(15),
+    paddingTop: scale(35),
     alignItems: "center",
     backgroundColor: "#ffb13d",
     borderBottomLeftRadius: 25,

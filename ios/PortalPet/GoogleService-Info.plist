@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>411434491747-ji7vvqcvs315g9cqjahl1ikajkp8n8cn.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.411434491747-ji7vvqcvs315g9cqjahl1ikajkp8n8cn</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCitZqb0g_vouVZIfNHHJUHngFKwEjlv9I</string>
+	<key>GCM_SENDER_ID</key>
+	<string>411434491747</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>portalPetIOS</string>
+	<key>PROJECT_ID</key>
+	<string>webportapetbeta</string>
+	<key>STORAGE_BUCKET</key>
+	<string>webportapetbeta.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:411434491747:ios:24adc5f8df5d423aac3d56</string>
+	<key>DATABASE_URL</key>
+	<string>https://webportapetbeta-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

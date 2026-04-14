@@ -1,16 +1,24 @@
-import { FlatList, StyleSheet } from "react-native";
-import { HeaderCustom, ViewCustom } from "@/components/ui";
+import { FlatList, Pressable, StyleSheet } from "react-native";
+import { HeaderCustom, IconSymbol, ViewCustom } from "@/components/ui";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/chatList/ChatCard";
 import { EmptyState } from "@/components/chatList/EmptyState";
 import { useChatList } from "@/features/chat/hooks/useChatList";
+import { ChatSortModal } from "@/components/chatList/ChatSortModal";
 
 export default function ChatList() {
-  const { chats, user } = useChatList();
+  const { chats, user, sort, setSort, showSortModal, setShowSortModal } = useChatList();
 
   return (
     <ViewCustom>
-      <HeaderCustom title="Chats" />
+      <HeaderCustom
+        title="Chats"
+        childrenLeft={
+          <Pressable onPress={() => setShowSortModal(true)}>
+            <IconSymbol size={26} name="sort" color="white" />
+          </Pressable>
+        }
+      />
       <FlatList
         data={chats}
         renderItem={({ item }) => (
@@ -19,6 +27,12 @@ export default function ChatList() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.flatList}
         ListEmptyComponent={<EmptyState />}
+      />
+      <ChatSortModal
+        visible={showSortModal}
+        selected={sort}
+        onSelect={setSort}
+        onClose={() => setShowSortModal(false)}
       />
     </ViewCustom>
   );

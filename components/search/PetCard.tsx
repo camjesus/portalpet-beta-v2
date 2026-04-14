@@ -1,5 +1,4 @@
 import { PetId } from "@/models";
-import { loadAction } from "@/services/utils/usePet";
 import { router } from "expo-router";
 import { Pressable, View, Image, Text, StyleSheet } from "react-native";
 import { IconSymbol } from "../ui";
@@ -8,21 +7,18 @@ import { toggleLike, isLiked } from "@/services/storage/likesStorage";
 import { useEffect, useState } from "react";
 import { formatAge, getPetName, SEX_LABEL, TYPE_LABEL } from "../petProfile/petProfileUtils";
 import { PetWithDistance } from "@/models";
+import { useLike } from "@/features/pet/hooks/useLike";
 
-export function PetCard({ item }: { item: PetWithDistance }) {
+type Props = {
+  item: PetWithDistance;
+  onUnlike?: (id: string) => void;
+};
+
+export function PetCard({ item, onUnlike }: Props) {
+  const { liked, handleLike } = useLike(item, onUnlike);
   const { pet } = item;
   const petName = getPetName(pet.name);
   const age = formatAge(pet.age, pet.ageType);
-  const [liked, setLiked] = useState(false);
-
-  useEffect(() => {
-    isLiked(item.id).then(setLiked);
-  }, [item.id]);
-
-  const handleLike = async () => {
-    const newLiked = await toggleLike(item.id);
-    setLiked(newLiked);
-  };
 
   return (
     <Pressable
@@ -109,22 +105,25 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "white",
     borderRadius: 16,
-    overflow: "hidden",
     marginBottom: scale(12),
-    elevation: 2,
+    elevation: 5,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
     shadowRadius: 4,
   },
   imageContainer: {
     width: "100%",
     height: scale(250),
+    overflow: "hidden",
   },
   image: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
+    borderTopRightRadius: 16,
+    borderTopLeftRadius: 16,
+
   },
   actionChip: {
     position: "absolute",

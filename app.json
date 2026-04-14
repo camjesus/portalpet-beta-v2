@@ -1,90 +1,90 @@
-{
-  "expo": {
-    "name": "portalpet-beta",
-    "slug": "0c2bb168-a812-4a46-9c47-28dd79a62a0f",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/dev/images/icon.png",
-    "scheme": "portalpet",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/dev/images/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "newArchEnabled": true,
-    "androidStatusBar": {
-      "backgroundColor": "#DCAD5F",
-      "translucent": false
-    },
-    "ios": {
-      "bundleIdentifier": "com.camjesus.portalpetbetav2",
-      "config": {
-        "googleMapsApiKey": "AIzaSyCvts-s40UYU1XDwuB2dQ7snApslO0-rck"
-      }
-    },
-    "android": {
-      "googleServicesFile": "./google-services.json",
-      "softwareKeyboardLayoutMode": "pan",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/dev/images/icon.png",
-        "backgroundColor": "#DCAD5F"
+  {
+    "expo": {
+      "name": "portalpet-beta",
+      "slug": "0c2bb168-a812-4a46-9c47-28dd79a62a0f",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/dev/images/icon.png",
+      "scheme": "portalpet",
+      "userInterfaceStyle": "automatic",
+      "splash": {
+        "image": "./assets/dev/images/icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.camjesus.portalpetbetav2",
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyCvts-s40UYU1XDwuB2dQ7snApslO0-rck"
+      "newArchEnabled": true,
+      "androidStatusBar": {
+        "backgroundColor": "#DCAD5F",
+        "translucent": false
+      },
+      "ios": {
+        "bundleIdentifier": "com.camjesus.portalpetbetav2",
+        "config": {
+          "googleMapsApiKey": "AIzaSyCvts-s40UYU1XDwuB2dQ7snApslO0-rck"
         }
       },
-      "permissions": [
-        "android.permission.ACCESS_MEDIA_LOCATION",
-        "android.permission.RECORD_AUDIO"
-      ]
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/dev/images/icon.png"
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
-          "savePhotosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
-          "isAccessMediaLocationEnabled": true
-        }
+      "android": {
+        "googleServicesFile": "./google-services.json",
+        "softwareKeyboardLayoutMode": "pan",
+        "adaptiveIcon": {
+          "foregroundImage": "./assets/dev/images/icon.png",
+          "backgroundColor": "#DCAD5F"
+        },
+        "package": "com.camjesus.portalpetbetav2",
+        "config": {
+          "googleMaps": {
+            "apiKey": "AIzaSyCvts-s40UYU1XDwuB2dQ7snApslO0-rck"
+          }
+        },
+        "permissions": [
+          "android.permission.ACCESS_MEDIA_LOCATION",
+          "android.permission.RECORD_AUDIO"
+        ]
+      },
+      "web": {
+        "bundler": "metro",
+        "output": "static",
+        "favicon": "./assets/dev/images/icon.png"
+      },
+      "plugins": [
+        "expo-router",
+        [
+          "expo-media-library",
+          {
+            "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
+            "savePhotosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
+            "isAccessMediaLocationEnabled": true
+          }
+        ],
+        "@react-native-google-signin/google-signin",
+        [
+          "expo-image-picker",
+          {
+            "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
+            "cameraPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?"
+          }
+        ],
+        [
+          "expo-location",
+          {
+            "locationAlwaysAndWhenInUsePermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tu ubicación?"
+          }
+        ]
       ],
-      "@react-native-google-signin/google-signin",
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?",
-          "cameraPermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tus fotos para subir esa bella mascota?"
-        }
-      ],
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Permitir que $(PRODUCT_NAME) tenga acceso a tu ubicación?"
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "androidClientId":"411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com",
-      "webClientId":"411434491747-m8qsjh1g8mvfmllkb3fnf5mdqektmvk7.apps.googleusercontent.com",
-      
-      "router": {
-        "origin": false
+      "experiments": {
+        "typedRoutes": true
       },
-      "eas": {
-        "projectId": "0c2bb168-a812-4a46-9c47-28dd79a62a0f"
+      "extra": {
+        "androidClientId":"411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com",
+        "webClientId":"411434491747-m8qsjh1g8mvfmllkb3fnf5mdqektmvk7.apps.googleusercontent.com",
+        
+        "router": {
+          "origin": false
+        },
+        "eas": {
+          "projectId": "0c2bb168-a812-4a46-9c47-28dd79a62a0f"
+        }
+        
       }
-      
     }
   }
-}

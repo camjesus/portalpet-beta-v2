@@ -5,20 +5,10 @@ export default ({ config }) => ({
   slug: "portalpet-beta-v2",
   scheme: ["portalpet", "com.camjesus.portalpetbetav2"],
 
-extra: {
-  ENV: process.env.ENV,
-  androidClientId: process.env.GOOGLE_ANDROID_ID ?? "411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com",
-  webClientId: process.env.GOOGLE_WEB_ID ?? "411434491747-m8qsjh1g8mvfmllkb3fnf5mdqektmvk7.apps.googleusercontent.com",
-  eas: {
-    projectId: "f3967fa5-3be1-48ad-b2aa-f62e4242487d",
-  },
-  ASSET_SET: process.env.ASSET_SET,
-},
-
-  scheme: "portalpet",
   extra: {
     ENV: process.env.ENV,
     androidClientId: process.env.GOOGLE_ANDROID_ID ?? "411434491747-4q0nfmdlno68gushqm18slkoeo489qbf.apps.googleusercontent.com",
+    iosClientId: process.env.GOOGLE_IOS_ID ?? "411434491747-sts3qfu2en9agd82guuopgamrsbkvpop.apps.googleusercontent.com",
     webClientId: process.env.GOOGLE_WEB_ID ?? "411434491747-m8qsjh1g8mvfmllkb3fnf5mdqektmvk7.apps.googleusercontent.com",
     eas: {
       projectId: "f3967fa5-3be1-48ad-b2aa-f62e4242487d",
@@ -40,6 +30,7 @@ extra: {
   ios: {
     ...config.ios,
     bundleIdentifier: "com.camjesus.portalpetbetav2",
+    googleServicesFile: "./ios/PortalPet/GoogleService-Info.plist",
     config: {
       googleMapsApiKey: "AIzaSyCvts-s40UYU1XDwuB2dQ7snApslO0-rck",
     },

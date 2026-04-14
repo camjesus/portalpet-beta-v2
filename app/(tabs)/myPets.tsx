@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
 filterRow: {
   position: "absolute",
-  paddingTop: scale(70),
+  paddingTop: scale(90),
   left: scale(20),
   right: scale(20),
 },

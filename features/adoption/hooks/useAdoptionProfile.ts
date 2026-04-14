@@ -25,11 +25,15 @@ const { fromChat, chatId } = useLocalSearchParams<{ fromChat: string; chatId: st
   const submitLabel = fromChat === "true" ? "Enviar solicitud" : "Guardar perfil";
 
   const handleBack = () => {
-  if (fromChat === "true" && chatId) {
-    router.dismissTo({ pathname: "/chat", params: { chatId } });
-  } else {
-    router.dismiss();
-  }
+    if (fromChat === "true" && chatId) {
+      router.dismissTo({ pathname: "/chat", params: { chatId } });
+    } else {
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace("/(tabs)/account");
+      } 
+    }
 };
 
   useEffect(() => {
@@ -83,7 +87,11 @@ const { fromChat, chatId } = useLocalSearchParams<{ fromChat: string; chatId: st
     if (fromChat === "true" && chatId) {
       router.dismissTo({ pathname: "/chat", params: { chatId, profileSaved: "true" } });
     } else {
-      router.dismiss();
+     if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace("/(tabs)/account");
+      } 
     }
   };
 

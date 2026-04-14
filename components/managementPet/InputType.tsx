@@ -19,12 +19,12 @@ export default function InputType({ type, changeValue }: Props) {
         }}
         icon={[
           <IconSymbol
-            size={25}
+            size={30}
             name={"dog"}
             color={type === Type.DOG ? "#4B4B4B" : "#A5A5A5"}
           />,
           <IconSymbol
-            size={25}
+            size={30}
             name={"cat"}
             color={type === Type.CAT ? "#4B4B4B" : "#A5A5A5"}
           />,

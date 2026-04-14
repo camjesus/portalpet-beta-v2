@@ -29,7 +29,14 @@
         <array>
           <string>portalpet</string>
           <string>com.camjesus.portalpetbetav2</string>
-          <string>com.camjesus.portalpetbetav2</string>
+        </array>
+      </dict>
+      <dict>
+        <key>CFBundleURLName</key>
+        <string>Google Sign-In</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.411434491747-sts3qfu2en9agd82guuopgamrsbkvpop</string>
         </array>
       </dict>
     </array>

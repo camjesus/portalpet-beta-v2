@@ -71,7 +71,8 @@ export const disablePetDoc = async (id: string) => {
   return await updateDoc(doc(db, "pets", id), { active: false });
 };
 
-export const getPetDocById = async (id: string) => {
+export const 
+getPetDocById = async (id: string) => {
   return await getDoc(doc(db, "pets", id));
 };
 

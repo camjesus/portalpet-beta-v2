@@ -42,14 +42,13 @@ export function ChatMenu({ items }: Props) {
                 key={index}
                 style={({ pressed }) => [
                   styles.item,
-                  pressed && styles.itemPressed,
-                  index < items.length - 1 && styles.itemBorder,
+                  pressed && styles.itemPressed
                 ]}
                 onPress={() => handlePress(item.onPress)}>
                 <IconSymbol
                   name={item.icon}
                   size={18}
-                  color={item.danger ? "#E57373" : "#D0D0D0"}
+                  color={item.danger ? "#E57373" : "#A5A5A5"}
                 />
                 <Text style={[styles.itemText, item.danger && styles.itemTextDanger]}>
                   {item.label}
@@ -76,12 +75,16 @@ const styles = StyleSheet.create({
     paddingRight: scale(12),
   },
   menu: {
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#ffffffff",
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#2A2A2A",
     minWidth: scale(200),
     overflow: "hidden",
+    gap: scale(4),
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
   },
   item: {
     flexDirection: "row",
@@ -91,15 +94,12 @@ const styles = StyleSheet.create({
     paddingVertical: scale(14),
   },
   itemPressed: {
-    backgroundColor: "#2A2A2A",
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#2A2A2A",
+    backgroundColor: "rgba(255,177,61,0.1)",
   },
   itemText: {
-    color: "#D0D0D0",
-    fontSize: scale(14),
+    flex: 1,
+    fontSize: scale(13),
+    color: "#151718",
   },
   itemTextDanger: {
     color: "#E57373",
