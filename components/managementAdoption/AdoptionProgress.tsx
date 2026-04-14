@@ -21,7 +21,7 @@ export default function AdoptionProgress({ acceptedRequest, onGoToChat, onOpenPr
 
   return (
     <ViewCustom>
-      <Pressable style={styles.backButton} onPress={() => router.back()}>
+      <Pressable style={styles.backButton} onPress={() => router.push({ pathname: "/myPets" })}>
         <IconSymbol size={30} name="arrow-back" color="white" />
       </Pressable>
 

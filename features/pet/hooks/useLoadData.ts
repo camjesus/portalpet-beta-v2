@@ -5,6 +5,7 @@ import { petReducer, ACTION } from "@/hooks/reducers/usePet";
 import { validatePet, savePetAsync } from "@/features/pet/services/petService";
 import { Validation } from "@/models";
 import { ACCTIONS, SIZE } from "@/constants/StaticData";
+import { useMyPetsStore } from "@/store/myPetsStore";
 
 export function useLoadData() {
   const { stringItem, image } = useLocalSearchParams<{
@@ -40,11 +41,12 @@ export function useLoadData() {
     setToast(true);
 
     if (result.sucess) {
+      useMyPetsStore.getState().invalidate();
       setTimeout(async () => {
         setToast(false);
         setLoad(true);
         await savePetAsync(state.statePet.id, state.statePet.pet);
-        router.push({ pathname: "/(tabs)/myPets", params: { search: "yes" } });
+        router.push({ pathname: "/(tabs)/myPets" });
         setLoad(false);
       }, 1500);
     }

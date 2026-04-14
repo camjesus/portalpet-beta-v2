@@ -77,6 +77,13 @@ export function useGlobalChatListener({ userId }: UseGlobalChatListenerOptions) 
                 return;
               }
 
+              if(seenMessageIds.current.has(messageId) ||
+                message.sender?.id === "")
+              {
+                seenMessageIds.current.add(messageId);
+                return;
+              }
+
               seenMessageIds.current.add(messageId);
               const createdAt: Timestamp | undefined = message.createAt;
               const time = createdAt ? formatTime(createdAt.toDate()) : undefined;

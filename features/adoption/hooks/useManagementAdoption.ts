@@ -79,6 +79,7 @@ const togglePin = (id: string) => {
   };
 
 const handleAccept = async () => {
+  setLoading(true);
   if (!selected) return;
   setShowModal(false);
     console.log("selected",selected);
@@ -93,6 +94,7 @@ const handleAccept = async () => {
   setItems((prev) => prev.filter((i) => i.request.id !== selected.request.id));
   setAcceptedRequest(selected);
   setSelected(null);
+  setLoading(false);
     router.push({ pathname: "/managementAdoption/progress", params: { petId: selected.request.petId } });
 
 };

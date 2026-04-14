@@ -7,6 +7,7 @@ type Props = {
   option: number;
   labels?: string[];
   children?: React.ReactNode[];
+  shadow?: boolean;
 };
 
 export default function PanelButtons({
@@ -14,9 +15,10 @@ export default function PanelButtons({
   option,
   labels,
   children,
+  shadow = true,
 }: Props) {
   return (
-    <View style={[styles.containerButton]}>
+    <View style={[styles.containerButton, shadow && styles.shadow]}>
       <View style={styles.boxLeft}>
         <Pressable
           style={({ pressed }) => [
@@ -79,6 +81,13 @@ export default function PanelButtons({
 }
 
 const styles = StyleSheet.create({
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 7
+  },
   containerButton: {
     flexDirection: "row",
     justifyContent: "center",
@@ -87,11 +96,6 @@ const styles = StyleSheet.create({
     borderColor: "#ffb13d",
     borderRadius: 40,
     backgroundColor: "rgba(255, 255, 255, 0)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 7
   },
   button: {
     borderWidth: 2,

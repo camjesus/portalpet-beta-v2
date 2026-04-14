@@ -11,6 +11,12 @@ export const OK_VALIDATION: Validation = {
   sucess: true,
 };
 
+export const OK_VALIDATION_UPDATE: Validation = {
+  type: "Eureka!",
+  msg: "La mascota se ha actualizado con éxito!",
+  sucess: true,
+};
+
 export const FIELD_VALIDATION = (message: string): Validation => ({
   type: "Validación",
   msg: message,

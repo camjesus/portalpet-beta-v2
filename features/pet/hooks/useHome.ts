@@ -88,5 +88,5 @@ const sortedPets = useMemo(() => {
   return myPets;
 }, [sort, myPets, userLocation]);
 
-return { sortedPets, sort, setSort, showSortModal, setShowSortModal, myPets, load, optAction, goToFilter, changeValue };
+return {  myPets: sortedPets, sort, setSort, showSortModal, setShowSortModal, load, optAction, goToFilter, changeValue };
 }

@@ -1,5 +1,5 @@
 export const ACCTIONS = ["ADOPTION", "WANTED", "FOUND"];
-export const LABELS_ACCTION = ["En adopción", "Buscados", "Encontrados"];
+export const LABELS_ACCTION = ["En adopción", "Buscado", "Encontrado"];
 export const PLACEHOLDER_DESCRIPTION = [
   "Esbribe una descripción de la mascota.",
   "Esbribe una descripción de la mascota, donde lo viste por última vez, detalles distintivos para reconocerlo.",
@@ -23,13 +23,13 @@ export type ActionConfig = {
 };
 
 export const ACTION_CONFIG: Record<ActionType, ActionConfig> = {
-  ADOPTION: { label: "ADOPCIÓN", color: "#9D69A3" },
-  WANTED:   { label: "BUSCADO",  color: "#C73E1D" },
-  FOUND:    { label: "ENCONTRADO", color: "#2E86AB" },
-  ADOPTED:    { label: "ADOPTADO", color: "#6B4870"  },
-  FOUNDED:    { label: "ENCONTRADO", color: "#8A2B14" },
-  DELIVERED:    { label: "ENTREGADO", color: "#1E5C75"  },
-  ADAPTING:    { label: "ADAPTACIÓN", color: "#c88bcfff"  },
+  ADOPTION:  { label: "ADOPCIÓN", color: "#9D69A3" },
+  WANTED:    { label: "BUSCADO",  color: "#C73E1D" },
+  FOUND:     { label: "ENCONTRADO", color: "#2E86AB" },
+  ADOPTED:   { label: "ADOPTADO", color: "#6B4870"  },
+  FOUNDED:   { label: "ENCONTRADO", color: "#8A2B14" },
+  DELIVERED: { label: "ENTREGADO", color: "#1E5C75"  },
+  ADAPTING:  { label: "ADAPTACIÓN", color: "#c88bcfff"  },
 };
 
 export const ACTIONS = Object.keys(ACTION_CONFIG) as ActionType[];

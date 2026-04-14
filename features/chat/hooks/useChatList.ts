@@ -2,11 +2,12 @@ import { useEffect, useState, useMemo } from "react";
 import { ChatId, User } from "@/models";
 import { getChatsAsync } from "@/features/chat/services/chatService";
 import { ChatSortType } from "@/components/chatList/ChatSortModal";
+import { softDeleteChat } from "../repository/chatRepository";
 
 export function useChatList() {
   const [chats, setChats] = useState<ChatId[]>([]);
   const [user, setUser] = useState<User | null>(null);
-
+  const [showDelete, setShowDelete] = useState(false);
   const [sort, setSort] = useState<ChatSortType>("recent");
   const [showSortModal, setShowSortModal] = useState(false);
 
@@ -45,5 +46,19 @@ export function useChatList() {
     return chats;
   }, [sort, chats]);
 
-  return { chats: sortedChats, user, sort, setSort, showSortModal, setShowSortModal };
+  const handleDeleteChat = async (chatId: string, userId: string) => {
+    setShowDelete(false);
+    if (!chatId || !userId) return;
+    await softDeleteChat(chatId, userId);
+    setChats(chats.filter((chat) => chat.id !== chatId));
+  };
+
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+
+  const handleLongPress = (chatId: string) => {
+    setSelectedChatId(chatId);
+    setShowDelete(true);
+  };
+
+  return { chats: sortedChats, user, sort, setSort, showSortModal, setShowSortModal, handleLongPress, showDelete, setShowDelete, handleDeleteChat, selectedChatId };
 }

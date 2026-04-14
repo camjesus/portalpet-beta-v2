@@ -102,7 +102,7 @@ export const sendAdoptionAcceptedMessage = async (
     text: "Solicitud de adopción aceptada",
     chatId: chat.id,
     type: "adoption_accepted",
-    sender: { id: user?.id ?? "", name: user?.name ?? "" },
+    sender: { id: "", name: "Portal Pet" },
   };
   const doc = await createMessage(message);
   return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };
@@ -117,7 +117,7 @@ export const sendAdoptionRejectedMessage = async (
     text: "Solicitud de adopción rechazada",
     chatId: chat.id,
     type: "adoption_rejected",
-    sender: { id: user?.id ?? "", name: user?.name ?? "" },
+    sender: { id: "", name: "Portal Pet" },
   };
   const doc = await createMessage(message);
   return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };
@@ -132,7 +132,7 @@ export const sendAdoptionCancelledMessage = async (
     text: "Solicitud de adopción cancelada",
     chatId: chat.id,
     type: "adoption_cancelled",
-    sender: { id: user?.id ?? "", name: user?.name ?? "" },
+    sender: { id: "", name: "Portal Pet" },
   };
   const doc = await createMessage(message);
   return { chat, lastMessage: mapMessageFromFirestore(doc.id, message) };

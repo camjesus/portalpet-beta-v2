@@ -26,6 +26,7 @@ export default function InputSize({
           <PanelButtons
             changeOption={(t) => changeOption(changeSize(t), "size")}
             option={option}
+            shadow={false}
             children={[
               <IconSymbol
                 key={"opt0"}

@@ -13,9 +13,8 @@ import {
 } from "../repository/petRepository";
 
 import { resolvePetImage } from "../storage/petImageStorage";
-import { FIELD_VALIDATION, OK_VALIDATION } from "@/constants/Validations";
+import { FIELD_VALIDATION , OK_VALIDATION_UPDATE} from "@/constants/Validations";
 import { loadAgeInMonths, loadInitPet } from "../utils/petHelper";
-import { saveMyPets } from "@/services/storage/petStorage";
 import { getAction, getFilters } from "@/features/filter/services/filterStorageService";
 import { saveFilter } from "@/features/filter/services/filterService";
 import { getCurrentLocation } from "@/services/utils/location";
@@ -148,7 +147,7 @@ export function validatePet(pet: Pet, noName: boolean) {
   if (pet.description === "")
     return FIELD_VALIDATION("Es necesario ingresar alguna descripción.");
 
-  return OK_VALIDATION;
+  return OK_VALIDATION_UPDATE;
 }
 
 export async function savePetAsync(petId: string | null, pet: Pet) {

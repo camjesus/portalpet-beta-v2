@@ -11,11 +11,15 @@ import { markChatAsRead } from "@/features/chat/repository/chatRepository";
 type Props = {
   item: ChatId;
   userId: string | undefined | null;
+  handleLongPress: (chatId: string) => void;
+  selectedChatId: string | null;
 };
 
-export default function ChatCard({ item, userId }: Props) {
+export default function ChatCard({ item, userId, handleLongPress, selectedChatId }: Props) {
   const [data, setData] = useState({ action: "", color: "" });
   const image = item?.chat?.pet?.image ?? "";
+  const isSelected = selectedChatId === item.id;
+
   const contactName =
     userId === item?.chat.rescuer?.id
       ? item?.chat.user?.name
@@ -26,6 +30,7 @@ export default function ChatCard({ item, userId }: Props) {
       ? item?.chat.hasUnreadRescuer
       : item?.chat.hasUnreadUser
   );
+
   const adoptionConfig = {
     pending: { label: "Solicitud pendiente", color: "#DCAD5F" },
     accepted: { label: "Adopción aceptada", color: "#4CAF50" },
@@ -50,11 +55,17 @@ export default function ChatCard({ item, userId }: Props) {
 
   return (
     <Pressable
+      onLongPress={() => handleLongPress(item.id)}
       onPress={() =>
         router.push({ pathname: "/chat", params: { chatId: item.id } })
       }>
-      <View style={[styles.card, { borderLeftColor: data.color }]}>
+      <View style={[
+        styles.card,
+        { borderLeftColor: isSelected ? "#E24B4A" : data.color },
+        isSelected && styles.cardSelected,
+      ]}>
         <Image source={{ uri: formatURL(image) }} style={styles.image} />
+
         <View style={styles.viewDesc}>
           <View style={styles.viewRow}>
             <IconSymbol name="paw" size={20} color="#ffb13d" />
@@ -67,24 +78,41 @@ export default function ChatCard({ item, userId }: Props) {
             <Text style={styles.textMeta}>{contactName}</Text>
           </View>
         </View>
+
         <View style={styles.viewAction}>
           <Text style={[styles.badge, { backgroundColor: data.color }]}>
             {data.action}
           </Text>
         </View>
+
         {adoption && (
-          <View
-            style={[styles.adoptionBadge, { backgroundColor: adoption.color }]}>
+          <View style={[styles.adoptionBadge, { backgroundColor: adoption.color }]}>
             <Text style={styles.adoptionBadgeText}>{adoption.label}</Text>
           </View>
         )}
-        {hasUnread && <View style={styles.unreadDot} />}
+
+        {isSelected && (
+          <View style={styles.deleteIcon}>
+            <IconSymbol name="trash" size={20} color="#E24B4A" />
+          </View>
+        )}
+
+        {hasUnread && !isSelected && <View style={styles.unreadDot} />}
       </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  cardSelected: {
+    backgroundColor: "#FFF0F0",
+    borderColor: "#E24B4A",
+  },
+  deleteIcon: {
+    position: "absolute",
+    top: scale(10),
+    right: scale(10),
+  },
   adoptionBadge: {
     position: "absolute",
     right: scale(10),

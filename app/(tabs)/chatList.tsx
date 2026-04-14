@@ -1,5 +1,5 @@
 import { FlatList, Pressable, StyleSheet } from "react-native";
-import { HeaderCustom, IconSymbol, ViewCustom } from "@/components/ui";
+import { ConfirmModal, HeaderCustom, IconSymbol, ViewCustom } from "@/components/ui";
 import { scale } from "react-native-size-matters";
 import ChatCard from "@/components/chatList/ChatCard";
 import { EmptyState } from "@/components/chatList/EmptyState";
@@ -7,7 +7,19 @@ import { useChatList } from "@/features/chat/hooks/useChatList";
 import { ChatSortModal } from "@/components/chatList/ChatSortModal";
 
 export default function ChatList() {
-  const { chats, user, sort, setSort, showSortModal, setShowSortModal } = useChatList();
+  const {
+    chats,
+    user,
+    sort,
+    setSort,
+    showSortModal,
+    setShowSortModal,
+    handleLongPress,
+    showDelete,
+    setShowDelete,
+    handleDeleteChat,
+    selectedChatId,
+  } = useChatList();
 
   return (
     <ViewCustom>
@@ -22,7 +34,12 @@ export default function ChatList() {
       <FlatList
         data={chats}
         renderItem={({ item }) => (
-          <ChatCard userId={user?.id ?? ""} item={item} />
+          <ChatCard
+            userId={user?.id ?? ""}
+            item={item}
+            handleLongPress={handleLongPress}
+            selectedChatId={selectedChatId}
+          />
         )}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.flatList}
@@ -33,6 +50,15 @@ export default function ChatList() {
         selected={sort}
         onSelect={setSort}
         onClose={() => setShowSortModal(false)}
+      />
+      <ConfirmModal
+        visible={showDelete}
+        title="¿Estás seguro de eliminar el chat?"
+        description="Se eliminará el chat de forma permanente."
+        confirmLabel="Sí, eliminar"
+        onConfirm={() => handleDeleteChat(selectedChatId ?? "", user?.id ?? "")}
+        onCancel={() => setShowDelete(false)}
+        danger
       />
     </ViewCustom>
   );
