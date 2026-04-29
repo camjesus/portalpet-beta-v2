@@ -44,13 +44,13 @@ export default function AdoptionProgress({ acceptedRequest, onGoToChat, onOpenPr
         </View>
 
         {!startDate && !isFinished && (
-          <TextInfo text="Comienza el periodo de adaptación una vez que la mascota se encuentre en su nuevo hogar." />
+          <TextInfo text="Comienza el periodo de adaptación una vez que la mascota se encuentre en su nuevo hogar." shortText="Comienza el periodo de adaptación." />
         )}
         {startDate && !isFinished && (
-          <TextInfo text="Pregunta como está la mascota, como está comiendo, si se está adaptando bien." />
+          <TextInfo text="Pregunta como está la mascota, como está de ánimo, si se está adaptando bien." shortText="Pregunta como está la mascota." />
         )}
         {isFinished && (
-          <TextInfo text="El periodo de adaptación finalizó. Confirmá la adopción." />
+          <TextInfo text="El periodo de adaptación finalizó. Confirmá la adopción." shortText="El periodo de adaptación finalizó." />
         )}
 
         <View style={styles.container}>

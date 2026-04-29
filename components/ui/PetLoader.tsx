@@ -187,7 +187,7 @@ interface PetLoaderProps {
 }
 
 export default function PetLoader({
-  label = "Buscando tu próxima mascota…",
+  label = "El portal de las mascotas",
   sublabel = "PortalPet",
 }: PetLoaderProps) {
   const dogY = useRef(new Animated.Value(0)).current;

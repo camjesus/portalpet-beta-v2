@@ -23,7 +23,10 @@ export function PendingRequestsView({ items, pinnedIds, togglePin, handleOpenMod
           </Pressable>
         }
       />
-      <TextInfo text={`Aceptá o rechazá solicitudes.\nSi aceptás una, las demás se cancelan.`} />
+      <TextInfo 
+      text={`Aceptá o rechazá solicitudes.\nSi aceptás una solicitud, las otras quedan en espera hasta confirmar la adopción.`} 
+      shortText={`Aceptá o rechazá solicitudes.`}
+       />
       <FlatList
         data={items}
         keyExtractor={(item) => item.request.id}
