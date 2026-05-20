@@ -78,7 +78,7 @@ export function LocationForm({
             />
           )}
         </View>
-        <TextInfo text="Tu dirección queda privada 🔒 la usamos únicamente para mostrar resultados por cercanía." />
+        <TextInfo text="Tu dirección queda privada 🔒 la usamos únicamente para mostrar resultados por cercanía." shortText="Tu dirección queda privada 🔒" />
       </View>
 
       <MapView

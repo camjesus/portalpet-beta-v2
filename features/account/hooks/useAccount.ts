@@ -4,6 +4,8 @@ import { User } from "@/models";
 import { getUserAsync, saveUserAsync, cleanAllAsync } from "@/services/storage/userStorage";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { updatePetsRescuer } from "@/features/pet/services/petService";
+import { usePetsStore } from "@/store/petsStore";
+import { useMyPetsStore } from "@/store/myPetsStore";
 
 export function useAccount() {
   const [name, setName] = useState("");
@@ -11,6 +13,8 @@ export function useAccount() {
   const [email, setEmail] = useState("");
   const [image, setImage] = useState("");
   const [bio, setBio] = useState("");
+  const resetPets = usePetsStore((s) => s.setMyPets);
+  const resetMyPets = useMyPetsStore((s) => s.setMyPets);
 
   useEffect(() => {
     getUserAsync().then((storedUser) => {
@@ -36,6 +40,8 @@ export function useAccount() {
   const clearAll = async () => {
     await cleanAllAsync();
     await GoogleSignin.signOut();
+    resetPets([]);
+    resetMyPets([]);
     router.replace("/signin");
   };
 

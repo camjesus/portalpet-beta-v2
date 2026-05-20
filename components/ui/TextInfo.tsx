@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 type Props = {
   text: string;
-  shortText: string;
+  shortText?: string;
 };
 
 export function TextInfo({ text, shortText }: Props) {

@@ -1,4 +1,6 @@
 import { Rescuer } from "./Rescuer";
+import { DogMedicalRecord, CatMedicalRecord } from "./MedicalRecord";
+import { PetCharacteristics } from "./PetCharacteristics";
 
 export type Pet = {
 	name: string; //NO_NAME
@@ -21,6 +23,8 @@ export type Pet = {
 	rescuer: Rescuer;
 	createDate: Date ;
 	archived: boolean;
+	medicalRecord?: DogMedicalRecord | CatMedicalRecord;
+	characteristics?: PetCharacteristics;
 };
 
 export interface PetId {

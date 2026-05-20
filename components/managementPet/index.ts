@@ -4,3 +4,5 @@ export { default as InputType } from "./InputType";
 export { default as InputSex } from "./InputSex";
 export { default as InputAction } from "./InputAction";
 export { default as InputDescription } from "./InputDescription";
+export { MedicalRecordForm } from "./MedicalRecordForm";
+export { CharacteristicsForm } from "./CharacteristicsForm";

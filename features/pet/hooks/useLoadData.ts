@@ -23,7 +23,8 @@ export function useLoadData() {
   const [toast, setToast] = useState(false);
   const [toastConfig, setToastConfig] = useState<Validation>();
   const imageSource = image ? { uri: image } : { uri: state.statePet.pet.image };
-  const labelButton = state.statePet.id ? "Editar" : "Crear";
+  const isAdoption = state.statePet.pet.action === "ADOPTION";
+  const labelButton = isAdoption ? "Siguiente" : state.statePet.id ? "Editar" : "Crear";
   const scrollViewRef = useRef<ScrollView | null>(null);
 
   useEffect(() => {
@@ -36,21 +37,44 @@ export function useLoadData() {
   }
 
   async function savePet() {
-    var result = validatePet(state.statePet.pet, noName);
+  const result = validatePet(state.statePet.pet, noName);
+
+  if (!result.sucess) {
     setToastConfig(result);
     setToast(true);
-
-    if (result.sucess) {
-      useMyPetsStore.getState().invalidate();
-      setTimeout(async () => {
-        setToast(false);
-        setLoad(true);
-        await savePetAsync(state.statePet.id, state.statePet.pet);
-        router.push({ pathname: "/(tabs)/myPets" });
-        setLoad(false);
-      }, 1500);
-    }
+    return;
   }
+
+  if (isAdoption) {
+    handleAdoptionRedirect();
+  } else {
+    await handleSavePet(result);
+  }
+}
+
+function handleAdoptionRedirect() {
+  setTimeout(() => {
+    setToast(false);
+    router.push({
+      pathname: "/managementPet/loadMedicalRecord",
+      params: { stringItem: JSON.stringify(state) },
+    });
+  }, 1500);
+}
+
+async function handleSavePet(result: Validation) {
+  setToastConfig(result);
+  setToast(true);
+  useMyPetsStore.getState().invalidate();
+
+  setTimeout(async () => {
+    setToast(false);
+    setLoad(true);
+    await savePetAsync(state.statePet.id, state.statePet.pet);
+    router.push({ pathname: "/(tabs)/myPets" });
+    setLoad(false);
+  }, 1500);
+}
 
   function changeNoName() {
     setNoName(!noName);
